@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      .chatbox {
+        border: 1px solid black;
+        height: 400px;
+        overflow-y: scroll;
+        padding: 10px;
+      }
+      .message {
+        margin-bottom: 10px;
+        text-align: center;
+      }
+      .user {
+        font-weight: bold;
+        height: 80px;
+        width: 80%;
+        margin: auto;
+        display: block;
+        border-radius: 15px;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      .bot {
+        background-color: #f2f2f2;
+        height: 40px;
+        width: 80%;
+        margin: auto;
+        display: block;
+        border-radius: 15px;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      #input_text {
+        height: 80px;
+        width: 80%;
+        margin: auto;
+        display: block;
+        border-radius: 15px;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      #submit_button {
+        margin: 10px auto;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Chatbot</h1>
+    <div class="chatbox" id="chatbox">
+    </div>
+    <form id="message_form" method="POST" onsubmit="return sendMessage();">
+      <input type="text" id="input_text" name="input_text">
+      <input type="submit" value="Send" id="submit_button">
+    </form>
+    <script>
+      function addMessage(message, isUser=false) {
+        var chatbox = document.getElementById('chatbox');
+        var messageClass = isUser ? 'user' : 'bot';
+        var messageElement = document.createElement('div');
+        messageElement.classList.add('message', messageClass);
+        messageElement.textContent = message;
+        chatbox.appendChild(messageElement);
+        chatbox.scrollTop = chatbox.scrollHeight;
+      }
+
+      function sendMessage() {
+        var inputText = document.getElementById('input_text').value;
+        addMessage(inputText, true);
+        $.post('/get_response', $('#message_form').serialize(), function(responseText) {
+          addMessage(responseText, false);
+        });
+        document.getElementById('input_text').value = '';
+        return false;
+      }
+    </script>
+  </body>
+</html>
