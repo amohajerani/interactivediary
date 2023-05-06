@@ -1,8 +1,15 @@
-{% extends "base.html" %} {% block title %}Welcome{% endblock %} {% block content
-%}
-<div>
-    {% for entry in entries %}
-    <p>{{entry}}</p>
-    {% endfor %}
-</div>
+{% extends "base.html" %}
+{% block title %}
+    {{ date }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h4>{{ date }} entry</h4>
+        {% for entry in entries %}
+        <p style="{% if my_dict['key2'] == 0 %}background-color: gray;{% else %}background-color: white;{% endif %}">
+            {{ entry['txt'] }}
+        </p>
+        {% endfor %}
+    </div>
 {% endblock %}

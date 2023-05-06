@@ -119,7 +119,7 @@ def get_response():
 def past_entries(date):
     username = get_username(session['user']['userinfo']['email'])
     entries = get_entries(date, username)
-    return render_template('journal-entry.html', entries=entries)
+    return render_template('journal-entry.html', entries=entries, date=date)
 
 
 if __name__ == "__main__":
