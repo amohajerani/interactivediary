@@ -51,7 +51,7 @@ def home():
     if not session.get('user'):
         return render_template('landing.html')
     dates = get_past_entry_dates(
-        username=get_username(session['user']['email']))
+        username=get_username(session['user']['userinfo']['email']))
     return render_template('home.html', dates=dates)
 
 
@@ -117,7 +117,7 @@ def get_response():
 @app.route("/past_entries/<date>")
 @require_auth
 def past_entries(date):
-    username = get_username(session['user']['email'])
+    username = get_username(session['user']['userinfo']['email'])
     entries = get_entries(date, username)
     return render_template('journal-entry.html', entries=entries)
 
