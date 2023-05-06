@@ -61,7 +61,7 @@ def insert_chat(username, txt, bot):
 
 def get_past_entry_dates(username):
     dates = Chats.distinct('date', {'username': username})
-    dates.sort(reversed=True)
+    dates.sort(reverse=True)
     return dates
 
 
