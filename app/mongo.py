@@ -67,4 +67,5 @@ def get_past_entry_dates(username):
 
 def get_entries(date, username):
     res = list(Chats.find({'username': username, 'date': date}))
+    sorted(res, key=lambda x: x['time'])
     return res
