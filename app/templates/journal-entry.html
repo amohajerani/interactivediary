@@ -7,7 +7,7 @@
     <div>
         <h4>{{ date }} entry</h4>
         {% for entry in entries %}
-        <p style="{% if entry['bot'] %}background-color: gray;{% else %}background-color: white;{% endif %}">
+        <p style="{% if entry['bot'] %}font-style: italic;{% endif %}">
             {{ entry['txt'] }}
         </p>
         {% endfor %}
