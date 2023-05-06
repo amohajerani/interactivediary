@@ -95,32 +95,32 @@ def chat():
 @app.route('/get_response', methods=['POST'])
 def get_response():
 
-    username = 'username'
-    input_text = request.form['input_text']
+    username = get_username(session['user']['userinfo']['email']))
+    input_text=request.form['input_text']
 
-    thread_input_txt = Thread(target=insert_chat, args=(
+    thread_input_txt=Thread(target = insert_chat, args = (
         username, input_text, False))
     thread_input_txt.start()
-    res = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=input_text,
-        max_tokens=50,
-        temperature=0,
+    res=openai.Completion.create(
+        model = "text-davinci-003",
+        prompt = input_text,
+        max_tokens = 50,
+        temperature = 0,
     )
 
-    thread_output_txt = Thread(target=insert_chat, args=(
+    thread_output_txt=Thread(target = insert_chat, args = (
         username, res.choices[0].text, True))
     thread_output_txt.start()
     return res.choices[0].text
 
 
-@app.route("/past_entries/<date>")
-@require_auth
+@ app.route("/past_entries/<date>")
+@ require_auth
 def past_entries(date):
-    username = get_username(session['user']['userinfo']['email'])
-    entries = get_entries(date, username)
-    return render_template('journal-entry.html', entries=entries)
+    username=get_username(session['user']['userinfo']['email'])
+    entries=get_entries(date, username)
+    return render_template('journal-entry.html', entries = entries)
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)
+    app.run(host = "0.0.0.0", port = env.get("PORT", 8000), debug = True)
