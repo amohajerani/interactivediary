@@ -1,54 +1,16 @@
-{% extends "base.html" %} {% block title %}Form{% endblock %} {% block content
-  %}
-  <div class="content">
-    <div>
-      <h6>Welcome {{username}}! All your files are here</h6>
-      <table>
-        <thead>
-          <tr>
-            <th>filename</th>
-            <th>privacy</th>
-            <th>View</th>
-            <th>Delete</th>
-            <th>Download</th>
-            <th>Link</th>
-            <th>Change privacy</th>
-            <th>Traffic log</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for filename, private in doc_objects.items() %}
-            <tr>
-              <td>{{ filename }}</td>
-              <td>{% if private==1 %}
-                Private {% else %} public {% endif %}</td>
-              <td><a href="/{{username}}/{{filename}}">View</a></td>
-              <td><a href="/delete/{{username}}/{{filename}}">Delete</a></td>
-              <td><a href="/{{username}}/{{filename}}" download={{filename}}>Download</a></td>
-              <td><button onclick="copyToClipboard('https://www.thegagali.com/{{username}}/{{filename}}')">Link</button></td>
-              <td><a href="/update-page/{{username}}/{{filename}}">Change privacy</a></td>
-              <td><a href="/logs/{{username}}/{{filename}}">See the log</a></td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+{% extends "base.html" %} {% block title %}Past entries{% endblock %} {% block content %}
+<div class="content">
+  <div>
+    <a href="/chat">Write today's journal</a>
+    <h6>Your journal from prior days</h6>
+    <ul>
+      {% for date in dates %}
+      <li><a href="/past_entries/{date}">{{date}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
 </div>
-  {% endblock %}
+{% endblock %}
 
-  {% block javascript %}
-  <script>
-    function copyToClipboard(link) {
-      const el = document.createElement('textarea');
-      el.value = link;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      alert('Link copied to clipboard!');
-    }
-    </script>
-
-  {% endblock %}
 
   

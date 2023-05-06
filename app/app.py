@@ -9,7 +9,7 @@ import os
 from authlib.integrations.flask_client import OAuth
 from dotenv import find_dotenv, load_dotenv
 from flask import Flask, redirect, render_template, session, request, Response, url_for
-from mongo import get_username, insert_chat
+from mongo import get_username, insert_chat, get_past_entry_dates, get_entries
 import datetime
 import openai
 from threading import Thread
@@ -21,9 +21,6 @@ if ENV_FILE:
 app = Flask(__name__)
 app.secret_key = env.get("APP_SECRET_KEY")
 openai.api_key = env.get("OPENAI_KEY")
-
-UPLOAD_FOLDER = "uploads"
-BUCKET = "thegagali"
 
 oauth = OAuth(app)
 
@@ -53,9 +50,9 @@ def require_auth(func):
 def home():
     if not session.get('user'):
         return render_template('landing.html')
-    username = get_username(session['user']['userinfo']['email'])
-    doc_objects = {}
-    return render_template('home.html', doc_objects=doc_objects, username=username)
+    dates = get_past_entry_dates(
+        username=get_username(session['user']['email']))
+    return render_template('home.html', dates=dates)
 
 
 @app.route("/callback", methods=["GET", "POST"])
@@ -90,7 +87,7 @@ def logout():
 
 
 @app.route("/chat")
-# @require_auth
+@require_auth
 def chat():
     return render_template('chat.html')
 
@@ -115,6 +112,14 @@ def get_response():
         username, res.choices[0].text, True))
     thread_output_txt.start()
     return res.choices[0].text
+
+
+@app.route("/past_entries/<date>")
+@require_auth
+def past_entries(date):
+    username = get_username(session['user']['email'])
+    entries = get_entries(date, username)
+    return render_template('journal-entry.html', entries=entries)
 
 
 if __name__ == "__main__":

@@ -56,4 +56,15 @@ def get_username(email):
 
 def insert_chat(username, txt, bot):
     Chats.insert_one(
-        {'txt': txt, 'bot': bot, 'username': username, 'time': datetime.datetime.now()})
+        {'txt': txt, 'bot': bot, 'username': username, 'time': datetime.datetime.now(), 'date': datetime.date.today().strftime('%Y-%m-%d')})
+
+
+def get_past_entry_dates(username):
+    dates = Chats.distinct('date', {'username': username})
+    dates.sort(reversed=True)
+    return dates
+
+
+def get_entries(date, username):
+    res = list(Chats.find({'username': username, 'date': date}))
+    return res
