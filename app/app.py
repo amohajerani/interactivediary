@@ -104,7 +104,7 @@ def get_response():
     res = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You help me write a thoughtful journal."},
+            {"role": "system", "content": "You are a therapist."},
             {"role": "user", "content": input_text}],
         max_tokens=50,
         temperature=0,
