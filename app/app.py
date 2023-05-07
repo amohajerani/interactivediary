@@ -87,7 +87,7 @@ def logout():
 
 
 @app.route("/chat")
-# @require_auth
+@require_auth
 def chat():
     return render_template('chat.html')
 
