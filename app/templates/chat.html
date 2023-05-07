@@ -110,6 +110,13 @@
           });
           document.getElementById('input_text').value = '';
           return false;
+
+          const myInput = document.getElementById('input_text');
+          myInput.addEventListener('keydown', function(event) {
+          if (event.keyCode === 13) { // Enter key
+          event.preventDefault(); // Cancel the default action
+          }
+          });
         }
       </script>
     </body>
