@@ -88,7 +88,7 @@
       <div class="chatbox" id="chatbox">
       </div>
       <form id="message_form" method="POST" onsubmit="return sendMessage();">
-        <input type="text" id="input_text" name="input_text">
+        <input type="textarea" id="input_text" name="input_text">
         <input type="submit" value="Send" id="submit_button">
       </form>
       <script>
@@ -110,13 +110,6 @@
           });
           document.getElementById('input_text').value = '';
           return false;
-
-          const myInput = document.getElementById('input_text');
-          myInput.addEventListener('keydown', function(event) {
-          if (event.keyCode === 13) { // Enter key
-          event.preventDefault(); // Cancel the default action
-          }
-          });
         }
       </script>
     </body>
