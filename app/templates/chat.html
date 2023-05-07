@@ -1,33 +1,105 @@
 
-  {% extends "base.html" %} {% block title %}Welcome{% endblock %} {% block content
-    %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <h1>Chatbot</h1>
-    <div class="chatbox" id="chatbox">
-    </div>
-    <form id="message_form" method="POST" onsubmit="return sendMessage();">
-      <input type="text" id="input_text" name="input_text">
-      <input type="submit" value="Send" id="submit_button">
-    </form>
-    <script>
-      function addMessage(message, isUser=false) {
-        var chatbox = document.getElementById('chatbox');
-        var messageClass = isUser ? 'user' : 'bot';
-        var messageElement = document.createElement('div');
-        messageElement.classList.add('message', messageClass);
-        messageElement.textContent = message;
-        chatbox.appendChild(messageElement);
-        chatbox.scrollTop = chatbox.scrollHeight;
-      }
-
-      function sendMessage() {
-        var inputText = document.getElementById('input_text').value;
-        addMessage(inputText, true);
-        $.post('/get_response', $('#message_form').serialize(), function(responseText) {
-          addMessage(responseText, false);
-        });
-        document.getElementById('input_text').value = '';
-        return false;
-      }
-    </script>
-{% endblock %}
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Chatbot</title>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <style>
+        .chatbox {
+          border: 1px solid black;
+          height: 400px;
+          overflow-y: scroll;
+          padding: 10px;
+        }
+        .message {
+          margin-bottom: 10px;
+          text-align: center;
+        }
+        .user {
+          font-weight: bold;
+          height: 80px;
+          width: 80%;
+          margin: auto;
+          display: block;
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 10px;
+        }
+        .bot {
+          background-color: #f2f2f2;
+          height: 40px;
+          width: 80%;
+          margin: auto;
+          display: block;
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 10px;
+        }
+        #input_text {
+          height: 80px;
+          width: 80%;
+          margin: auto;
+          display: block;
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          padding: 10px;
+        }
+        #submit_button {
+          margin: 10px auto;
+          display: block;
+        }
+      </style>
+    </head>
+    <body>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <h3>GAGALI</h3>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbar"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav">
+          {% if session %}
+          <a class="nav-item nav-link" id="home" href="/">Home</a>
+          <a class="nav-item nav-link" id="new_entry" href="/chat">Write journal</a>
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          {% else %}
+          <a class="nav-item nav-link" id="login" href="/login">Login or sign up</a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+      <h1>Chatbot</h1>
+      <div class="chatbox" id="chatbox">
+      </div>
+      <form id="message_form" method="POST" onsubmit="return sendMessage();">
+        <input type="text" id="input_text" name="input_text">
+        <input type="submit" value="Send" id="submit_button">
+      </form>
+      <script>
+        function addMessage(message, isUser=false) {
+          var chatbox = document.getElementById('chatbox');
+          var messageClass = isUser ? 'user' : 'bot';
+          var messageElement = document.createElement('div');
+          messageElement.classList.add('message', messageClass);
+          messageElement.textContent = message;
+          chatbox.appendChild(messageElement);
+          chatbox.scrollTop = chatbox.scrollHeight;
+        }
+  
+        function sendMessage() {
+          var inputText = document.getElementById('input_text').value;
+          addMessage(inputText, true);
+          $.post('/get_response', $('#message_form').serialize(), function(responseText) {
+            addMessage(responseText, false);
+          });
+          document.getElementById('input_text').value = '';
+          return false;
+        }
+      </script>
+    </body>
+  </html>
