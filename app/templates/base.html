@@ -150,26 +150,6 @@
     ></script>
 
 {% block javascript %}
-<script>
-  function addMessage(message, isUser=false) {
-    var chatbox = document.getElementById('chatbox');
-    var messageClass = isUser ? 'user' : 'bot';
-    var messageElement = document.createElement('div');
-    messageElement.classList.add('message', messageClass);
-    messageElement.textContent = message;
-    chatbox.appendChild(messageElement);
-    chatbox.scrollTop = chatbox.scrollHeight;
-  }
 
-  function sendMessage() {
-    var inputText = document.getElementById('input_text').value;
-    addMessage(inputText, true);
-    $.post('/get_response', $('#message_form').serialize(), function(responseText) {
-      addMessage(responseText, false);
-    });
-    document.getElementById('input_text').value = '';
-    return false;
-  }
-</script>
 {% endblock %}
 </html>
