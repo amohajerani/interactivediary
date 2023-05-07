@@ -8,7 +8,7 @@ from urllib.parse import quote_plus, urlencode
 import os
 from authlib.integrations.flask_client import OAuth
 from dotenv import find_dotenv, load_dotenv
-from flask import Flask, redirect, render_template, session, request, Response, url_for
+from flask import Flask, redirect, render_template, session, request, Response, url_for, send_file
 from mongo import get_username, insert_chat, get_past_entry_dates, get_entries
 import datetime
 import openai
@@ -122,6 +122,11 @@ def past_entries(date):
     username = get_username(session['user']['userinfo']['email'])
     entries = get_entries(date, username)
     return render_template('journal-entry.html', entries=entries, date=date)
+
+
+@app.route('/logo')
+def get_log0():
+    return send_file('./images/gagalilogo.jpg', mimetype='image/jpg')
 
 
 if __name__ == "__main__":
