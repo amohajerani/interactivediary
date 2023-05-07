@@ -14,7 +14,7 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>{% block title %}Home{% endblock %}</title>
     <style>
       .btn {
@@ -132,7 +132,7 @@
     </div>
     {% endif %} {% endfor %} {% endif %} {% endwith %}
 
-    <div class="contai  r">{% block content %} {% endblock %}</div>
+    <div class="container">{% block content %} {% endblock %}</div>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -150,14 +150,25 @@
     ></script>
 
 {% block javascript %}
-    <script type="text/javascript">
-      function deleteNote(noteId) {
-  fetch("/delete-note", {
-    method: "POST",
-    body: JSON.stringify({ noteId: noteId }),
-  }).then((_res) => {
-    window.location.href = "/";
-  });
+<script>
+  function addMessage(message, isUser=false) {
+    var chatbox = document.getElementById('chatbox');
+    var messageClass = isUser ? 'user' : 'bot';
+    var messageElement = document.createElement('div');
+    messageElement.classList.add('message', messageClass);
+    messageElement.textContent = message;
+    chatbox.appendChild(messageElement);
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  function sendMessage() {
+    var inputText = document.getElementById('input_text').value;
+    addMessage(inputText, true);
+    $.post('/get_response', $('#message_form').serialize(), function(responseText) {
+      addMessage(responseText, false);
+    });
+    document.getElementById('input_text').value = '';
+    return false;
   }
 </script>
 {% endblock %}
