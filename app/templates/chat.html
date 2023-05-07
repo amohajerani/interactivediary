@@ -1,7 +1,55 @@
-
-{% extends "base.html" %} {% block title %}Write{% endblock %} {% block content %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      .chatbox {
+        border: 1px solid black;
+        height: 400px;
+        overflow-y: scroll;
+        padding: 10px;
+      }
+      .message {
+        margin-bottom: 10px;
+        text-align: center;
+      }
+      .user {
+        font-weight: bold;
+        height: 80px;
+        width: 80%;
+        margin: auto;
+        display: block;
+        border-radius: 15px;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      .bot {
+        background-color: #f2f2f2;
+        height: 40px;
+        width: 80%;
+        margin: auto;
+        display: block;
+        border-radius: 15px;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      #input_text {
+        height: 80px;
+        width: 80%;
+        margin: auto;
+        display: block;
+        border-radius: 15px;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      #submit_button {
+        margin: 10px auto;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
     <h1>Chatbot</h1>
     <div class="chatbox" id="chatbox">
     </div>
@@ -30,6 +78,5 @@
         return false;
       }
     </script>
-  </div>
-
-{% endblock %}
+  </body>
+</html>
