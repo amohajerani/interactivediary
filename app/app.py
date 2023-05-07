@@ -101,17 +101,19 @@ def get_response():
     thread_input_txt = Thread(target=insert_chat, args=(
         username, input_text, False))
     thread_input_txt.start()
-    res = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=input_text,
+    res = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You help me write a thoughtful journal."},
+            {"role": "user", "content": input_text}],
         max_tokens=50,
         temperature=0,
     )
 
     thread_output_txt = Thread(target=insert_chat, args=(
-        username, res.choices[0].text, True))
+        username, res['choices'][0]['message']['content'], True))
     thread_output_txt.start()
-    return res.choices[0].text
+    return res['choices'][0]['message']['content']
 
 
 @ app.route("/past_entries/<date>")
