@@ -106,7 +106,7 @@ def get_response():
         messages=[
             {"role": "system", "content": "You are a therapist."},
             {"role": "user", "content": input_text}],
-        max_tokens=50,
+        max_tokens=20,
         temperature=0,
     )
 
