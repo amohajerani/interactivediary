@@ -23,6 +23,7 @@ oauth = OAuth(app)
 
 oauth.register(
     "auth0",
+    authorize_url="https://auth.thegagali.com",
     client_id=env.get("AUTH0_CLIENT_ID"),
     client_secret=env.get("AUTH0_CLIENT_SECRET"),
     client_kwargs={

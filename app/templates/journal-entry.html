@@ -5,7 +5,7 @@
 
 {% block content %}
     <div>
-        <h4>{{ date }} entry</h4>
+        <h4>{{ date }}</h4>
         {% for entry in entries %}
         <p style="{% if entry['bot'] %}font-style: italic;background-color: lightgray;{% endif %}">
             {{ entry['txt'] }}
