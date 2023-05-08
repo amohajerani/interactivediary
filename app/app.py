@@ -2,15 +2,12 @@
 Python Flask WebApp Auth0 integration example
 """
 
-import json
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
-import os
 from authlib.integrations.flask_client import OAuth
 from dotenv import find_dotenv, load_dotenv
 from flask import Flask, redirect, render_template, session, request, Response, url_for, send_file
-from mongo import get_username, insert_chat, get_past_entry_dates, get_entries
-import datetime
+import orm
 import openai
 from threading import Thread
 
@@ -43,15 +40,14 @@ def require_auth(func):
             return redirect('/login')
     wrapper.__name__ = func.__name__
     return wrapper
-# Controllers API
 
 
 @app.route("/")
 def home():
     if not session.get('user'):
         return render_template('landing.html')
-    dates = get_past_entry_dates(
-        username=get_username(session['user']['userinfo']['email']))
+    dates = orm.get_past_entry_dates(
+        username=orm.get_username(session['user']['userinfo']['email']))
     return render_template('home.html', dates=dates)
 
 
@@ -95,10 +91,10 @@ def chat():
 @app.route('/get_response', methods=['POST'])
 def get_response():
 
-    username = get_username(session['user']['userinfo']['email'])
+    username = orm.get_username(session['user']['userinfo']['email'])
     input_text = request.form['input_text']
 
-    thread_input_txt = Thread(target=insert_chat, args=(
+    thread_input_txt = Thread(target=orm.insert_chat, args=(
         username, input_text, False))
     thread_input_txt.start()
     res = openai.ChatCompletion.create(
@@ -110,7 +106,7 @@ def get_response():
         temperature=0,
     )
 
-    thread_output_txt = Thread(target=insert_chat, args=(
+    thread_output_txt = Thread(target=orm.insert_chat, args=(
         username, res['choices'][0]['message']['content'], True))
     thread_output_txt.start()
     return res['choices'][0]['message']['content']
@@ -119,8 +115,8 @@ def get_response():
 @ app.route("/past_entries/<date>")
 @ require_auth
 def past_entries(date):
-    username = get_username(session['user']['userinfo']['email'])
-    entries = get_entries(date, username)
+    username = orm.get_username(session['user']['userinfo']['email'])
+    entries = orm.get_entries(date, username)
     return render_template('journal-entry.html', entries=entries, date=date)
 
 
