@@ -23,7 +23,6 @@ oauth = OAuth(app)
 
 oauth.register(
     "auth0",
-    authorize_url="https://auth.thegagali.com",
     client_id=env.get("AUTH0_CLIENT_ID"),
     client_secret=env.get("AUTH0_CLIENT_SECRET"),
     client_kwargs={
@@ -45,7 +44,7 @@ def require_auth(func):
 
 @app.route("/")
 def home():
-    if not session.get('user'):
+    if not session.get('user', None):
         return render_template('landing.html')
     dates = orm.get_past_entry_dates(
         username=orm.get_username(session['user']['userinfo']['email']))
