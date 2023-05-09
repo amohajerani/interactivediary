@@ -9,6 +9,7 @@ from dotenv import find_dotenv, load_dotenv
 from flask import Flask, redirect, render_template, session, request, Response, url_for, send_file
 import orm
 import openai
+import data
 from threading import Thread
 
 ENV_FILE = find_dotenv()
@@ -47,7 +48,7 @@ def home():
     if not session.get('user', None):
         return render_template('landing.html')
     dates = orm.get_past_entry_dates(
-        username=orm.get_username(session['user']['userinfo']['email']))
+        user_id=session['user']['user_id'])
     return render_template('home.html', dates=dates)
 
 
@@ -55,6 +56,8 @@ def home():
 def callback():
     token = oauth.auth0.authorize_access_token()
     session["user"] = token
+    session['user']['user_id'] = data.get_user_id(
+        session['user']['userinfo']['sub'])
     return redirect("/")
 
 
@@ -83,19 +86,19 @@ def logout():
 
 
 @app.route("/chat")
-# @require_auth
+@require_auth
 def chat():
     return render_template('chat.html')
 
 
 @app.route('/get_response', methods=['POST'])
+@require_auth
 def get_response():
 
-    username = orm.get_username(session['user']['userinfo']['email'])
     input_text = request.form['input_text']
 
     thread_input_txt = Thread(target=orm.insert_chat, args=(
-        username, input_text, False))
+        session['user']['user_id'], input_text, 'user'))
     thread_input_txt.start()
     res = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
@@ -107,7 +110,7 @@ def get_response():
     )
 
     thread_output_txt = Thread(target=orm.insert_chat, args=(
-        username, res['choices'][0]['message']['content'], True))
+        session['user']['user_id'], res['choices'][0]['message']['content'], 'bot'))
     thread_output_txt.start()
     return res['choices'][0]['message']['content']
 
@@ -115,8 +118,7 @@ def get_response():
 @ app.route("/past_entries/<date>")
 @ require_auth
 def past_entries(date):
-    username = orm.get_username(session['user']['userinfo']['email'])
-    entries = orm.get_entries(date, username)
+    entries = orm.get_entries(date, session['user']['user_id'])
     return render_template('journal-entry.html', entries=entries, date=date)
 
 
