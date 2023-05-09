@@ -58,6 +58,7 @@ def callback():
     session["user"] = token
     session['user']['user_id'] = data.get_user_id(
         session['user']['userinfo']['sub'])
+    print('session: ', session)
     return redirect("/")
 
 
