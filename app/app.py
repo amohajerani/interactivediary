@@ -86,16 +86,11 @@ def logout():
     )
 
 
-@app.route("/chat")
+@app.route("/chat",  methods=['POST', 'GET'])
 @require_auth
 def chat():
-    return render_template('chat.html')
-
-
-@app.route('/get_response', methods=['POST'])
-@require_auth
-def get_response():
-
+    if request.method == 'GET':
+        return render_template('chat.html')
     input_text = request.form['input_text']
 
     thread_input_txt = Thread(target=orm.insert_chat, args=(
