@@ -91,6 +91,7 @@ def logout():
 def chat():
     if request.method == 'GET':
         return render_template('chat.html')
+
     input_text = request.form['input_text']
 
     thread_input_txt = Thread(target=orm.insert_chat, args=(
