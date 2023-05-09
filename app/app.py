@@ -48,6 +48,7 @@ def home():
         return render_template('landing.html')
     dates = orm.get_past_entry_dates(
         username=orm.get_username(session['user']['userinfo']['email']))
+    print('session: ', session)
     return render_template('home.html', dates=dates)
 
 
@@ -83,12 +84,13 @@ def logout():
 
 
 @app.route("/chat")
-# @require_auth
+@require_auth
 def chat():
     return render_template('chat.html')
 
 
 @app.route('/get_response', methods=['POST'])
+@require_auth
 def get_response():
 
     username = orm.get_username(session['user']['userinfo']['email'])
