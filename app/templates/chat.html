@@ -106,7 +106,7 @@
         function sendMessage() {
           var inputText = document.getElementById('input_text').value;
           addMessage(inputText, true);
-          $.post('/chat', $('#message_form').serialize(), function(responseText) {
+          $.post('/get_response', $('#message_form').serialize(), function(responseText) {
             addMessage(responseText, false);
           });
           document.getElementById('input_text').value = '';

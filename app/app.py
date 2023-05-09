@@ -58,7 +58,6 @@ def callback():
     session["user"] = token
     session['user']['user_id'] = data.get_user_id(
         session['user']['userinfo']['sub'])
-    print('session: ', session)
     return redirect("/")
 
 
@@ -86,11 +85,15 @@ def logout():
     )
 
 
-@app.route("/chat",  methods=['POST', 'GET'])
+@app.route("/chat", methods=['POST', 'GET'])
 @require_auth
 def chat():
-    if request.method == 'GET':
-        return render_template('chat.html')
+    return render_template('chat.html')
+
+
+@app.route('/get_response', methods=['POST'])
+@require_auth
+def get_response():
 
     input_text = request.form['input_text']
 
