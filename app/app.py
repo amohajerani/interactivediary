@@ -12,6 +12,7 @@ import openai
 import data
 from threading import Thread
 import json
+import time
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -87,7 +88,7 @@ def logout():
 
 
 @app.route("/chat")
-@require_auth
+# @require_auth
 def chat():
     return render_template('chat.html')
 
@@ -96,32 +97,36 @@ def chat():
 @require_auth
 def get_response():
     # get the payload
+    start = time.time()
     req_data = request.get_json()
     user_text = req_data['msg']
     chat_history = req_data['history']
+    print('step 1: ', time.time()-start)
 
     # store the user input to db
     thread_input_txt = Thread(target=orm.insert_chat, args=(
         session['user']['user_id'], user_text, 'user'))
     thread_input_txt.start()
-
+    print('step 2: ', time.time()-start)
     # get response from the bot
     messages = [{'role': 'system',
                  "content": "You help me write a better diary journal by providing brief and thoughtful prompts. Be brief"}]
     messages.extend(chat_history)
     messages.append({'role': 'user', 'content': user_text})
-
+    print('step 3: ', time.time()-start)
     res = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=messages,
         max_tokens=200,
         temperature=0,
     )
+    print('step 4: ', time.time()-start)
 
     # store the bot's response to the db
     thread_output_txt = Thread(target=orm.insert_chat, args=(
         session['user']['user_id'], res['choices'][0]['message']['content'], 'bot'))
     thread_output_txt.start()
+    print('step 5: ', time.time()-start)
     return res['choices'][0]['message']['content']
 
 

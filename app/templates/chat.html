@@ -2,6 +2,18 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    crossorigin="anonymous"
+  />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Chat with AI</title>
     <style>
       body {
@@ -87,12 +99,8 @@
   </button>
   <div class="collapse navbar-collapse" id="navbar">
     <div class="navbar-nav">
-      {% if session %}
       <a class="nav-item nav-link" id="home" href="/">Home</a>
       <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-      {% else %}
-      <a class="nav-item nav-link" id="login" href="/login">Login or sign up</a>
-      {% endif %}
     </div>
   </div>
 </nav>
