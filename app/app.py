@@ -11,6 +11,7 @@ import orm
 import openai
 import data
 from threading import Thread
+import json
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -94,21 +95,30 @@ def chat():
 @app.route('/get_response', methods=['POST'])
 @require_auth
 def get_response():
+    # get the payload
+    req_data = request.get_json()
+    user_text = req_data['msg']
+    chat_history = req_data['history']
 
-    input_text = request.form['input_text']
-
+    # store the user input to db
     thread_input_txt = Thread(target=orm.insert_chat, args=(
-        session['user']['user_id'], input_text, 'user'))
+        session['user']['user_id'], user_text, 'user'))
     thread_input_txt.start()
+
+    # get response from the bot
+    messages = [{'role': 'system',
+                 "content": "You help me write a better diary journal by providing brief and thoughtful prompts. Be brief"}]
+    messages.extend(chat_history)
+    messages.append({'role': 'user', 'content': user_text})
+
     res = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a therapist."},
-            {"role": "user", "content": input_text}],
-        max_tokens=20,
+        messages=messages,
+        max_tokens=200,
         temperature=0,
     )
 
+    # store the bot's response to the db
     thread_output_txt = Thread(target=orm.insert_chat, args=(
         session['user']['user_id'], res['choices'][0]['message']['content'], 'bot'))
     thread_output_txt.start()
