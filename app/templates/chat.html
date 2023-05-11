@@ -113,7 +113,7 @@
   if (message === "") return;
   document.getElementById("message").value = "";
 
-  fetch("/get", {
+  fetch("/get_response", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
