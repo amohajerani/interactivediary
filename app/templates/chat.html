@@ -1,116 +1,143 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <title>Chatbot</title>
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-        crossorigin="anonymous"
-      />
-      <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-        crossorigin="anonymous"
-      />
-      <style>
-        .chatbox {
-          border: 1px solid black;
-          height: 400px;
-          overflow-y: scroll;
-          padding: 10px;
-        }
-        .message {
-          margin-bottom: 10px;
-          text-align: center;
-        }
-        .user {
-          font-weight: bold;
-          height: 80px;
-          width: 80%;
-          margin: auto;
-          display: block;
-          border-radius: 15px;
-          border: 1px solid #ccc;
-          padding: 10px;
-        }
-        .bot {
-          background-color: #f2f2f2;
-          height: 40px;
-          width: 80%;
-          margin: auto;
-          display: block;
-          border-radius: 15px;
-          border: 1px solid #ccc;
-          padding: 10px;
-        }
-        #input_text {
-          height: 80px;
-          width: 80%;
-          margin: auto;
-          display: block;
-          border-radius: 15px;
-          border: 1px solid #ccc;
-          padding: 10px;
-        }
-        #submit_button {
-          margin: 10px auto;
-          display: block;
-        }
-      </style>
-    </head>
-    <body>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a href="/"><h3>GAGALI</h3></a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbar"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbar">
-        <div class="navbar-nav">
-          {% if session %}
-          <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-          {% else %}
-          <a class="nav-item nav-link" id="login" href="/login">Login or sign up</a>
-          {% endif %}
-        </div>
-      </div>
-    </nav>
-      <div class="chatbox" id="chatbox">
-      </div>
-      <form id="message_form" method="POST" onsubmit="return sendMessage();">
-        <textarea id="input_text" name="input_text"></textarea>
-        <input type="submit" value="Send" id="submit_button">
-      </form>
-      <script>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chat with AI</title>
+    <style>
+      body {
+        background-color: #f5f5f5;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+      }
+      #chat-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 600px;
+    padding: 20px;
+  }
 
-        function addMessage(message, isUser=false) {
-          var chatbox = document.getElementById('chatbox');
-          var messageClass = isUser ? 'user' : 'bot';
-          var messageElement = document.createElement('div');
-          messageElement.classList.add('message', messageClass);
-          messageElement.textContent = message;
-          chatbox.appendChild(messageElement);
-          chatbox.scrollTop = chatbox.scrollHeight;
-        }
-  
-        function sendMessage() {
-          var inputText = document.getElementById('input_text').value;
-          addMessage(inputText, true);
-          $.post('/get_response', $('#message_form').serialize(), function(responseText) {
-            addMessage(responseText, false);
-          });
-          document.getElementById('input_text').value = '';
-          return false;
-        }
-      </script>
-    </body>
-  </html>
+  #chat-history p {
+    margin: 0 0 10px;
+  }
+
+  #chat-message {
+    margin-top: 20px;
+  }
+
+  #message {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: block;
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  #message:focus {
+    outline: none;
+  }
+
+  button {
+    background-color: #4caf50;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px;
+    margin-left: 10px;
+  }
+
+  button:hover {
+    background-color: #3e8e41;
+  }
+
+  #history p {
+    margin: 0 0 10px;
+  }
+
+  #history p strong {
+    font-weight: bold;
+  }
+
+  #history p.user {
+    color: #2196f3;
+  }
+
+  #history p.bot {
+    color: #f44336;
+  }
+</style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a href="/"><h3>GAGALI</h3></a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbar"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbar">
+    <div class="navbar-nav">
+      {% if session %}
+      <a class="nav-item nav-link" id="home" href="/">Home</a>
+      <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+      {% else %}
+      <a class="nav-item nav-link" id="login" href="/login">Login or sign up</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+  <div id="chat-box">
+    <div id="chat-history">
+      <p>Chat History:</p>
+      <div id="history"></div>
+    </div>
+    <div id="chat-message">
+      <textarea id="message"></textarea>
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+  <script>
+    let chatHistory = [];
+    function sendMessage() {
+  const message = document.getElementById("message").value.trim();
+  if (message === "") return;
+  document.getElementById("message").value = "";
+
+  fetch("/get", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ msg: message, history: chatHistory })
+  })
+  .then(response => response.text())
+  .then(response => {
+    appendMessageToHistory("user", message);
+    appendMessageToHistory("assistant", response);
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });
+}
+
+  function appendMessageToHistory(role, content) {
+    chatHistory.push({ role, content });
+    let historyHTML = "";
+    for (const message of chatHistory) {
+      historyHTML += `<p class="${message.role}"><strong>${message.role === "user" ? "User" : "AI"}:</strong> ${message.content}</p>`;
+    }
+    document.getElementById("history").innerHTML = historyHTML;
+  }
+</script>
+  </body>
+</html> 
