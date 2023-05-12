@@ -169,7 +169,7 @@ def subscription_entry(encoded_email, date):
     if not subscription_user or subscriber_email not in subscription_user['subscribers']:
         return 'you are not allowed'
     entries = orm.get_entries(date, str(subscription_user['_id']))
-    return render_template('journal-entry-subscription.html', entries=entries, date=date, email=subscription_email)
+    return render_template('journal-entry-subscription.html', entries=entries, date=date, email=subscription_email, encoded_email=urllib.parse.quote(subscription_email))
 
 
 if __name__ == "__main__":

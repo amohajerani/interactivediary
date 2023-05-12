@@ -5,7 +5,7 @@
     <h6>Your journal from prior days</h6>
     <ul>
       {% for date in dates %}
-      <li><a href="/subscription/past_entry/{{encodeURIComponent(email)}}/{{date}}">{{date}}</a></li>
+      <li><a href="/subscription/past_entry/{{encoded_email}}/{{date}}">{{date}}</a></li>
       {% endfor %}
     </ul>
   </div>
