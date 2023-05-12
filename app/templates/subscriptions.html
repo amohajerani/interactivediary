@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Subscriber List</title>
-</head>
-<body>
+{% extends "base.html" %} {% block title %}Past entries{% endblock %} {% block content %}
+<div class="content">
 	<h1>Subscriber List</h1>
 	
 	<!-- Subscriber list -->
@@ -102,5 +98,5 @@
 			.catch(error => console.log(error));
 		}
 	</script>
-</body>
-</html>
+</div>
+{% endblock %}
