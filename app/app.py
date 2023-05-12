@@ -160,5 +160,17 @@ def subscription_content(encoded_email):
     return render_template('home_subscription.html', dates=dates, email=subscription_email)
 
 
+@app.route('/subscription/past_entry/<encoded_email>/<date>')
+@require_auth
+def subscription_entry(encoded_email, date):
+    subscription_email = urllib.parse.unquote(encoded_email)
+    subscriber_email = session['user']['userinfo']['email']
+    subscription_user = orm.Users.find_one({'email': subscription_email})
+    if not subscription_user or subscriber_email not in subscription_user['subscribers']:
+        return 'you are not allowed'
+    entries = orm.get_entries(date, str(subscription_user['_id']))
+    return render_template('journal-entry-subscription.html', entries=entries, date=date, email=subscription_email)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)
