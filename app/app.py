@@ -112,7 +112,7 @@ def get_log0():
 
 
 @app.route('/subscriptions')
-@require_auth
+# @require_auth
 def subscriptions():
     return render_template('subscriptions.html')
 

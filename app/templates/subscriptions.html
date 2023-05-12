@@ -30,9 +30,10 @@
 			.then(subscriptions => {
 				const subscriptionList = document.querySelector('#subscription-list');
 				subscriptions.forEach(subscription => {
+					console.log('subscription: ',subscription)
 					const listItem = document.createElement('li');
 					const link = document.createElement('a');
-					const encodgetedSubscription = encodeURIComponent(subscription);
+					const encodedSubscription = encodeURIComponent(subscription);
       				link.href = '/subscription/' + encodedSubscription;
       				link.textContent = subscription;
 					listItem.appendChild(link);
