@@ -7,7 +7,14 @@
 	<ul id="subscriber-list">
 		<!-- List items will be added dynamically via JavaScript -->
 	</ul>
-	
+
+	<!-- Subscription list -->
+	<h2>Current Subscriptions:</h2>
+	<ul id="subscription-list">
+		<!-- List items will be added dynamically via JavaScript -->
+	</ul>
+
+
 	<!-- Add new subscriber form -->
 	<h2>Add New Subscriber:</h2>
 	<form id="subscribe-form">
@@ -17,6 +24,25 @@
 	</form>
 	
 	<script>
+		// Fetch initial list of subscriptions
+		fetch('/get-subscriptions')
+			.then(response => response.json())
+			.then(subscriptions => {
+				const subscriptionList = document.querySelector('#subscription-list');
+				subscriptions.forEach(subscription => {
+					const listItem = document.createElement('li');
+					const link = document.createElement('a');
+					const encodedSubscription = encodeURIComponent(subscription);
+      				link.href = '/subscription/' + encodedSubscription;
+      				link.textContent = subscription;
+					
+					subscriptionList.appendChild(listItem);
+				});
+			})
+			.catch(error => console.log(error));
+
+
+
 		// Fetch initial list of subscribers
 		fetch('/get-subscribers')
 			.then(response => response.json())

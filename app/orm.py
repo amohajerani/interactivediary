@@ -20,8 +20,8 @@ def insert_chat(user_id, txt, agent):
         {'txt': txt, 'agent': agent, 'user_id': user_id, 'time': datetime.datetime.now(), 'date': datetime.date.today().strftime('%Y-%m-%d')})
 
 
-def get_past_entry_dates(user_id):
-    dates = Chats.distinct('date', {'user_id': user_id})
+def get_past_entry_dates(email):
+    dates = Chats.distinct('date', {'email': email})
     dates.sort(reverse=True)
     return dates
 

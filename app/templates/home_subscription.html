@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block title %}Past entries{% endblock %} {% block content %}
+<div class="content">
+  <div>
+    <h3> {{email}} </h3>
+    <h6>Your journal from prior days</h6>
+    <ul>
+      {% for date in dates %}
+      <li><a href="/past_entries/{{date}}">{{date}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

@@ -9,7 +9,7 @@ from dotenv import find_dotenv, load_dotenv
 from flask import redirect, render_template, session, request, Response, url_for, send_file
 import orm
 import data
-
+import urllib.parse
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -44,7 +44,7 @@ def home():
     if not session.get('user', None):
         return render_template('landing.html')
     dates = orm.get_past_entry_dates(
-        user_id=session['user']['user_id'])
+        email=session['user']['userinfo']['email'])
     return render_template('home.html', dates=dates)
 
 
@@ -140,6 +140,21 @@ def add_subscriber():
 @require_auth
 def get_subscribers():
     return data.get_subscribers(session['user']['user_id'])
+
+
+@app.route('/get-subscriptions')
+@require_auth
+def get_subscriptions():
+    return data.get_subscriptions(session['user']['user_id'])
+
+
+@app.route('/subscription/<encoded_email>')
+@require_auth
+def subscription_content(encoded_email):
+    email = urllib.parse.unquote(encoded_email)
+    dates = orm.get_past_entry_dates(
+        email=urllib.parse.unquote(encoded_email))
+    return render_template('home_subscription.html', dates=dates, email=email)
 
 
 if __name__ == "__main__":
