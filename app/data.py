@@ -22,7 +22,8 @@ openai.api_key = env.get("OPENAI_KEY")
 
 
 def get_user_id(id):
-    id = id.replace('auth0|', '')
+    if '|' in id:
+        return id.split('|')[1]
     return id
 
 
