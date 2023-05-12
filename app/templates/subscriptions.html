@@ -32,10 +32,10 @@
 				subscriptions.forEach(subscription => {
 					const listItem = document.createElement('li');
 					const link = document.createElement('a');
-					const encodedSubscription = encodeURIComponent(subscription);
+					const encodgetedSubscription = encodeURIComponent(subscription);
       				link.href = '/subscription/' + encodedSubscription;
       				link.textContent = subscription;
-					
+					listItem.appendChild(link);
 					subscriptionList.appendChild(listItem);
 				});
 			})
