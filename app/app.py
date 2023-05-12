@@ -132,10 +132,10 @@ def add_subscriber():
     return render_template('subscriptions.html')
 
 
-@app.route('/get-subscriber')
+@app.route('/get-subscribers')
 # @require_auth
-def get_subscriber():
-    return data.get_subscriber(session['user']['user_id'])
+def get_subscribers():
+    return data.get_subscribers(session['user']['user_id'])
 
 
 if __name__ == "__main__":

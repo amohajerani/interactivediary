@@ -86,5 +86,5 @@ def add_subscriber(req_data, publisher_user_id, publisher_email):
         upsert=True)
 
 
-def get_subscriber():
+def get_subscribers(user_id):
     return ['a', 'b']
