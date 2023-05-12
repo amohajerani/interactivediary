@@ -64,7 +64,7 @@ def get_response(req_data, user_id, store=True):
 
 
 def remove_subscriber(req_data, publisher_user_id):
-    subscriber_email = req_data.form['email']
+    subscriber_email = req_data['email']
     publisher_email = orm.Users.find_one(
         {'_id': ObjectId(publisher_user_id)})['email']
     orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
@@ -77,7 +77,7 @@ def remove_subscriber(req_data, publisher_user_id):
 
 
 def add_subscriber(req_data, publisher_user_id):
-    subscriber_email = req_data.form['email']
+    subscriber_email = req_data['email']
     publisher_email = orm.Users.find_one(
         {'_id': ObjectId(publisher_user_id)})['email']
     orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
