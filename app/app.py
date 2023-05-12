@@ -153,10 +153,10 @@ def get_subscriptions():
 def subscription_content(encoded_email):
     subscriber_email = session['user']['userinfo']['email']
     email = urllib.parse.unquote(encoded_email)
-    subscription_user_id = orm.Users.find_one({'email': email})
-    if not subscription_user_id or subscriber_email not in subscription_user_id['subscribers']:
+    subscription_user = orm.Users.find_one({'email': email})
+    if not subscription_user or subscriber_email not in subscription_user['subscribers']:
         return 'you are not allowed'
-    dates = orm.get_past_entry_dates(user_id=subscription_user_id)
+    dates = orm.get_past_entry_dates(user_id=subscription_user['email'])
     return render_template('home_subscription.html', dates=dates, email=email)
 
 
