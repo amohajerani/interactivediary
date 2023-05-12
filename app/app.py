@@ -44,7 +44,7 @@ def home():
     if not session.get('user', None):
         return render_template('landing.html')
     dates = orm.get_past_entry_dates(
-        email=session['user']['userinfo']['email'])
+        user_id=session['user']['user_id'])
     return render_template('home.html', dates=dates)
 
 
@@ -151,9 +151,12 @@ def get_subscriptions():
 @app.route('/subscription/<encoded_email>')
 @require_auth
 def subscription_content(encoded_email):
+    subscriber_email = session['user']['userinfo']['email']
     email = urllib.parse.unquote(encoded_email)
-    dates = orm.get_past_entry_dates(
-        email=urllib.parse.unquote(encoded_email))
+    subscription_user_id = orm.Users.find_one({'email': email})
+    if not subscription_user_id or subscriber_email not in subscription_user_id['subscribers']:
+        return render_template('subscriptions.html')
+    dates = orm.get_past_entry_dates(user_id=subscription_user_id)
     return render_template('home_subscription.html', dates=dates, email=email)
 
 
