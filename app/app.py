@@ -119,14 +119,16 @@ def subscriptions():
 @app.route('/remove-subscriber', methods=['POST'])
 # @require_auth
 def remove_subscriber():
-    data.remove_subscriber(request.form, session['user']['user_id'])
+    data.remove_subscriber(
+        request.form, session['user']['user_id'], session['user']['email'])
     return render_template('subscriptions.html')
 
 
 @app.route('/add-subscriber', methods=['POST'])
 # @require_auth
 def add_subscriber():
-    data.add_subscriber(request.form, session['user']['user_id'])
+    data.add_subscriber(
+        request.form, session['user']['user_id'], session['user']['email'])
     return render_template('subscriptions.html')
 
 

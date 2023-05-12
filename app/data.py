@@ -63,10 +63,8 @@ def get_response(req_data, user_id, store=True):
     return res['choices'][0]['message']['content']
 
 
-def remove_subscriber(req_data, publisher_user_id):
+def remove_subscriber(req_data, publisher_user_id, publisher_email):
     subscriber_email = req_data['email']
-    publisher_email = orm.Users.find_one(
-        {'_id': ObjectId(publisher_user_id)})['email']
     orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
         "$pull": {"subscribers": subscriber_email}},
         upsert=True)
@@ -76,10 +74,9 @@ def remove_subscriber(req_data, publisher_user_id):
         upsert=True)
 
 
-def add_subscriber(req_data, publisher_user_id):
+def add_subscriber(req_data, publisher_user_id, publisher_email):
     subscriber_email = req_data['email']
-    publisher_email = orm.Users.find_one(
-        {'_id': ObjectId(publisher_user_id)})['email']
+
     orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
         "$push": {"subscribers": subscriber_email}},
         upsert=True)
