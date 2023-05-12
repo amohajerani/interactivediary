@@ -110,5 +110,13 @@ def get_log0():
     return send_file('./images/gagalilogo.jpg', mimetype='image/jpg')
 
 
+@app.route('/subscriptions', methods=['GET', 'POST'])
+# @require_auth
+def subscriptions():
+    if request.method == 'POST':
+        data.update_subscriptions(request.json, session['user']['user_id'])
+    return render_template('subscriptions.html')
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)

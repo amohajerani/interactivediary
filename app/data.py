@@ -4,6 +4,7 @@ import openai
 import orm
 from dotenv import find_dotenv, load_dotenv
 from os import environ as env
+from bson.objectid import ObjectId
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -60,3 +61,34 @@ def get_response(req_data, user_id, store=True):
             user_id, res['choices'][0]['message']['content'], 'bot'))
         thread_output_txt.start()
     return res['choices'][0]['message']['content']
+
+
+def update_subscription(req_data, publisher_user_id):
+    '''
+    We have publisheres and subscribers. Publisher write a diary and subscribers read it
+    For now only the publisher can take action. Maybe in future, I add subscribers too.
+    '''
+    subscriber_email = req_data['email']
+    action = req_data['action']
+    publisher_email = orm.Users.find_one(
+        {'_id': ObjectId(publisher_user_id)})['email']
+
+    # to remove a subscriber, so they cannot see your content
+    if action == 'remove':
+        orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
+                             "$pull": {"subscribers": subscriber_email}},
+                             upsert=True)
+
+        orm.Users.update_one({"email": subscriber_email}, {
+                             "$pull": {"subscriptions": publisher_email}},
+                             upsert=True)
+
+    # to add a subscriber, so they see your content
+    if action == 'add':
+        orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
+                             "$push": {"subscribers": subscriber_email}},
+                             upsert=True)
+
+        orm.Users.update_one({"email": subscriber_email}, {
+                             "$push": {"subscriptions": publisher_email}},
+                             upsert=True)
