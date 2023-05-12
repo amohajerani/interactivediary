@@ -155,7 +155,7 @@ def subscription_content(encoded_email):
     email = urllib.parse.unquote(encoded_email)
     subscription_user_id = orm.Users.find_one({'email': email})
     if not subscription_user_id or subscriber_email not in subscription_user_id['subscribers']:
-        return render_template('subscriptions.html')
+        return 'you are not allowed'
     dates = orm.get_past_entry_dates(user_id=subscription_user_id)
     return render_template('home_subscription.html', dates=dates, email=email)
 
