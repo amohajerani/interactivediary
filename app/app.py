@@ -132,5 +132,11 @@ def add_subscriber():
     return render_template('subscriptions.html')
 
 
+@app.route('/get-subscriber')
+# @require_auth
+def get_subscriber():
+    return data.get_subscriber(session['user']['user_id'])
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)

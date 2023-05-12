@@ -84,3 +84,7 @@ def add_subscriber(req_data, publisher_user_id, publisher_email):
     orm.Users.update_one({"email": subscriber_email}, {
         "$push": {"subscriptions": publisher_email}},
         upsert=True)
+
+
+def get_subscriber():
+    return ['a', 'b']
