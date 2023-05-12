@@ -131,6 +131,7 @@ def remove_subscriber():
 def add_subscriber():
     data.add_subscriber(
         request.form, session['user']['user_id'], session['user']['userinfo']['email'])
+
     return render_template('subscriptions.html')
 
 

@@ -74,6 +74,9 @@ def remove_subscriber(req_data, publisher_user_id, publisher_email):
 
 def add_subscriber(req_data, publisher_user_id, publisher_email):
     subscriber_email = req_data['email']
+    subscriber_exists = orm.Users.find_one({'email': subscriber_email})
+    if not subscriber_exists:
+        return
 
     orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
         "$push": {"subscribers": subscriber_email}})
