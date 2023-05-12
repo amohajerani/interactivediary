@@ -128,10 +128,12 @@ def remove_subscriber():
 @app.route('/add-subscriber', methods=['POST'])
 @require_auth
 def add_subscriber():
-    data.add_subscriber(
+    success = data.add_subscriber(
         request.form, session['user']['user_id'], session['user']['userinfo']['email'])
 
-    return render_template('subscriptions.html')
+    if success:
+        return request.form.get('email')
+    return ''
 
 
 @app.route('/get-subscribers')
