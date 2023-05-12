@@ -66,28 +66,30 @@ def get_response(req_data, user_id, store=True):
 def remove_subscriber(req_data, publisher_user_id, publisher_email):
     subscriber_email = req_data['email']
     orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
-        "$pull": {"subscribers": subscriber_email}},
-        upsert=True)
+        "$pull": {"subscribers": subscriber_email}})
 
     orm.Users.update_one({"email": subscriber_email}, {
-        "$pull": {"subscriptions": publisher_email}},
-        upsert=True)
+        "$pull": {"subscriptions": publisher_email}})
 
 
 def add_subscriber(req_data, publisher_user_id, publisher_email):
     subscriber_email = req_data['email']
 
     orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
-        "$push": {"subscribers": subscriber_email}},
-        upsert=True)
+        "$push": {"subscribers": subscriber_email}})
 
     orm.Users.update_one({"email": subscriber_email}, {
-        "$push": {"subscriptions": publisher_email}},
-        upsert=True)
+        "$push": {"subscriptions": publisher_email}})
 
 
 def get_subscribers(user_id):
     user = orm.Users.find_one({'_id': ObjectId(user_id)})
-    if user and user.get('subscribers'):
-        return user['subscribers']
-    return []
+    return user['subscribers']
+
+
+def create_user(user_id, email):
+    user = orm.Users.find_one({'_id': ObjectId(user_id)})
+    if user:
+        return
+    orm.Users.insert_one({'_id': ObjectId(
+        user_id), 'email': email, 'subscriptions': [], 'subscribers': []})

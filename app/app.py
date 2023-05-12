@@ -54,6 +54,8 @@ def callback():
     session["user"] = token
     session['user']['user_id'] = data.get_user_id(
         session['user']['userinfo']['sub'])
+    data.create_user(session['user']['user_id'],
+                     session['user']['userinfo']['email'])
     return redirect("/")
 
 
@@ -111,13 +113,13 @@ def get_log0():
 
 
 @app.route('/subscriptions')
-# @require_auth
+@require_auth
 def subscriptions():
     return render_template('subscriptions.html')
 
 
 @app.route('/remove-subscriber', methods=['POST'])
-# @require_auth
+@require_auth
 def remove_subscriber():
     data.remove_subscriber(
         request.form, session['user']['user_id'], session['user']['userinfo']['email'])
@@ -125,7 +127,7 @@ def remove_subscriber():
 
 
 @app.route('/add-subscriber', methods=['POST'])
-# @require_auth
+@require_auth
 def add_subscriber():
     data.add_subscriber(
         request.form, session['user']['user_id'], session['user']['userinfo']['email'])
@@ -133,7 +135,7 @@ def add_subscriber():
 
 
 @app.route('/get-subscribers')
-# @require_auth
+@require_auth
 def get_subscribers():
     return data.get_subscribers(session['user']['user_id'])
 
