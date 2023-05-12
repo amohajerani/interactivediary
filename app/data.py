@@ -21,10 +21,13 @@ def init_app():
 openai.api_key = env.get("OPENAI_KEY")
 
 
-def get_user_id(id):
-    if '|' in id:
-        return id.split('|')[1]
-    return id
+def get_user_id(email):
+    user = orm.Users.find_one({'email': email})
+    if user:
+        return str(user['_id'])
+    user = orm.Users.insert_one(
+        {'email': email, 'subscriptions': [], 'subscribers': []})
+    return str(user.inserted_id)
 
 
 def get_response(req_data, user_id, store=True):
@@ -89,11 +92,3 @@ def add_subscriber(req_data, publisher_user_id, publisher_email):
 def get_subscribers(user_id):
     user = orm.Users.find_one({'_id': ObjectId(user_id)})
     return user['subscribers']
-
-
-def create_user(user_id, email):
-    user = orm.Users.find_one({'_id': ObjectId(user_id)})
-    if user:
-        return
-    orm.Users.insert_one({'_id': ObjectId(
-        user_id), 'email': email, 'subscriptions': [], 'subscribers': []})

@@ -53,9 +53,8 @@ def callback():
     token = oauth.auth0.authorize_access_token()
     session["user"] = token
     session['user']['user_id'] = data.get_user_id(
-        session['user']['userinfo']['sub'])
-    data.create_user(session['user']['user_id'],
-                     session['user']['userinfo']['email'])
+        session['user']['userinfo']['email'])
+
     return redirect("/")
 
 
