@@ -87,4 +87,7 @@ def add_subscriber(req_data, publisher_user_id, publisher_email):
 
 
 def get_subscribers(user_id):
-    return ['a', 'b']
+    user = orm.Users.find_one({'_id': ObjectId(user_id)})
+    if user and user.get('subscribers'):
+        return user['subscribers']
+    return []
