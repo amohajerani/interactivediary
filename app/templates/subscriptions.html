@@ -54,52 +54,53 @@
 			emailInput.value = '';
 		});
 		
-		// Function to add subscriber via AJAX request
+		// Function to add subscriber
 		function addSubscriber(email) {
-			const xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState === XMLHttpRequest.DONE) {
-					if (xhr.status === 200) {
-						const subscriber = xhr.responseText;
-						const subscriberList = document.querySelector('#subscriber-list');
-						const listItem = document.createElement('li');
-						listItem.textContent = subscriber;
-						const deleteButton = document.createElement('button');
-						deleteButton.classList.add('delete-button');
-						deleteButton.dataset.email = subscriber;
-						deleteButton.textContent = 'Delete';
-						deleteButton.addEventListener('click', event => {
-							const email = deleteButton.dataset.email;
-							const listItem = deleteButton.parentElement;
-							removeSubscriber(email, listItem);
-						});
-						listItem.appendChild(deleteButton);
-						subscriberList.appendChild(listItem);
-					} else {
-						console.log('Error adding subscriber');
-					}
-				}
-			};
-			xhr.open('POST', '/add-subscriber');
-			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-			xhr.send(`email=${encodeURIComponent(email)}`);
+			fetch('/add-subscriber', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: `email=${encodeURIComponent(email)}`
+			})
+			.then(response => response.text())
+			.then(subscriber => {
+				const subscriberList = document.querySelector('#subscriber-list');
+				const listItem = document.createElement('li');
+				listItem.textContent = subscriber;
+				const deleteButton = document.createElement('button');
+				deleteButton.classList.add('delete-button');
+				deleteButton.dataset.email = subscriber;
+				deleteButton.textContent = 'Delete';
+				deleteButton.addEventListener('click', event => {
+					const email = deleteButton.dataset.email;
+					const listItem = deleteButton.parentElement;
+					removeSubscriber(email, listItem);
+				});
+				listItem.appendChild(deleteButton);
+				subscriberList.appendChild(listItem);
+			})
+			.catch(error => console.log(error));
 		}
 		
-		// Function to remove subscriber via AJAX request
+		// Function to remove subscriber
 		function removeSubscriber(email, listItem) {
-			const xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState === XMLHttpRequest.DONE) {
-					if (xhr.status === 200) {
-						console.log(`Deleted subscriber ${email}`);
-						listItem.remove();
-					} else {
-						console.log('Error deleting subscriber');
-					}
+			fetch('/remove-subscriber', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				body: `email=${encodeURIComponent(email)}`
+			})
+			.then(response => {
+				if (response.ok) {
+					listItem.remove();
+				} else {
+					console.log('Error removing subscriber');
 				}
-			};
-			xhr.open('POST', '/remove-subscriber');
-			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-			xhr.send(`email=${encodeURIComponent(email)}`);
+			})
+			.catch(error => console.log(error));
 		}
 	</script>
+</body>
+</html>
