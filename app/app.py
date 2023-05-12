@@ -114,7 +114,7 @@ def get_log0():
 # @require_auth
 def subscriptions():
     if request.method == 'POST':
-        data.update_subscriptions(request.json, session['user']['user_id'])
+        data.update_subscription(request.json, session['user']['user_id'])
     return render_template('subscriptions.html')
 
 
