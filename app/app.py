@@ -120,7 +120,7 @@ def subscriptions():
 # @require_auth
 def remove_subscriber():
     data.remove_subscriber(
-        request.form, session['user']['user_id'], session['user']['email'])
+        request.form, session['user']['user_id'], session['user']['userinfo']['email'])
     return render_template('subscriptions.html')
 
 
@@ -128,7 +128,7 @@ def remove_subscriber():
 # @require_auth
 def add_subscriber():
     data.add_subscriber(
-        request.form, session['user']['user_id'], session['user']['email'])
+        request.form, session['user']['user_id'], session['user']['userinfo']['email'])
     return render_template('subscriptions.html')
 
 
