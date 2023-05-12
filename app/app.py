@@ -152,12 +152,12 @@ def get_subscriptions():
 @require_auth
 def subscription_content(encoded_email):
     subscriber_email = session['user']['userinfo']['email']
-    email = urllib.parse.unquote(encoded_email)
-    subscription_user = orm.Users.find_one({'email': email})
+    subscription_email = urllib.parse.unquote(encoded_email)
+    subscription_user = orm.Users.find_one({'email': subscription_email})
     if not subscription_user or subscriber_email not in subscription_user['subscribers']:
         return 'you are not allowed'
-    dates = orm.get_past_entry_dates(user_id=subscription_user['email'])
-    return render_template('home_subscription.html', dates=dates, email=email)
+    dates = orm.get_past_entry_dates(user_id=str(subscription_user['_id']))
+    return render_template('home_subscription.html', dates=dates, email=subscription_email)
 
 
 if __name__ == "__main__":
