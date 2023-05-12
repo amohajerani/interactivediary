@@ -110,11 +110,23 @@ def get_log0():
     return send_file('./images/gagalilogo.jpg', mimetype='image/jpg')
 
 
-@app.route('/subscriptions', methods=['GET', 'POST'])
+@app.route('/subscriptions')
 # @require_auth
 def subscriptions():
-    if request.method == 'POST':
-        data.update_subscription(request.json, session['user']['user_id'])
+    return render_template('subscriptions.html')
+
+
+@app.route('/remove-subscriber', method=['POST'])
+# @require_auth
+def remove_subscriber():
+    data.remove_subscriber(request.json, session['user']['user_id'])
+    return render_template('subscriptions.html')
+
+
+@app.route('/add-subscriber', method=['POST'])
+# @require_auth
+def add_subscriber():
+    data.add_subscriber(request.json, session['user']['user_id'])
     return render_template('subscriptions.html')
 
 

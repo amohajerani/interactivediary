@@ -63,32 +63,27 @@ def get_response(req_data, user_id, store=True):
     return res['choices'][0]['message']['content']
 
 
-def update_subscription(req_data, publisher_user_id):
-    '''
-    We have publisheres and subscribers. Publisher write a diary and subscribers read it
-    For now only the publisher can take action. Maybe in future, I add subscribers too.
-    '''
+def remove_subscriber(req_data, publisher_user_id):
     subscriber_email = req_data['email']
-    action = req_data['action']
     publisher_email = orm.Users.find_one(
         {'_id': ObjectId(publisher_user_id)})['email']
+    orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
+        "$pull": {"subscribers": subscriber_email}},
+        upsert=True)
 
-    # to remove a subscriber, so they cannot see your content
-    if action == 'remove':
-        orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
-                             "$pull": {"subscribers": subscriber_email}},
-                             upsert=True)
+    orm.Users.update_one({"email": subscriber_email}, {
+        "$pull": {"subscriptions": publisher_email}},
+        upsert=True)
 
-        orm.Users.update_one({"email": subscriber_email}, {
-                             "$pull": {"subscriptions": publisher_email}},
-                             upsert=True)
 
-    # to add a subscriber, so they see your content
-    if action == 'add':
-        orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
-                             "$push": {"subscribers": subscriber_email}},
-                             upsert=True)
+def add_subscriber(req_data, publisher_user_id):
+    subscriber_email = req_data['email']
+    publisher_email = orm.Users.find_one(
+        {'_id': ObjectId(publisher_user_id)})['email']
+    orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
+        "$push": {"subscribers": subscriber_email}},
+        upsert=True)
 
-        orm.Users.update_one({"email": subscriber_email}, {
-                             "$push": {"subscriptions": publisher_email}},
-                             upsert=True)
+    orm.Users.update_one({"email": subscriber_email}, {
+        "$push": {"subscriptions": publisher_email}},
+        upsert=True)

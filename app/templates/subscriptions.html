@@ -1,13 +1,105 @@
-{% extends "base.html" %} {% block title %}Past entries{% endblock %} {% block content %}
-<div class="content">
-  <h3> Users who shared their content with you </h3>
-  <h3> Users you shared your content with </h3>
-  <h2>Subscribe to our Newsletter</h2>
-  <form action="#" method="POST">
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
-      <br>
-      <input type="submit" value="Subscribe">
-  </form>
-</div>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Subscriber List</title>
+</head>
+<body>
+	<h1>Subscriber List</h1>
+	
+	<!-- Subscriber list -->
+	<h2>Current Subscribers:</h2>
+	<ul id="subscriber-list">
+		<!-- List items will be added dynamically via JavaScript -->
+	</ul>
+	
+	<!-- Add new subscriber form -->
+	<h2>Add New Subscriber:</h2>
+	<form id="subscribe-form">
+		<label for="email">Email Address:</label>
+		<input type="email" id="email" name="email" required>
+		<button type="submit">Subscribe</button>
+	</form>
+	
+	<script>
+		// Fetch initial list of subscribers
+		fetch('/get-subscribers')
+			.then(response => response.json())
+			.then(subscribers => {
+				const subscriberList = document.querySelector('#subscriber-list');
+				subscribers.forEach(subscriber => {
+					const listItem = document.createElement('li');
+					listItem.textContent = subscriber;
+					const deleteButton = document.createElement('button');
+					deleteButton.classList.add('delete-button');
+					deleteButton.dataset.email = subscriber;
+					deleteButton.textContent = 'Delete';
+					deleteButton.addEventListener('click', event => {
+						const email = deleteButton.dataset.email;
+						const listItem = deleteButton.parentElement;
+						removeSubscriber(email, listItem);
+					});
+					listItem.appendChild(deleteButton);
+					subscriberList.appendChild(listItem);
+				});
+			})
+			.catch(error => console.log(error));
+		
+		// Add event listener to subscribe form
+		const subscribeForm = document.querySelector('#subscribe-form');
+		subscribeForm.addEventListener('submit', event => {
+			event.preventDefault();
+			const emailInput = document.querySelector('#email');
+			const email = emailInput.value;
+			addSubscriber(email);
+			emailInput.value = '';
+		});
+		
+		// Function to add subscriber via AJAX request
+		function addSubscriber(email) {
+			const xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === XMLHttpRequest.DONE) {
+					if (xhr.status === 200) {
+						const subscriber = xhr.responseText;
+						const subscriberList = document.querySelector('#subscriber-list');
+						const listItem = document.createElement('li');
+						listItem.textContent = subscriber;
+						const deleteButton = document.createElement('button');
+						deleteButton.classList.add('delete-button');
+						deleteButton.dataset.email = subscriber;
+						deleteButton.textContent = 'Delete';
+						deleteButton.addEventListener('click', event => {
+							const email = deleteButton.dataset.email;
+							const listItem = deleteButton.parentElement;
+							removeSubscriber(email, listItem);
+						});
+						listItem.appendChild(deleteButton);
+						subscriberList.appendChild(listItem);
+					} else {
+						console.log('Error adding subscriber');
+					}
+				}
+			};
+			xhr.open('POST', '/add-subscriber');
+			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			xhr.send(`email=${encodeURIComponent(email)}`);
+		}
+		
+		// Function to remove subscriber via AJAX request
+		function removeSubscriber(email, listItem) {
+			const xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === XMLHttpRequest.DONE) {
+					if (xhr.status === 200) {
+						console.log(`Deleted subscriber ${email}`);
+						listItem.remove();
+					} else {
+						console.log('Error deleting subscriber');
+					}
+				}
+			};
+			xhr.open('POST', '/remove-subscriber');
+			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			xhr.send(`email=${encodeURIComponent(email)}`);
+		}
+	</script>
