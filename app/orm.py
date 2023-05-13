@@ -15,9 +15,10 @@ Users = db.users
 Chats = db.chats
 
 
-def insert_chat(user_id, txt, agent):
-    Chats.insert_one(
-        {'txt': txt, 'agent': agent, 'user_id': user_id, 'time': datetime.datetime.now(), 'date': datetime.date.today().strftime('%Y-%m-%d')})
+def insert_chat(obj):
+    obj.update({'time': datetime.datetime.now(),
+               'date': datetime.date.today().strftime('%Y-%m-%d')})
+    Chats.insert_one(obj)
 
 
 def get_past_entry_dates(user_id):

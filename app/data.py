@@ -22,6 +22,28 @@ def init_app():
 openai.api_key = env.get("OPENAI_KEY")
 
 
+def store_message(user_id, text, role):
+    obj = {'user_id': user_id, 'txt': text}
+    if role == 'bot':
+        orm.insert_chat(obj, summarize=True)
+    if role == 'user':
+        messages = [{'role': 'system',
+                     "content": "summarize"},
+                    {'role': 'user', 'content': text}]
+        try:
+            res = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages,
+                max_tokens=200,
+                temperature=0,
+            )
+            summary = res['choices'][0]['message']['content']
+            obj.update({'summary': summary})
+        except Exception as e:
+            print(e)
+            obj.update({'summary': ''})
+
+
 def get_user_id(email):
     user = orm.Users.find_one({'email': email})
     if user:
@@ -45,10 +67,6 @@ def get_response(req_data, user_id, store=True):
                  "content": "You help me write a better diary journal by providing brief and thoughtful prompts. Be brief"}]
     messages.extend(chat_history)
     messages.append({'role': 'user', 'content': user_text})
-    if store:
-        thread_input_txt = Thread(target=orm.insert_chat, args=(
-            user_id, user_text, 'user'))
-        thread_input_txt.start()
     try:
         res = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -62,9 +80,13 @@ def get_response(req_data, user_id, store=True):
 
     # store the user input and bot's response to db
     if store:
-        thread_output_txt = Thread(target=orm.insert_chat, args=(
+        thread_input_txt = Thread(target=store_message, args=(
+            user_id, user_text, 'user'))
+        thread_input_txt.start()
+        thread_output_txt = Thread(target=store_message, args=(
             user_id, res['choices'][0]['message']['content'], 'bot'))
         thread_output_txt.start()
+
     return res['choices'][0]['message']['content']
 
 
