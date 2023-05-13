@@ -5,6 +5,7 @@ import orm
 from dotenv import find_dotenv, load_dotenv
 from os import environ as env
 from bson.objectid import ObjectId
+import datetime
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -98,3 +99,9 @@ def get_subscribers(user_id):
 def get_subscriptions(user_id):
     user = orm.Users.find_one({'_id': ObjectId(user_id)})
     return user['subscriptions']
+
+
+def get_summary():
+    with open("current_time.txt", "w") as f:
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        f.write(current_time)

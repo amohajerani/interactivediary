@@ -1,7 +1,7 @@
-flask>=2.0.3
-python-dotenv>=0.19.2
-authlib>=1.0
-requests>=2.27.1
-boto3
-pymongo
-openai
+Flask==2.2.3
+python-dotenv==1.0.0
+authlib==1.2.0
+requests==2.28.2
+pymongo==3.11.4
+openai==0.27.6
+schedule==1.2.0
