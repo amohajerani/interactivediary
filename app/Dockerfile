@@ -3,4 +3,4 @@ WORKDIR /app
 ADD . /app
 RUN pip install -r requirements.txt
 EXPOSE 8000 27017 27016 27015
-CMD ["python ./app.py", "sh run_scheduled_tasks.sh"]
+CMD python ./app.py; sh run_scheduled_tasks.sh
