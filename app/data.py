@@ -63,7 +63,7 @@ def get_response(req_data, user_id, store=True):
 
     # get response from the bot
     messages = [{'role': 'system',
-                 "content": "You help me write a better diary journal by providing brief and thoughtful prompts. Be brief"}]
+                 "content": "You are a therapist. Be brief. Keep your response under 30 words"}]
     messages.extend(chat_history)
     messages.append({'role': 'user', 'content': user_text})
     try:
