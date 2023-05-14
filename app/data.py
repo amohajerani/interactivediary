@@ -69,6 +69,12 @@ def get_response(req_data, user_id, store=True):
     '''
     # get the payload
     user_text = req_data['msg']
+    # store the input message immediately so it is retained.
+    if store:
+        thread_input_txt = Thread(target=store_message, args=(
+            user_id, user_text, 'user'))
+        thread_input_txt.start()
+
     chat_history = req_data['history']
     # let's just use the last response from bot as history
     if chat_history:
@@ -91,9 +97,6 @@ def get_response(req_data, user_id, store=True):
 
     # store the user input and bot's response to db
     if store:
-        thread_input_txt = Thread(target=store_message, args=(
-            user_id, user_text, 'user'))
-        thread_input_txt.start()
         thread_output_txt = Thread(target=store_message, args=(
             user_id, res['choices'][0]['message']['content'], 'bot'))
         thread_output_txt.start()
