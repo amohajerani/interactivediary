@@ -23,10 +23,10 @@ openai.api_key = env.get("OPENAI_KEY")
 
 
 def store_message(user_id, text, role):
-    obj = {'user_id': user_id, 'txt': text}
+    obj = {'user_id': user_id, 'txt': text, 'role': role}
     if role == 'user':
         messages = [{'role': 'system',
-                     "content": "summarize from first party narrative"},
+                     "content": "summarize"},
                     {'role': 'user', 'content': text}]
         try:
             res = openai.ChatCompletion.create(
