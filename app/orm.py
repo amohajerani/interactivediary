@@ -22,10 +22,22 @@ def insert_chat(obj):
     Chats.insert_one(obj)
 
 
-def get_past_entry_dates(user_id):
+def get_summaries(user_id):
     dates = Chats.distinct('date', {'user_id': user_id})
     dates.sort(reverse=True)
-    return dates
+
+    # get summaries
+    summaries = list(Summaries.find(
+        {'user_id': user_id}, {'date': 1, 'summary': 1}))
+    res = []
+    for date in dates:
+        summary = [doc['summary'] for doc in summaries if doc['date'] == date]
+        if summary:
+            summary = summary[0]
+        else:
+            summary = ''
+    res.append({date: summary})
+    return res
 
 
 def get_entries(date, user_id):

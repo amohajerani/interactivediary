@@ -43,9 +43,9 @@ def require_auth(func):
 def home():
     if not session.get('user', None):
         return render_template('landing.html')
-    dates = orm.get_past_entry_dates(
+    summaries = orm.get_summaries(
         user_id=session['user']['user_id'])
-    return render_template('home.html', dates=dates)
+    return render_template('home.html', summaries=summaries)
 
 
 @app.route("/callback", methods=["GET", "POST"])

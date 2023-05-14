@@ -23,7 +23,7 @@ def init_app():
 
 openai.api_key = env.get("OPENAI_KEY")
 
-summarize_prompt = 'Summarize what I said: '
+summarize_prompt = '.\n Summarize what I said: '
 
 
 def store_message(user_id, text, role):
@@ -136,13 +136,15 @@ def get_summary():
     # for each user, concat all today's messages.
     for user in users:
         user_id = str(user['_id'])
-        chats = orm.Chats.find({'user_id': user_id, 'date': today_str, 'role': user}).sort(
-            ("time", pymongo.ASCENDING))
+        chats = orm.Chats.find({'user_id': user_id, 'date': today_str, 'role': 'user'}).sort(
+            "time", pymongo.ASCENDING)
         # make a list of user texts
         diary = ''
         for chat in chats:
-            diary = diary + ' ' + chat['summary']
+            diary = diary + ' ' + chat.get('summary')
         summary = summarize(diary)
+        print('diary: ', diary)
+        print('summary: ', summary)
         orm.insert_summary(user_id, today_str, summary)
 
 
@@ -159,7 +161,7 @@ def get_token_count(message, model="text-curie-001"):
 def summarize(text):
     summary = text
     if len(text) < 150:
-        return text
+        return summary
 
     prompt = text+summarize_prompt
     try:
