@@ -6,6 +6,8 @@ from dotenv import find_dotenv, load_dotenv
 from os import environ as env
 from bson.objectid import ObjectId
 import datetime
+import pymongo
+import tiktoken
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -21,6 +23,8 @@ def init_app():
 
 openai.api_key = env.get("OPENAI_KEY")
 
+summarize_prompt = 'Summarize what I said: '
+
 
 def store_message(user_id, text, role):
     '''
@@ -31,26 +35,11 @@ def store_message(user_id, text, role):
     If a message has an empty summary, it is because we should use the original text.
     '''
     obj = {'user_id': user_id, 'txt': text, 'role': role}
-    if role == 'user' and len(text) > 150:
-        start_sequence = " Summarize what I said:"
-        prompt = text+start_sequence
-        try:
-            res = openai.Completion.create(
-                model="text-curie-001",
-                prompt=prompt,
-                temperature=0.15,
-                max_tokens=300,
-                top_p=1,
-                frequency_penalty=0,
-                presence_penalty=0
-            )
-            summary = res['choices'][0]['text']
-            if len(summary)/len(text) < 0.8:  # use the summary if it is sufficiently shorter
-                obj.update({'summary': summary})
-        except Exception as e:
-            print(e)
-            obj.update({'summary': ''})
+    if role == 'user':
+        summary = summarize(text)
+        obj.update({'summary': summary})
     orm.insert_chat(obj)
+    orm.update_user(user_id, {'last_msg': datetime.datetime.now()})
 
 
 def get_user_id(email):
@@ -138,6 +127,54 @@ def get_subscriptions(user_id):
 
 
 def get_summary():
-    with open("current_time.txt", "w") as f:
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        f.write(current_time)
+    # this assumes the job runs once an hour.
+    today = datetime.date.today()
+    today_str = today.strftime('%Y-%m-%d')
+    start_time = datetime.datetime.now()-datetime.timedelta(hours=1)
+    # get users who had a new msg since the last function run.
+    users = orm.Users.find({'last_msg': {'$gte': start_time}}, {'_id': 1})
+    # for each user, concat all today's messages.
+    for user in users:
+        user_id = str(user['_id'])
+        chats = orm.Chats.find({'user_id': user_id, 'date': today_str, 'role': user}).sort(
+            ("time", pymongo.ASCENDING))
+        # make a list of user texts
+        diary = ''
+        for chat in chats:
+            diary = diary + ' ' + chat['summary']
+        summary = summarize(diary)
+        orm.insert_summary(user_id, today_str, summary)
+
+
+def get_token_count(message, model="text-curie-001"):
+    """Returns the number of tokens used by a list of messages."""
+    try:
+        encoding = tiktoken.encoding_for_model(model)
+    except KeyError:
+        encoding = tiktoken.get_encoding("cl100k_base")
+    num_tokens = encoding.encode(message+summarize_prompt)
+    return num_tokens
+
+
+def summarize(text):
+    summary = text
+    if len(text) < 150:
+        return text
+
+    prompt = text+summarize_prompt
+    try:
+        res = openai.Completion.create(
+            model="text-curie-001",
+            prompt=prompt,
+            temperature=0.15,
+            max_tokens=500,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        summary = res['choices'][0]['text']
+        if len(summary)/len(text) > 0.9:  # use the summary if it is sufficiently shorter
+            summary = text
+    except Exception as e:
+        print(e)
+    return summary

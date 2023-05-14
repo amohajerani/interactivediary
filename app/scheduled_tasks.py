@@ -11,7 +11,7 @@ def run_get_summary():
 
 
 if __name__ == '__main__':
-    schedule.every(5).seconds.do(run_get_summary)
+    schedule.every().hour.do(run_get_summary)
     while True:
         schedule.run_pending()
-        time.sleep(1)  # after testing change this to 60 seconds or more
+        time.sleep(60)  # after testing change this to 60 seconds or more
