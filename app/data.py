@@ -26,7 +26,7 @@ def store_message(user_id, text, role):
     obj = {'user_id': user_id, 'txt': text}
     if role == 'user':
         messages = [{'role': 'system',
-                     "content": "summarize"},
+                     "content": "summarize from first party narrative"},
                     {'role': 'user', 'content': text}]
         try:
             res = openai.ChatCompletion.create(
