@@ -25,18 +25,19 @@ openai.api_key = env.get("OPENAI_KEY")
 def store_message(user_id, text, role):
     obj = {'user_id': user_id, 'txt': text, 'role': role}
     if role == 'user':
-        messages = [{'role': 'system',
-                     "content": "summarize"},
-                    {'role': 'user', 'content': text}]
+        start_sequence = "summarize this text into less than half: "
+        prompt = text+start_sequence
         try:
-            res = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=messages,
-                max_tokens=200,
-                temperature=0,
+            res = openai.Completion.create(
+                model="text-curie-001",
+                prompt=prompt,
+                temperature=0.7,
+                max_tokens=256,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0
             )
-            summary = res['choices'][0]['message']['content']
-            obj.update({'summary': summary})
+            obj.update({'summary': res['choices'][0]['text']})
         except Exception as e:
             print(e)
             obj.update({'summary': ''})
@@ -60,7 +61,9 @@ def get_response(req_data, user_id, store=True):
     # get the payload
     user_text = req_data['msg']
     chat_history = req_data['history']
-
+    # let's just use the last response from bot as history
+    if chat_history:
+        chat_history = chat_history[-1]
     # get response from the bot
     messages = [{'role': 'system',
                  "content": "You are a therapist. Be brief. Keep your response under 30 words"}]
