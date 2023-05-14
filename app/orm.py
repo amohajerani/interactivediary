@@ -36,7 +36,7 @@ def get_summaries(user_id):
             summary = summary[0]
         else:
             summary = ''
-    res.append({date: summary})
+        res.append({date: summary})
     return res
 
 
