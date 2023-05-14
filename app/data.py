@@ -24,8 +24,6 @@ openai.api_key = env.get("OPENAI_KEY")
 
 def store_message(user_id, text, role):
     obj = {'user_id': user_id, 'txt': text}
-    if role == 'bot':
-        orm.insert_chat(obj, summarize=True)
     if role == 'user':
         messages = [{'role': 'system',
                      "content": "summarize"},
@@ -42,6 +40,7 @@ def store_message(user_id, text, role):
         except Exception as e:
             print(e)
             obj.update({'summary': ''})
+    orm.insert_chat(obj)
 
 
 def get_user_id(email):
