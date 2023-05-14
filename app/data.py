@@ -23,21 +23,30 @@ openai.api_key = env.get("OPENAI_KEY")
 
 
 def store_message(user_id, text, role):
+    '''
+    If the message is from the bot, just store it in mongo.
+    If the message is from the user, first get teh summary. If the summary makes sense, add it to
+    the object and then store it. 
+    If a message does not have summary, it is because it is from bot
+    If a message has an empty summary, it is because we should use the original text.
+    '''
     obj = {'user_id': user_id, 'txt': text, 'role': role}
-    if role == 'user':
-        start_sequence = "summarize this text into less than half: "
+    if role == 'user' and len(text) > 150:
+        start_sequence = " Summarize this text: "
         prompt = text+start_sequence
         try:
             res = openai.Completion.create(
                 model="text-curie-001",
                 prompt=prompt,
-                temperature=0.7,
-                max_tokens=256,
+                temperature=0.15,
+                max_tokens=300,
                 top_p=1,
                 frequency_penalty=0,
                 presence_penalty=0
             )
-            obj.update({'summary': res['choices'][0]['text']})
+            summary = res['choices'][0]['text']
+            if len(summary)/len(text) < 0.8:  # use the summary if it is sufficiently shorter
+                obj.update({'summary': summary})
         except Exception as e:
             print(e)
             obj.update({'summary': ''})
