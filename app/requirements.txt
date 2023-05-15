@@ -7,4 +7,7 @@ openai==0.27.6
 schedule==1.2.0
 tiktoken==0.4.0
 wordcloud
+matplotlib
+numpy
+pandas
 boto3==1.26.115
