@@ -6,4 +6,5 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 8000 27017 27016 27015
-CMD python ./app.py
+#CMD python ./app.py
+CMD ["supervisord", "-n"]
