@@ -10,6 +10,7 @@ from flask import redirect, render_template, session, request, Response, url_for
 import orm
 import data
 import urllib.parse
+import base64
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -27,6 +28,11 @@ oauth.register(
     },
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration',
 )
+
+
+@app.template_filter('b64encode')
+def b64encode_filter(s):
+    return base64.b64encode(s).decode('utf-8')
 
 
 def require_auth(func):
