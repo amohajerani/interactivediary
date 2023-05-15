@@ -2,9 +2,7 @@ FROM python:3.11-slim
 WORKDIR /app
 ADD . /app
 RUN apt-get update && \
-    apt-get install -y supervisor && \
-    apt-get install -y gcc
-COPY main.c /app/main.c
+    apt-get install -y supervisor
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
