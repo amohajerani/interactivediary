@@ -9,7 +9,6 @@ import datetime
 import pymongo
 import tiktoken
 from wordcloud import WordCloud
-import matplotlib.pyplot as plt
 import os
 
 ENV_FILE = find_dotenv()
@@ -213,10 +212,11 @@ def generate_wordcloud():
                 txt = txt + ' '+message['txt']
         if not txt:
             continue
-        WordCloud(collocations=False, background_color='white').generate(txt)
-        word_cloud = None
+        image = WordCloud(collocations=False,
+                          background_color='white').generate(txt)
         file_path = f"./uploads/{user_id}_{today_str}.png"
-        plt.savefig(file_path)
+        image.to_file(file_path)
+
         if os.path.exists(file_path):
             orm.upload_to_s3(file_path, user_id, today_str)
             os.remove(file_path)
