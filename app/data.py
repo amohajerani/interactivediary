@@ -8,8 +8,8 @@ from bson.objectid import ObjectId
 import datetime
 import pymongo
 import tiktoken
-# from wordcloud import WordCloud
-# import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 import os
 
 ENV_FILE = find_dotenv()
@@ -213,7 +213,7 @@ def generate_wordcloud():
                 txt = txt + ' '+message['txt']
         if not txt:
             continue
-        # WordCloud(collocations=False, background_color='white').generate(txt)
+        WordCloud(collocations=False, background_color='white').generate(txt)
         word_cloud = None
         plt.imshow(word_cloud, interpolation='bilinear')
         file_path = f"./uploads/{user_id}_{today_str}.png"
