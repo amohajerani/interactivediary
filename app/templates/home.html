@@ -5,6 +5,7 @@
     <br>
     <a href="/chat">Write today's journal</a>
     <h6>Your journal from prior days</h6>
+    <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud">
     <ul>
       {% for summary in summaries %}
       {% for date, summary in summary.items() %}

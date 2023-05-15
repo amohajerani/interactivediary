@@ -8,6 +8,9 @@ from bson.objectid import ObjectId
 import datetime
 import pymongo
 import tiktoken
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+import os
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -180,3 +183,41 @@ def summarize(text):
     except Exception as e:
         print(e)
     return summary
+
+
+def generate_wordcloud():
+    # get all the messages from the past one week
+
+    users = orm.Users.find({}, {'_id': 1})
+    for user in users:
+        today = datetime.date.today()
+        today_str = today.strftime('%Y-%m-%d')
+        user_id = str(user['_id'])
+        date = today-datetime.timedelta(days=7)
+        date_str = date.strftime('%Y-%m-%d')
+        messages = orm.Chats.find(
+            {'user_id': user_id, 'date': {'$gte': date_str}, 'role': 'user'}, {'txt': 1})
+        # concat the texts
+        txt = ''
+        for message in messages:
+            txt = txt + ' '+message['txt']
+        # if there is not much text, let's make it a 2 week window
+        if len(txt) < 400:
+            date = today-datetime.timedelta(days=14)
+            date_str = date.strftime('%Y-%m-%d')
+            messages = orm.Chats.find(
+                {'user_id': user_id, 'date': {'$gte': date_str}, 'role': 'user'}, {'txt': 1})
+            # concat the texts
+            txt = ''
+            for message in messages:
+                txt = txt + ' '+message['txt']
+        if not txt:
+            continue
+        word_cloud = WordCloud(
+            collocations=False, background_color='white').generate(txt)
+        plt.imshow(word_cloud, interpolation='bilinear')
+        file_path = f"./uploads/{user_id}_{today_str}.png"
+        plt.savefig(file_path)
+        if os.path.exists(file_path):
+            orm.upload_to_s3(file_path, user_id, today_str)
+            os.remove(file_path)
