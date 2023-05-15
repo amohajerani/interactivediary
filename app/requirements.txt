@@ -7,4 +7,4 @@ openai==0.27.6
 schedule==1.2.0
 tiktoken==0.4.0
 boto3==1.26.115
-wordcloud
+wordcloud====1.8.2.2
