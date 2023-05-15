@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12.0a7-bullseye
 WORKDIR /app
 ADD . /app
 RUN apt-get update && \
