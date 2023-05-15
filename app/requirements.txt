@@ -7,4 +7,4 @@ openai==0.27.6
 schedule==1.2.0
 tiktoken==0.4.0
 boto3==1.26.115
-git+https://github.com/amueller/word_cloud.git
+wordcloud
