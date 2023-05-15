@@ -1,9 +1,8 @@
-FROM python:3.11-slim
+FROM python:3.11
 WORKDIR /app
 ADD . /app
 RUN apt-get update && \
-    apt-get install -y supervisor && \
-    apt-get install -y build-essential
+    apt-get install -y supervisor
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
