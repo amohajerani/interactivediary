@@ -2,7 +2,8 @@ FROM python:3.11-slim
 WORKDIR /app
 ADD . /app
 RUN apt-get update && \
-    apt-get install -y supervisor
+    apt-get install -y supervisor && \
+    apt-get install -y git
 
 RUN git clone https://github.com/amueller/word_cloud.git && \
     cd word_cloud && \
