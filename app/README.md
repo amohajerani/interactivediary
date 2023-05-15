@@ -192,3 +192,27 @@ The below are links to the resources used to make this project possible.
 - [Stack Overflow discussion on MongoDB use with Flask](https://stackoverflow.com/questions/54992412/flask-login-usermixin-class-with-a-mongodb)
 - [Werkzeug documentation](https://werkzeug.palletsprojects.com/en/1.0.x/)
 - [Flask PyMongo documentation](https://flask-pymongo.readthedocs.io/en/latest/)
+
+Setting up a new EC2 instance:
+
+- create a new instance. Use ubuntu. Allow http and https connection
+- associate elastic ip with the instance
+- in the security tab, click on security group and add a custom at port 8000
+- connect and git clone https://github.com/amohajerani/interactivediary.git
+- cd interactivediary/app
+- vim .env
+- copy and past all the .env content
+- cd ..
+- cd nginx
+- vim ssl_ke.pem and then copy and paste the content
+- vim ssl_privat_ke.pem and then copy and paste the content
+- cd ..
+- sudo apt update
+- sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+- curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+- echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+- sudo apt update
+- sudo apt install -y docker-ce docker-ce-cli containerd.io
+- sudo systemctl start docker
+- sudo systemctl enable docker
+- docker --version

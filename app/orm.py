@@ -99,7 +99,7 @@ def get_wordcloud_file(user_id):
     s3_client = boto3.client('s3',
                              aws_access_key_id=os.environ.get('S3_KEY'),
                              aws_secret_access_key=os.environ.get('S3_SECRET'))
-    if True:  # not file_name:
+    if not file_name:
         file_name = 'not_enough_data.png'
     response = s3_client.get_object(Bucket='diary-gagali', Key=file_name)
     file_contents = response['Body'].read()
