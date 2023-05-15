@@ -215,7 +215,6 @@ def generate_wordcloud():
             continue
         WordCloud(collocations=False, background_color='white').generate(txt)
         word_cloud = None
-        plt.imshow(word_cloud, interpolation='bilinear')
         file_path = f"./uploads/{user_id}_{today_str}.png"
         plt.savefig(file_path)
         if os.path.exists(file_path):
