@@ -9,7 +9,7 @@ import datetime
 import pymongo
 import tiktoken
 # from wordcloud import WordCloud
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import os
 
 ENV_FILE = find_dotenv()
