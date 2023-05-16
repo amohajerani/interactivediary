@@ -179,6 +179,11 @@
       <textarea id="message"></textarea>
       <button onclick="sendMessage()">Send</button>
     </div>
+    <div id="analyze">
+      <a href="/analyze">
+        <button>Analyze today's chat</button>
+      </a>
+    </div>
   </div>
   <script>
     let quietMode = false;
@@ -222,6 +227,7 @@
     }
     document.getElementById("history").innerHTML = historyHTML;
   }
+
 </script>
   </body>
 </html> 

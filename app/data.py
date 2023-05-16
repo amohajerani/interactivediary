@@ -223,3 +223,7 @@ def generate_wordcloud():
         if os.path.exists(file_path):
             orm.upload_to_s3(file_path, user_id, today_str)
             os.remove(file_path)
+
+
+def analyze(user_id):
+    return {'success': True}
