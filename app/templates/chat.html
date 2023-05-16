@@ -205,7 +205,9 @@
   .then(response => response.text())
   .then(response => {
     appendMessageToHistory("user", message);
-    appendMessageToHistory("assistant", response);
+    if (!quietMode){
+      appendMessageToHistory("assistant", response);
+    }
   })
   .catch(error => {
     console.error("Error:", error);
