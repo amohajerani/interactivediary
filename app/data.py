@@ -60,12 +60,15 @@ def get_response(req_data, user_id, store=True):
     '''
     # get the payload
     user_text = req_data['msg']
+    quiet_mode = req_data['quietMode']
     # store the input message immediately so it is retained.
     if store:
         thread_input_txt = Thread(target=store_message, args=(
             user_id, user_text, 'user'))
         thread_input_txt.start()
-
+    # if it is quiet mode, you are done
+    if quiet_mode == 'on':
+        return
     chat_history = req_data['history']
     # let's just use the last response from bot as history
     if chat_history:
