@@ -116,7 +116,7 @@ def past_entries(date):
 
 @app.route('/logo')
 def get_log0():
-    return send_file('./images/gagalilogo.jpg', mimetype='image/jpg')
+    return send_file('./static/gagalilogo.jpg', mimetype='image/jpg')
 
 
 @app.route('/subscriptions')
