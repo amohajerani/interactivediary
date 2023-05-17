@@ -243,8 +243,8 @@ def analyze(user_id):
     # make wordcloud from today's chat
     image = WordCloud(collocations=False,
                       background_color='white').generate(txt)
-    file_path = f"uploads/{user_id}_{today_str}.png"
-    image.to_file('./'+file_path)
+    file_path = f"{user_id}_{today_str}.png"
+    image.to_file('./uploads/'+file_path)
     return insight, actions, file_path
 
 
