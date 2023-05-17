@@ -184,7 +184,8 @@ def subscription_entry(encoded_email, date):
 @require_auth
 def analyze():
     insight, actions, wordcloud = data.analyze(session['user']['user_id'])
-    render_template('analysis', insight, actions, wordcloud)
+    render_template('analysis', insight=insight,
+                    actions=actions, wordcloud=wordcloud)
 
 
 if __name__ == "__main__":
