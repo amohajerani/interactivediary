@@ -244,7 +244,7 @@ def analyze(user_id):
     image = WordCloud(collocations=False,
                       background_color='white').generate(txt)
     filename = f"{user_id}_{today_str}.png"
-    image.to_file('./uploads/'+filename)
+    image.to_file('./static/'+filename)
     return insight, actions, filename
 
 
