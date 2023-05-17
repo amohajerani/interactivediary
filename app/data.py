@@ -227,19 +227,22 @@ def generate_wordcloud():
 
 def analyze(user_id):
     # get today's chat
+    import pdb
+    pdb.set_trace()
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
-    msgs = list(orm.Chats.find({'user_id': ObjectId(user_id), 'date': today_str, 'role': 'user'}).sort(
+    msgs = list(orm.Chats.find({'user_id': user_id, 'date': today_str, 'role': 'user'}).sort(
         "time", pymongo.ASCENDING))
     msgs = [msg['summary'] for msg in msgs]
     txt = ''
+
     for msg in msgs:
         txt = txt + '\n'+msg
     insight = get_insight(txt)
     # get insights from today's chat
     actions = get_actions(txt)
     # make wordcloud from today's chat
-
+    print(txt)
     image = WordCloud(collocations=False,
                       background_color='white').generate(txt)
     file_path = f"./uploads/{user_id}_{today_str}.png"
