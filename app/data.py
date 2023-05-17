@@ -229,8 +229,8 @@ def analyze(user_id):
     # get today's chat
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
-    msgs = list(orm.Chats.find({'user_id': ObjectId(user_id), 'date': today_str, 'role': 'user'})).sort(
-        "time", pymongo.ASCENDING)
+    msgs = list(orm.Chats.find({'user_id': ObjectId(user_id), 'date': today_str, 'role': 'user'}).sort(
+        "time", pymongo.ASCENDING))
     msgs = [msg['summary'] for msg in msgs]
     txt = ''
     for msg in msgs:
