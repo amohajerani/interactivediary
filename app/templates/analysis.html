@@ -1,7 +1,16 @@
 {% extends "base.html" %} {% block title %}Past entries{% endblock %} {% block content %}
 <div class="content">
   <div>
-    <p>You are here </p>
+    <h4>Insights</h4>
+    <p>{{insights}} </p>
+  </div>
+  <div>
+    <h4>Actions</h4>
+    <p>{{actions}} </p>
+  </div>
+  <div>
+    <h4>wordcloud</h4>
+    <img src={{wordcloud}} alt="wordcloud">
   </div>
 </div>
 {% endblock %}

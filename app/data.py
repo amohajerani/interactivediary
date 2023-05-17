@@ -226,4 +226,68 @@ def generate_wordcloud():
 
 
 def analyze(user_id):
-    return {'success': True}
+    # get today's chat
+    today = datetime.date.today()
+    today_str = today.strftime('%Y-%m-%d')
+    msgs = list(orm.Chats.find({'user_id': ObjectId(user_id), 'date': today_str, 'role': 'user'})).sort(
+        "time", pymongo.ASCENDING)
+    msgs = [msg['summary'] for msg in msgs]
+    txt = ''
+    for msg in msgs:
+        txt = txt + '\n'+msg
+    insight = get_insight(txt)
+    # get insights from today's chat
+    actions = get_actions(txt)
+    # make wordcloud from today's chat
+
+    image = WordCloud(collocations=False,
+                      background_color='white').generate(txt)
+    file_path = f"./uploads/{user_id}_{today_str}.png"
+    image.to_file(file_path)
+    return insight, actions, file_path
+
+
+def get_insight(txt):
+    insight_prompt = "\n You are a therapist. Give a summary of insights from this text: "
+
+    if len(txt) < 150:
+        return "Not enough content to get insights from"
+
+    prompt = txt+insight_prompt
+    try:
+        res = openai.Completion.create(
+            model="text-curie-001",
+            prompt=prompt,
+            temperature=0.15,
+            max_tokens=500,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        insight = res['choices'][0]['text']
+    except Exception as e:
+        print(e)
+    return insight
+
+
+def get_actions(txt):
+    action_prompt = "\n Summarize the action items from this text: "
+
+    if len(txt) < 150:
+        return "Not enough content to get action items from"
+
+    prompt = txt+action_prompt
+    try:
+        res = openai.Completion.create(
+            model="text-curie-001",
+            prompt=prompt,
+            temperature=0.15,
+            max_tokens=500,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        actions = res['choices'][0]['text']
+    except Exception as e:
+        print(e)
+    return actions

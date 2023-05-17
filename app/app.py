@@ -183,7 +183,8 @@ def subscription_entry(encoded_email, date):
 @app.route('/analyze')
 @require_auth
 def analyze():
-    return data.analyze(session['user']['user_id'])
+    insight, actions, wordcloud = data.analyze(session['user']['user_id'])
+    render_template('analysis', insight, actions, wordcloud)
 
 
 if __name__ == "__main__":
