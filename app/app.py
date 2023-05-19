@@ -188,5 +188,11 @@ def analyze():
                            actions=actions, wordcloud=wordcloud)
 
 
+@app.route('/tmp')
+def tmp():
+
+    return render_template('tmp.html')
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)
