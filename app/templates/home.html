@@ -9,9 +9,9 @@
         <ul>
           {% for doc in summaries %}
           <li><a href="/past_entries/{{doc.date}}">{{doc.date}}</a>
-          <h4>Summary</h4>
+          <p>Summary</p>
           <p>{{doc.summary}}</p>
-          <h4>Insights</h4>
+          <p>Insights</p>
           <p>{{doc.insights}}</p>
           </li>
           {% endfor %}
