@@ -7,6 +7,16 @@ checkbox.addEventListener("change", function () {
 })
 
 let chatHistory = []
+function load_initial_prompt() {
+  console.log("Div loaded!")
+  chatHistory.push({ role: "assistant", message: "hello world" })
+  // Add your desired code here
+}
+
+document.addEventListener("DOMContentLoaded", function (event) {
+  myFunction()
+})
+
 function sendMessage() {
   const message = document.getElementById("message").value.trim()
   if (message === "") return
