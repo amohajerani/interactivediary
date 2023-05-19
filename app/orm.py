@@ -26,26 +26,17 @@ def insert_chat(obj):
 
 
 def get_summaries(user_id):
-    dates = Chats.distinct('date', {'user_id': user_id})
-    dates.sort(reverse=True)
-
-    # get summaries
     summaries = list(Summaries.find(
-        {'user_id': user_id}, {'date': 1, 'summary': 1}))
-    res = []
-    for date in dates:
-        summary = [doc['summary'] for doc in summaries if doc['date'] == date]
-        if summary:
-            summary = summary[0]
-        else:
-            summary = ''
-        res.append({date: summary})
-    return res
+        {'user_id': user_id}, {'date': 1, 'summary': 1, 'insights': 1}))
+    for summary in summaries:
+        del summary['_id']
+    summaries = sorted(summaries, key=lambda x: x['date'])
+    return summaries
 
 
 def get_entries(date, user_id):
     res = list(Chats.find({'user_id': user_id, 'date': date}))
-    sorted(res, key=lambda x: x['time'])
+    res = sorted(res, key=lambda x: x['time'])
     return res
 
 

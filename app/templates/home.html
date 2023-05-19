@@ -5,13 +5,12 @@
   <div>
     <div style="display: flex; justify-content: space-between;">
       <div>
-        <h6>Your journal from prior days</h6>
+        <h6>Prior entries</h6>
         <ul>
-          {% for summary in summaries %}
-          {% for date, summary in summary.items() %}
-          <li><a href="/past_entries/{{date}}">{{date}}</a></li>
-          <p>{{summary}}</p>
-          {% endfor %}
+          {% for doc in summaries %}
+          <li><a href="/past_entries/{{doc.date}}">{{date}}</a></li>
+          <p>{{doc.summary}}</p>
+          <p>{{doc.insights}}</p>
           {% endfor %}
         </ul>
       </div>
