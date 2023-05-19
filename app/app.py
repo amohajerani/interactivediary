@@ -91,7 +91,7 @@ def logout():
 
 
 @app.route("/chat")
-# @require_auth
+@require_auth
 def chat():
     return render_template('chat.html')
 
@@ -104,7 +104,6 @@ def get_response_test():
 @app.route('/get_response', methods=['POST'])
 # @require_auth
 def get_response():
-    return "hello"
     return data.get_response(request.json, session['user']['user_id'])
 
 
@@ -121,7 +120,7 @@ def get_log0():
 
 
 @app.route('/subscriptions')
-# @require_auth
+@require_auth
 def subscriptions():
     return render_template('subscriptions.html')
 
@@ -146,16 +145,14 @@ def add_subscriber():
 
 
 @app.route('/get-subscribers')
-# @require_auth
+@require_auth
 def get_subscribers():
-    return ['amir@gmail.com', 'gholi@gmail.com']
     return data.get_subscribers(session['user']['user_id'])
 
 
 @app.route('/get-subscriptions')
-# @require_auth
+@require_auth
 def get_subscriptions():
-    return ['amir@gmail.com', 'gholi@gmail.com']
     return data.get_subscriptions(session['user']['user_id'])
 
 
