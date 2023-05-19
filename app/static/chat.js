@@ -79,3 +79,9 @@ function sendInsights() {
       console.error("Error:", error)
     })
 }
+
+function doneFunc() {
+  fetch("/analyze/done").then((data) => {
+    window.location.href = "/"
+  })
+}
