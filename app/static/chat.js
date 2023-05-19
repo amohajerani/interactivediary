@@ -47,3 +47,35 @@ function appendMessageToHistory(role, content, italic = false) {
   }
   document.getElementById("history").innerHTML = historyHTML
 }
+
+function sendSummary() {
+  fetch("/analyze/summary", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.text())
+    .then((response) => {
+      appendMessageToHistory("analysis", response, true)
+    })
+    .catch((error) => {
+      console.error("Error:", error)
+    })
+}
+
+function sendInsights() {
+  fetch("/analyze/insights", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.text())
+    .then((response) => {
+      appendMessageToHistory("analysis", response, true)
+    })
+    .catch((error) => {
+      console.error("Error:", error)
+    })
+}

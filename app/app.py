@@ -180,17 +180,21 @@ def subscription_entry(encoded_email, date):
     return render_template('journal-entry-subscription.html', entries=entries, date=date, email=subscription_email)
 
 
-@app.route('/analyze')
+@app.route('/analyze/<analysis_type>')
 @require_auth
-def analyze():
-    insight, actions, wordcloud = data.analyze(session['user']['user_id'])
-    return render_template('analysis.html', insight=insight,
-                           actions=actions, wordcloud=wordcloud)
+def summarize(analysis_type):
+    """
+    return a json like {'text':'......'}
+    """
+    summary, insights, wordcloud = data.analyze(session['user']['user_id'])
+    if analysis_type == 'summary':
+        return {'text': summary}
+    if analysis_type == 'insights':
+        return {'text': insights}
 
 
 @app.route('/tmp')
 def tmp():
-
     return render_template('tmp.html')
 
 

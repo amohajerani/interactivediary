@@ -25,7 +25,15 @@ def init_app():
 
 openai.api_key = env.get("OPENAI_KEY")
 
-summarize_prompt = '.\n Summarize what I said: '
+summarize_prompt = '.\n Summarize in 3 sentences or less, based on principles of reflective listening. Echo what the writer said and offer validation for feelings expressed: '
+insight_prompt = """\n You are a therapist. First, provide the overall sentiment of the paragraph in one sentence. Then, Analyze the paragraph and provide the following as bullet points:
+'Feelings':  If no feelings could be identified, make a note that no 'feelings' are clearly expressed and question whether the writer has feelings about what’s happening. Give writer example of 'feeling' words.
+'Thoughts':
+'Facts': 
+
+Then, list 3 bullet points of the writer's beliefs that lead to those feelings and thoughts.
+Then, write no more than 4 bullet points, each one sentence, or the action items that the writer could follow.
+"""
 
 
 def store_message(user_id, text, role):
@@ -148,8 +156,6 @@ def get_summary():
         for chat in chats:
             diary = diary + ' ' + chat.get('summary')
         summary = summarize(diary)
-        print('diary: ', diary)
-        print('summary: ', summary)
         orm.insert_summary(user_id, today_str, summary)
 
 
@@ -239,17 +245,16 @@ def analyze(user_id):
         txt = txt + '\n'+msg
     insight = get_insight(txt)
     # get insights from today's chat
-    actions = get_actions(txt)
+    summary = summarize(txt)
     # make wordcloud from today's chat
     image = WordCloud(collocations=False,
                       background_color='white').generate(txt)
     filename = f"{user_id}_{today_str}.png"
     image.to_file('./static/'+filename)
-    return insight, actions, filename
+    return summary, insight, filename
 
 
 def get_insight(txt):
-    insight_prompt = "\n You are a therapist. Give a summary of insights from this text: "
 
     if len(txt) < 150:
         return "Not enough content to get insights from"
@@ -269,26 +274,3 @@ def get_insight(txt):
     except Exception as e:
         print(e)
     return insight
-
-
-def get_actions(txt):
-    action_prompt = "\n Summarize the action items from this text: "
-
-    if len(txt) < 150:
-        return "Not enough content to get action items from"
-
-    prompt = txt+action_prompt
-    try:
-        res = openai.Completion.create(
-            model="text-curie-001",
-            prompt=prompt,
-            temperature=0.15,
-            max_tokens=500,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0
-        )
-        actions = res['choices'][0]['text']
-    except Exception as e:
-        print(e)
-    return actions
