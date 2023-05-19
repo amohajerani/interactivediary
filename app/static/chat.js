@@ -27,7 +27,7 @@ function sendMessage() {
     .then((response) => {
       appendMessageToHistory("user", message)
       if (!quietMode) {
-        appendMessageToHistory("assistant", response)
+        appendMessageToHistory("assistant", response, true)
       }
     })
     .catch((error) => {
@@ -35,13 +35,15 @@ function sendMessage() {
     })
 }
 
-function appendMessageToHistory(role, content) {
+function appendMessageToHistory(role, content, italic = false) {
   chatHistory.push({ role, content })
   let historyHTML = ""
   for (const message of chatHistory) {
-    historyHTML += `<p class="${message.role}"><strong>${
-      message.role === "user" ? "User" : "AI"
-    }:</strong> ${message.content}</p>`
+    let messageContent = message.content
+    if (message.role === "assistant" && italic) {
+      messageContent = `<em>${messageContent}</em>` // Wrap assistant message in <em> tags for italic styling
+    }
+    historyHTML += `<p>${messageContent}</p>`
   }
   document.getElementById("history").innerHTML = historyHTML
 }

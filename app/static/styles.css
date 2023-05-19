@@ -119,17 +119,6 @@ button:hover {
   margin: 0 0 10px;
 }
 
-#history p strong {
-  font-weight: bold;
-}
-
-#history p.user {
-  color: #2196f3;
-}
-
-#history p.bot {
-  color: #f44336;
-}
 .switch {
     position: relative;
     display: inline-block;
@@ -188,4 +177,12 @@ button:hover {
 
   .slider.round:before {
     border-radius: 50%;
+  }
+
+  .assistant {
+    margin-left: 20px;
+  }
+  
+  .assistant.italic {
+    font-style: italic;
   }

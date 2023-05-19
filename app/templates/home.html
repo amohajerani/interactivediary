@@ -1,9 +1,7 @@
 {% extends "base.html" %} {% block title %}Past entries{% endblock %} {% block content %}
 <div class="content">
   <div>
-    <a href="/subscriptions">Shared content</a>
-    <br>
-    <a href="/chat">Write today's journal</a>
+
     <h6>Your journal from prior days</h6>
     <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud">
     <ul>

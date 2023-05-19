@@ -25,7 +25,7 @@ fetch("/get-subscribers")
       const listItem = document.createElement("li")
       listItem.textContent = subscriber
       const deleteButton = document.createElement("button")
-      deleteButton.classList.add("delete-button")
+      deleteButton.classList.add("btn")
       deleteButton.dataset.email = subscriber
       deleteButton.textContent = "Delete"
       deleteButton.addEventListener("click", (event) => {
@@ -64,7 +64,7 @@ function addSubscriber(email) {
       const listItem = document.createElement("li")
       listItem.textContent = subscriber
       const deleteButton = document.createElement("button")
-      deleteButton.classList.add("delete-button")
+      deleteButton.classList.add("btn btn-primary")
       deleteButton.dataset.email = subscriber
       deleteButton.textContent = "Delete"
       deleteButton.addEventListener("click", (event) => {
