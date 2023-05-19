@@ -8,8 +8,7 @@
         <h6>Prior entries</h6>
         <ul>
           {% for doc in summaries %}
-          console.log('doc: ',doc)
-          <li><a href="/past_entries/{{doc.date}}">{{date}}</a></li>
+          <li><a href="/past_entries/{{doc.date}}">{{doc.date}}</a></li>
           <h4>Summary</h4>
           <p>{{doc.summary}}</p>
           <h4>Insights</h4>
