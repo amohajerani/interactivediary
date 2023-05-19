@@ -186,16 +186,7 @@ def summarize(analysis_type):
     """
     return a json like {'text':'......'}
     """
-    summary, insights, wordcloud = data.analyze(session['user']['user_id'])
-    if analysis_type == 'summary':
-        return {'text': summary}
-    if analysis_type == 'insights':
-        return {'text': insights}
-
-
-@app.route('/tmp')
-def tmp():
-    return render_template('tmp.html')
+    return data.analyze(session['user']['user_id'], analysis_type)
 
 
 if __name__ == "__main__":

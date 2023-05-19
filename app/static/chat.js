@@ -81,7 +81,6 @@ function sendInsights() {
 }
 
 function doneFunc() {
-  fetch("/analyze/done").then((data) => {
-    window.location.href = "/"
-  })
+  window.location.href = "/"
+  fetch("/analyze/done")
 }

@@ -156,7 +156,7 @@ def get_summary():
         for chat in chats:
             diary = diary + ' ' + chat.get('summary')
         summary = summarize(diary)
-        orm.insert_summary(user_id, today_str, summary)
+        orm.insert_summary(user_id, today_str, summary=summary)
 
 
 def get_token_count(message, model="text-curie-001"):
@@ -231,7 +231,7 @@ def generate_wordcloud():
             os.remove(file_path)
 
 
-def analyze(user_id):
+def analyze(user_id, analysis_type):
     # get today's chat
 
     today = datetime.date.today()
@@ -243,7 +243,7 @@ def analyze(user_id):
 
     for msg in msgs:
         txt = txt + '\n'+msg
-    insight = get_insight(txt)
+    insights = get_insight(txt)
     # get insights from today's chat
     summary = summarize(txt)
     # make wordcloud from today's chat
@@ -251,7 +251,13 @@ def analyze(user_id):
                       background_color='white').generate(txt)
     filename = f"{user_id}_{today_str}.png"
     image.to_file('./static/'+filename)
-    return summary, insight, filename
+    orm.insert_summary(user_id, today_str, summary=summary, insights=insights)
+    if analysis_type == 'insights':
+        return insights
+    if analysis_type == 'summary':
+        return summary
+    if analysis_type == 'done':
+        return None
 
 
 def get_insight(txt):

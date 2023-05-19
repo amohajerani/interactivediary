@@ -49,9 +49,12 @@ def get_entries(date, user_id):
     return res
 
 
-def insert_summary(user_id, date, summary):
-    update = {"$set": {'user_id': user_id, 'date': date,
-                       'summary': summary, 'time': datetime.datetime.now()}}
+def insert_summary(user_id, date, summary, insights):
+    update = {"$set": {'user_id': user_id,
+                       'date': date,
+                       'summary': summary,
+                       'insights': insights,
+                       'time': datetime.datetime.now()}}
     Summaries.update_one(
         {'user_id': user_id, 'date': date}, update, upsert=True)
 
