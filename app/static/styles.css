@@ -1,0 +1,191 @@
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn:hover {
+    background-color: #0069d9;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  td, th {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+  td {
+    margin: 5px;
+  }
+  .chatbox {
+  border: 1px solid black;
+  height: 400px;
+  overflow-y: scroll;
+  padding: 10px;
+}
+.message {
+  margin-bottom: 10px;
+  text-align: center;
+}
+.user {
+  font-weight: bold;
+  height: 80px;
+  width: 80%;
+  margin: auto;
+  display: block;
+  border-radius: 15px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+.bot {
+  background-color: #f2f2f2;
+  height: 40px;
+  width: 80%;
+  margin: auto;
+  display: block;
+  border-radius: 15px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+#input_text {
+  height: 80px;
+  width: 80%;
+  margin: auto;
+  display: block;
+  border-radius: 15px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+#submit_button {
+  margin: 10px auto;
+  display: block;
+}
+
+#chat-box {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 600px;
+  padding: 20px;
+}
+
+#chat-history p {
+  margin: 0 0 10px;
+}
+
+#chat-message {
+  margin-top: 20px;
+}
+
+#message {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: block;
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
+}
+
+#message:focus {
+  outline: none;
+}
+
+button {
+  background-color: #4caf50;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px;
+  margin-left: 10px;
+}
+
+button:hover {
+  background-color: #3e8e41;
+}
+
+#history p {
+  margin: 0 0 10px;
+}
+
+#history p strong {
+  font-weight: bold;
+}
+
+#history p.user {
+  color: #2196f3;
+}
+
+#history p.bot {
+  color: #f44336;
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }

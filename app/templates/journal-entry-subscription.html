@@ -8,7 +8,7 @@
         <h3>{{email}}</h3>
         <h4>{{ date }}</h4>
         {% for entry in entries %}
-        <p style="{% if entry['bot'] %}font-style: italic;background-color: lightgray;{% endif %}">
+        <p style="{% if entry['role']=='bot' %}font-style: italic;background-color: lightgray;{% endif %}">
             {{ entry['txt'] }}
         </p>
         {% endfor %}

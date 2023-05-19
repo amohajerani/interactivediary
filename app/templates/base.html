@@ -14,81 +14,9 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>{% block title %}Home{% endblock %}</title>
-    <style>
-      .btn {
-          display: inline-block;
-          padding: 12px 24px;
-          background-color: #007bff;
-          color: #fff;
-          text-decoration: none;
-          border-radius: 4px;
-          transition: background-color 0.3s ease;
-        }
-
-        .btn:hover {
-          background-color: #0069d9;
-        }
-        table {
-          border-collapse: collapse;
-          width: 100%;
-        }
-        td, th {
-          padding: 8px;
-          text-align: left;
-          border: 1px solid #ddd;
-        }
-        th {
-          background-color: #f2f2f2;
-        }
-        td {
-          margin: 5px;
-        }
-        .chatbox {
-        border: 1px solid black;
-        height: 400px;
-        overflow-y: scroll;
-        padding: 10px;
-      }
-      .message {
-        margin-bottom: 10px;
-        text-align: center;
-      }
-      .user {
-        font-weight: bold;
-        height: 80px;
-        width: 80%;
-        margin: auto;
-        display: block;
-        border-radius: 15px;
-        border: 1px solid #ccc;
-        padding: 10px;
-      }
-      .bot {
-        background-color: #f2f2f2;
-        height: 40px;
-        width: 80%;
-        margin: auto;
-        display: block;
-        border-radius: 15px;
-        border: 1px solid #ccc;
-        padding: 10px;
-      }
-      #input_text {
-        height: 80px;
-        width: 80%;
-        margin: auto;
-        display: block;
-        border-radius: 15px;
-        border: 1px solid #ccc;
-        padding: 10px;
-      }
-      #submit_button {
-        margin: 10px auto;
-        display: block;
-      }
-      </style>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
