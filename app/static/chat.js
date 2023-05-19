@@ -14,7 +14,7 @@ function load_initial_prompt() {
 }
 
 document.addEventListener("DOMContentLoaded", function (event) {
-  myFunction()
+  load_initial_prompt()
 })
 
 function sendMessage() {
