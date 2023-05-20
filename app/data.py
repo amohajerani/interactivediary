@@ -192,6 +192,7 @@ def summarize(text):
             summary = text
     except Exception as e:
         print(e)
+        return "there was an error in the summary"
     return summary
 
 
