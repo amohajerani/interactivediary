@@ -28,7 +28,7 @@ function sendMessage() {
     .then((response) => {
       appendMessageToHistory("user", message)
       if (!quietMode) {
-        appendMessageToHistory("assistant", response, true)
+        appendMessageToHistory("bot", response, true)
       }
     })
     .catch((error) => {
@@ -42,8 +42,8 @@ function appendMessageToHistory(role, content, italic = false) {
   let historyHTML = ""
   for (const message of chatHistory) {
     let messageContent = message.content
-    if (message.role === "assistant" && italic) {
-      messageContent = `<em>${messageContent}</em>` // Wrap assistant message in <em> tags for italic styling
+    if (message.role === "bot" && italic) {
+      messageContent = `<em>${messageContent}</em>` // Wrap bot message in <em> tags for italic styling
     }
     historyHTML += `<p>${messageContent}</p>`
   }
