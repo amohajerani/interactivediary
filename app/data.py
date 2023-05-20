@@ -12,10 +12,19 @@ import pymongo
 import tiktoken
 from wordcloud import WordCloud
 import os
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
+
+# Email configuration
+SMTP_HOST = 'smtp.gmail.com'
+SMTP_PORT = 587
+SMTP_USERNAME = env.get("SMTP_USERNAME")
+GMAIL_APP_PASSWORD = env.get("GMAIL_APP_PASSWORD")
 
 
 def init_app():
@@ -328,3 +337,40 @@ def get_chat_history(user_id):
             return [{'role': 'initial_prompt', 'content': content}]
 
     return chat_history
+
+
+def get_chat_content(user_id, date):
+    query = {
+        "user_id": user_id,
+        "date": date
+    }
+    projection = {
+        "_id": 0,
+        "role": 1,
+        "txt": 1
+    }
+    sort = [("time", 1)]  # Sort by the "time" field in ascending order
+
+    chat_content = list(orm.Chats.find(query, projection).sort(sort))
+
+    # Map the fields to the desired keys in each dictionary
+    chat_content = [
+        {"role": message["role"], "content": message["txt"]}
+        for message in chat_content
+    ]
+    return chat_content
+
+
+def send_email(date, email, content):
+    # Create the email message
+    message = MIMEMultipart()
+    message['From'] = SMTP_USERNAME
+    message['To'] = email
+    message['Subject'] = f'Chat Content for {date}'
+    message.attach(MIMEText(content, 'plain'))
+
+    # Connect to SMTP server and send the email
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+        server.starttls()
+        server.login(SMTP_USERNAME, GMAIL_APP_PASSWORD)
+        server.send_message(message)

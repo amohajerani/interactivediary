@@ -6,7 +6,7 @@ from authlib.integrations.flask_client import OAuth
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 from dotenv import find_dotenv, load_dotenv
-from flask import redirect, render_template, session, request, Response, url_for, send_file
+from flask import redirect, render_template, session, request, Response, url_for, send_file, jsonify
 import orm
 import data
 import urllib.parse
@@ -189,6 +189,30 @@ def analyze(analysis_type):
     return a json like {'text':'......'}
     """
     return data.analyze(session['user']['user_id'], analysis_type)
+
+
+@app.route('/email_content',  methods=['POST'])
+@require_auth
+def email_content():
+    try:
+        data = request.get_json()
+        date = data.get('date')
+        email = data.get('email')
+        user_id = session['user']['user_id']
+        chats = data.get_chat_content(user_id, date)
+        # Format chat content for email
+        formatted_content = ''
+        for chat in chats:
+            role = chat['role']
+            text = chat['txt']
+            formatted_content += f'{role}: {text}\n'
+
+        # Call the send_email function from the email module
+        data.send_email(date, email, formatted_content)
+
+        return jsonify({'message': 'Email sent successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == "__main__":
