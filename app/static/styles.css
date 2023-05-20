@@ -211,3 +211,14 @@ button:hover {
     font-style: italic;
     color: #888;
   }
+
+  body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+  }
+
+  .container {
+    max-width: 800px; /* Set the maximum width for the content */
+    margin: 0 auto; /* Center the content horizontally */
+    padding: 20px;
+  }
