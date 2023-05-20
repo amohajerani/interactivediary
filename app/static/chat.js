@@ -9,7 +9,7 @@ checkbox.addEventListener("change", function () {
 let chatHistory = []
 function load_initial_prompt() {
   console.log("Div loaded!")
-  chatHistory.push({ role: "assistant", message: "hello world" })
+  chatHistory.push({ role: "assistant", content: "hello world" })
   // Add your desired code here
 }
 

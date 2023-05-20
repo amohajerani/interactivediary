@@ -4,6 +4,7 @@ Entry
 {% endblock %}
 
 {% block content %}
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
 <style>
   #chat-box {
     max-width: 100%;
@@ -117,6 +118,6 @@ Entry
       
     </div>
   </div>
-  <script src="{{ url_for('static', filename='chat.js') }}"></script>
+
 
 {% endblock %}
