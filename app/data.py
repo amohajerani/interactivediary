@@ -297,7 +297,7 @@ def get_chat_history(user_id):
     projection = {
         "_id": 0,
         "role": 1,
-        "text": 1
+        "txt": 1
     }
     sort = [("time", 1)]  # Sort by the "time" field in ascending order
 
