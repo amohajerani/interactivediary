@@ -2,7 +2,7 @@ function shareViaEmail() {
   var email = prompt("Please enter your email address:")
   if (email) {
     var payload = {
-      date: "{{ date }}",
+      date: date,
       email: email,
     }
     fetch("/email_content", {
