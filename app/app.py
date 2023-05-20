@@ -192,7 +192,7 @@ def analyze(analysis_type):
 
 
 @app.route('/email_content',  methods=['POST'])
-@require_auth
+# @require_auth
 def email_content():
     try:
         data = request.get_json()
