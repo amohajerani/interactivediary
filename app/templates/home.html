@@ -6,9 +6,7 @@
     <div>
       <div>
         <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud" style="float: right;">
-      </div>
-      <div>
-        <h6>Prior entries</h6>
+        <h4>Prior entries</h4>
         <ul>
           {% for doc in summaries %}
           <li><a href="/past_entries/{{doc.date}}">{{doc.date}}</a>
