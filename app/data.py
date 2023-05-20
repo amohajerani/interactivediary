@@ -27,15 +27,14 @@ def init_app():
 
 openai.api_key = env.get("OPENAI_KEY")
 
-summarize_prompt = '.\n Summarize the text between two double $ signs in 3 sentences or less, based on principles of reflective listening. Echo what the writer said and offer validation for feelings expressed: '
-insight_prompt = """\n You are a therapist. First, provide the overall sentiment of the text between two double $ signs in one sentence. Then, analyze it and provide the following three bullet points:
-'Feelings':  If no feelings could be identified, make a note that no 'feelings' are clearly expressed and question whether the writer has feelings about what’s happening. Give writer example of 'feeling' words.
-'Thoughts':
-'Facts': 
-
-Then, list 3 bullet points of the writer's beliefs that lead to those feelings and thoughts.
-Then, write no more than 4 bullet points, each one sentence, or the action items that the writer could follow.
-"""
+summarize_prompt = """Your task is to generate a short summary of a diary entry based on principles of reflective listening. 
+Offer validation for feelings expressed. Summarize the below diary delimited by triple backticks, in 3 sentences or less.
+Diary: """
+insight_prompt = """Provide the overall sentiment of the passage in one sentence.
+Then, analyze the passage and describe the feelings, thoughts and facts, each as one bullet point.
+Then, list the writer's beliefs that lead to those feelings and thoughts in three bullet points.
+Finally, list action items that the writer could follow in at most four bullet points.
+Passage: """
 
 
 def store_message(user_id, text, role):
@@ -175,8 +174,7 @@ def summarize(text):
     summary = text
     if len(text) < 150:
         return summary
-
-    prompt = "$$"+summarize_prompt + "$$" + text
+    prompt = f"{summarize_prompt} ```{text}```"
     try:
         res = openai.Completion.create(
             model="text-curie-001",
@@ -268,7 +266,7 @@ def get_insight(txt):
     if len(txt) < 150:
         return "Not enough content to get insights from"
 
-    prompt = "$$ "+insight_prompt + " $$ " + txt
+    prompt = f"{insight_prompt} ```{txt}```"
     try:
         res = openai.Completion.create(
             model="text-curie-001",
