@@ -187,3 +187,27 @@ button:hover {
     font-style: italic;
   }
 
+  .post {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+
+  .post h1 {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  .post p {
+    font-size: 18px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .post .meta {
+    font-style: italic;
+    color: #888;
+  }

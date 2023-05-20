@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-    <div>
+    <div class="post">
         <h4>{{ date }}</h4>
         {% for entry in entries %}
         <p style="{% if entry['role']=='bot' %}font-style: italic;background-color: lightgray;{% endif %}">

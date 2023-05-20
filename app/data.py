@@ -233,7 +233,7 @@ def generate_wordcloud():
             os.remove(file_path)
 
 
-def analyze(user_id, analysis_type):
+def analyze(user_id, analysis_type, wordcloud=False):
     # get today's chat
 
     today = datetime.date.today()
@@ -247,16 +247,17 @@ def analyze(user_id, analysis_type):
             txt = txt+'\n' + msg['summary']
         else:
             txt = txt+'\n' + msg['txt']
-
     insights = get_insight(txt)
     # get insights from today's chat
     summary = summarize(txt)
     # make wordcloud from today's chat
-    image = WordCloud(collocations=False,
-                      background_color='white').generate(txt)
-    filename = f"{user_id}_{today_str}.png"
-    image.to_file('./static/'+filename)
-    orm.insert_summary(user_id, today_str, summary=summary, insights=insights)
+    if wordcloud:
+        image = WordCloud(collocations=False,
+                          background_color='white').generate(txt)
+        filename = f"{user_id}_{today_str}.png"
+        image.to_file('./static/'+filename)
+        orm.insert_summary(user_id, today_str,
+                           summary=summary, insights=insights)
     if analysis_type == 'insights':
         return insights
     if analysis_type == 'summary':

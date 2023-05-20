@@ -184,7 +184,7 @@ def subscription_entry(encoded_email, date):
 
 @app.route('/analyze/<analysis_type>')
 @require_auth
-def summarize(analysis_type):
+def analyze(analysis_type):
     """
     return a json like {'text':'......'}
     """
