@@ -43,7 +43,15 @@ function appendMessageToHistory(role, content, italic = false) {
   for (const message of chatHistory) {
     let messageContent = message.content
     if (message.role === "bot" && italic) {
-      messageContent = `<em>${messageContent}</em>` // Wrap bot message in <em> tags for italic styling
+      messageContent = `<em>${messageContent}</em>`
+    }
+    if (message.role === "summary") {
+      historyHTML += `<strong><em>Summary: </em></strong>`
+      messageContent = `<em>${messageContent}</em>`
+    }
+    if (message.role === "insights") {
+      historyHTML += `<strong><em>Insights: </em></strong>`
+      messageContent = `<em>${messageContent}</em>`
     }
     historyHTML += `<p>${messageContent}</p>`
   }
@@ -69,7 +77,7 @@ function sendSummary() {
   })
     .then((response) => response.text())
     .then((response) => {
-      appendMessageToHistory("analysis", response, true)
+      appendMessageToHistory("summary", response, true)
     })
     .catch((error) => {
       console.error("Error:", error)
@@ -85,7 +93,7 @@ function sendInsights() {
   })
     .then((response) => response.text())
     .then((response) => {
-      appendMessageToHistory("analysis", response, true)
+      appendMessageToHistory("insights", response, true)
     })
     .catch((error) => {
       console.error("Error:", error)
