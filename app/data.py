@@ -305,7 +305,7 @@ def get_chat_history(user_id):
 
     # Map the fields to the desired keys in each dictionary
     chat_history = [
-        {"role": message["role"], "content": message["text"]}
+        {"role": message["role"], "content": message["txt"]}
         for message in chat_history
     ]
 
