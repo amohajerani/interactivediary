@@ -1,3 +1,5 @@
+from pymongo import MongoClient
+from datetime import date
 from flask import request, Flask
 from threading import Thread
 import openai
@@ -283,4 +285,28 @@ def get_insight(txt):
 
 
 def get_chat_history(user_id):
-    return [{'role': 'assistant', 'content': 'your first message is here'}]
+
+    # Get today's date as a string
+    today = str(date.today())
+
+    # Query the collection for chat history
+    query = {
+        "user_id": user_id,
+        "date": today
+    }
+    projection = {
+        "_id": 0,
+        "role": 1,
+        "text": 1
+    }
+    sort = [("time", 1)]  # Sort by the "time" field in ascending order
+
+    chat_history = list(orm.Chats.find(query, projection).sort(sort))
+
+    # Map the fields to the desired keys in each dictionary
+    chat_history = [
+        {"role": message["role"], "content": message["text"]}
+        for message in chat_history
+    ]
+
+    return chat_history
