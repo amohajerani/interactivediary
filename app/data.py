@@ -191,6 +191,7 @@ def summarize(text):
     except Exception as e:
         print(e)
         return "there was an error in the summary"
+    summary = summary.strip()
     return summary
 
 
@@ -283,6 +284,8 @@ def get_insight(txt):
         insight = res['choices'][0]['text']
     except Exception as e:
         print(e)
+        return ''
+    insight = insight.strip()
     return insight
 
 
