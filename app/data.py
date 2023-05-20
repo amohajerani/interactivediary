@@ -22,7 +22,7 @@ if ENV_FILE:
 
 # Email configuration
 SMTP_HOST = 'smtp.gmail.com'
-SMTP_PORT = 25  # 587
+SMTP_PORT = 587
 SMTP_USERNAME = env.get("SMTP_USERNAME")
 GMAIL_APP_PASSWORD = env.get("GMAIL_APP_PASSWORD")
 

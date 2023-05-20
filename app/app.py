@@ -195,9 +195,9 @@ def analyze(analysis_type):
 # @require_auth
 def email_content():
     try:
-        data = request.get_json()
-        date = data.get('date')
-        email = data.get('email')
+        payload = request.get_json()
+        date = payload.get('date')
+        email = payload.get('email')
         user_id = session['user']['user_id']
         chats = data.get_chat_content(user_id, date)
         # Format chat content for email
