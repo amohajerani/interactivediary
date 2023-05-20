@@ -280,3 +280,7 @@ def get_insight(txt):
     except Exception as e:
         print(e)
     return insight
+
+
+def get_chat_history(user_id):
+    return [{'role': 'assistant', 'content': 'your first message is here'}]

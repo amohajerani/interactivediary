@@ -7,15 +7,6 @@ checkbox.addEventListener("change", function () {
 })
 
 let chatHistory = []
-function load_initial_prompt() {
-  console.log("Div loaded!")
-  chatHistory.push({ role: "assistant", content: "hello world" })
-  // Add your desired code here
-}
-
-document.addEventListener("DOMContentLoaded", function (event) {
-  load_initial_prompt()
-})
 
 function sendMessage() {
   const message = document.getElementById("message").value.trim()
@@ -47,6 +38,7 @@ function sendMessage() {
 
 function appendMessageToHistory(role, content, italic = false) {
   chatHistory.push({ role, content })
+
   let historyHTML = ""
   for (const message of chatHistory) {
     let messageContent = message.content
@@ -55,7 +47,17 @@ function appendMessageToHistory(role, content, italic = false) {
     }
     historyHTML += `<p>${messageContent}</p>`
   }
+
   document.getElementById("history").innerHTML = historyHTML
+}
+
+// Retrieve the chat history from the rendered HTML and update chatHistory array
+const chatHistoryElement = document.getElementById("history")
+const initialChatHistory = chatHistoryElement.querySelectorAll("p")
+for (const messageElement of initialChatHistory) {
+  const role = "user" // Assuming all initial messages are from the user
+  const content = messageElement.innerHTML
+  chatHistory.push({ role, content })
 }
 
 function sendSummary() {

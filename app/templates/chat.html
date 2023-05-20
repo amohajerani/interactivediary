@@ -4,7 +4,6 @@ Entry
 {% endblock %}
 
 {% block content %}
-<script src="{{ url_for('static', filename='chat.js') }}"></script>
 <style>
   #chat-box {
     max-width: 100%;
@@ -105,7 +104,12 @@ Entry
       <label for="toggle">Solo</label>
     </div>
     <div id="chat-history">
-      <div id="history"></div>
+      <div id="history">
+        {% for message in chat_history %}
+        <p>{{ message.content }}</p>
+        {% endfor %}
+
+      </div>
     </div>
     <div id="chat-message">
       <textarea id="message" autofocus></textarea>
@@ -118,6 +122,6 @@ Entry
       
     </div>
   </div>
-
+  <script src="{{ url_for('static', filename='chat.js') }}"></script>
 
 {% endblock %}
