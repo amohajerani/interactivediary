@@ -315,4 +315,16 @@ def get_chat_history(user_id):
         for message in chat_history
     ]
 
+    # the initial prompt for a new diary entry
+    if not chat_history:
+        summary = orm.Summaries.find({'user_id': user_id}).sort(
+            'date', pymongo.DESCENDING).limit(1)[0]
+        if summary:
+            content = "Here is your latest summary and insights: \n{summary.summary}\n{summary.insights}"
+            return [{'role': 'initial_prompt', 'content': content}]
+        # the first ever prompt
+        else:
+            content = "This is your first entry. If you prefer, set me on Quiet mode, and start writing. If you prefer to get my input, leave it on interactive mode.\nHere are some suggestions to get started:\nDescibe your day\nTalk about your emotions\nWrite a letter to future self"
+            return [{'role': 'initial_prompt', 'content': content}]
+
     return chat_history
