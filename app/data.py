@@ -256,8 +256,8 @@ def analyze(user_id, analysis_type, wordcloud=False):
                           background_color='white').generate(txt)
         filename = f"{user_id}_{today_str}.png"
         image.to_file('./static/'+filename)
-        orm.insert_summary(user_id, today_str,
-                           summary=summary, insights=insights)
+    orm.insert_summary(user_id, today_str,
+                       summary=summary, insights=insights)
     if analysis_type == 'insights':
         return insights
     if analysis_type == 'summary':
