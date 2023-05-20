@@ -239,11 +239,14 @@ def analyze(user_id, analysis_type):
     today_str = today.strftime('%Y-%m-%d')
     msgs = list(orm.Chats.find({'user_id': user_id, 'date': today_str, 'role': 'user'}).sort(
         "time", pymongo.ASCENDING))
-    msgs = [msg['summary'] for msg in msgs]
-    txt = ''
 
+    txt = ''
     for msg in msgs:
-        txt = txt + '\n'+msg
+        if msg['summary']:
+            txt = txt+'\n' + msg['summary']
+        else:
+            txt = txt+'\n' + msg['txt']
+
     insights = get_insight(txt)
     # get insights from today's chat
     summary = summarize(txt)
