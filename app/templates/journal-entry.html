@@ -7,7 +7,7 @@
     <div class="post">
 
         <h4>{{ date }}</h4>
-        <button onclick="shareViaEmail()">Share via Email</button>
+        <button onclick="shareViaEmail('{{ date }}')">Share via Email</button>
         {% for entry in entries %}
         <p style="{% if entry['role']=='bot' %}font-style: italic;background-color: lightgray;{% endif %}">
             {{ entry['txt'] }}

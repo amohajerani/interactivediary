@@ -1,4 +1,4 @@
-function shareViaEmail() {
+function shareViaEmail(date) {
   var email = prompt("Please enter your email address:")
   if (email) {
     var payload = {
