@@ -327,7 +327,7 @@ def get_chat_history(user_id):
         summary = orm.Summaries.find({'user_id': user_id}).sort(
             'date', pymongo.DESCENDING).limit(1)
         if summary:
-            content = "Here is your latest summary and insights: \n{summary[0].summary}\n{summary[0].insights}"
+            content = f"Here is your latest summary and insights: \n{summary[0].summary}\n{summary[0].insights}"
             return [{'role': 'initial_prompt', 'content': content}]
         # the first ever prompt
         else:
