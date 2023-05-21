@@ -20,10 +20,8 @@ if ENV_FILE:
     load_dotenv(ENV_FILE)
 
 # Email configuration
-SMTP_HOST = 'smtp.gmail.com'
-SMTP_PORT = 587
+
 SENDER_EMAIL = env.get("SMTP_USERNAME")
-GMAIL_APP_PASSWORD = env.get("GMAIL_APP_PASSWORD")
 AWS_REGION = "us-east-2"
 
 
