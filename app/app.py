@@ -203,11 +203,9 @@ def email_content():
         chats = data.get_chat_content(user_id, date)
         # Format chat content for email
         formatted_content = ''
-        chats = [{'role': 'user', 'content': 'my 1'},
-                 {'role': 'bot', 'content': 'my 2'}]
         for chat in chats:
-            role = chat['role']
-            text = chat['content']
+            role = chat.get('role')
+            text = chat.get('content')
             formatted_content += f'{role}: {text}\n'
 
         # Call the send_email function from the email module
