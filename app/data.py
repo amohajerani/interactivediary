@@ -22,7 +22,7 @@ if ENV_FILE:
 
 # Email configuration
 SMTP_HOST = 'smtp.gmail.com'
-SMTP_PORT = 25  # 587
+SMTP_PORT = 587
 SMTP_USERNAME = env.get("SMTP_USERNAME")
 GMAIL_APP_PASSWORD = env.get("GMAIL_APP_PASSWORD")
 
@@ -370,7 +370,10 @@ def send_email(date, email, content):
     message.attach(MIMEText(content, 'plain'))
 
     # Connect to SMTP server and send the email
-    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-        server.starttls()
-        server.login(SMTP_USERNAME, GMAIL_APP_PASSWORD)
-        server.send_message(message)
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SMTP_USERNAME, GMAIL_APP_PASSWORD)
+            server.send_message(message)
+    except Exception as e:
+        print('errorrrrrr ', e)
