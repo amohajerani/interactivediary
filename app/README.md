@@ -216,7 +216,7 @@ Setting up a new EC2 instance:
 - sudo systemctl start docker
 - sudo systemctl enable docker
 - docker --version
-- inside the interactivediary folder: sudo mkdir ~/.aws
+- inside the interactivediary/app folder: sudo mkdir ~/.aws
 - sudo touch .aws/credentials
 - vim .aws/credentials
 - copy the following:
