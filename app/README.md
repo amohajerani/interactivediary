@@ -216,9 +216,9 @@ Setting up a new EC2 instance:
 - sudo systemctl start docker
 - sudo systemctl enable docker
 - docker --version
-- sudo mkdir ~/.aws
-- sudo touch ~/.aws/credentials
-- vim ~/.aws/credentials
+- inside the interactivediary folder: sudo mkdir ~/.aws
+- sudo touch .aws/credentials
+- vim .aws/credentials
 - copy the following:
   [default]
   aws_access_key_id = YOUR_AWS_ACCESS_KEY_ID
