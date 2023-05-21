@@ -325,9 +325,9 @@ def get_chat_history(user_id):
     # the initial prompt for a new diary entry
     if not chat_history:
         summary = orm.Summaries.find({'user_id': user_id}).sort(
-            'date', pymongo.DESCENDING).limit(1)[0]
+            'date', pymongo.DESCENDING).limit(1)
         if summary:
-            content = "Here is your latest summary and insights: \n{summary.summary}\n{summary.insights}"
+            content = "Here is your latest summary and insights: \n{summary[0].summary}\n{summary[0].insights}"
             return [{'role': 'initial_prompt', 'content': content}]
         # the first ever prompt
         else:
