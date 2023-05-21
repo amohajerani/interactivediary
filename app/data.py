@@ -12,9 +12,8 @@ import pymongo
 import tiktoken
 from wordcloud import WordCloud
 import os
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+import boto3
+from botocore.exceptions import ClientError
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -23,8 +22,9 @@ if ENV_FILE:
 # Email configuration
 SMTP_HOST = 'smtp.gmail.com'
 SMTP_PORT = 587
-SMTP_USERNAME = env.get("SMTP_USERNAME")
+SENDER_EMAIL = env.get("SMTP_USERNAME")
 GMAIL_APP_PASSWORD = env.get("GMAIL_APP_PASSWORD")
+AWS_REGION = "us-east-1"
 
 
 def init_app():
@@ -362,18 +362,55 @@ def get_chat_content(user_id, date):
 
 
 def send_email(date, email, content):
-    # Create the email message
-    message = MIMEMultipart()
-    message['From'] = SMTP_USERNAME
-    message['To'] = email
-    message['Subject'] = f'Chat Content for {date}'
-    message.attach(MIMEText(content, 'plain'))
+    aws_client = boto3.client('ses', region_name=AWS_REGION)
 
-    # Connect to SMTP server and send the email
+    BODY_TEXT = ("Amazon SES Test (Python)\r\n"
+                 "This email was sent with Amazon SES using the "
+                 "AWS SDK for Python (Boto)."
+                 )
+    BODY_HTML = """<html>
+        <head></head>
+        <body>
+          <h1>Amazon SES Test (SDK for Python)</h1>
+          <p>This email was sent with
+            <a href='https://aws.amazon.com/ses/'>Amazon SES</a> using the
+            <a href='https://aws.amazon.com/sdk-for-python/'>
+              AWS SDK for Python (Boto)</a>.</p>
+        </body>
+        </html>
+            """
     try:
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SMTP_USERNAME, GMAIL_APP_PASSWORD)
-            server.send_message(message)
-    except Exception as e:
-        print('errorrrrrr ', e)
+        # Provide the contents of the email.
+        response = aws_client.send_email(
+            Destination={
+                'ToAddresses': [
+                    email,
+                ],
+            },
+            Message={
+                'Body': {
+                    'Html': {
+                        'Charset': "UTF-8",
+                        'Data': BODY_HTML,
+                    },
+                    'Text': {
+                        'Charset': "UTF-8",
+                        'Data': BODY_TEXT,
+                    },
+                },
+                'Subject': {
+                    'Charset': "UTF-8",
+                    'Data': f'Chat Content for {date}',
+                },
+            },
+            Source=SENDER_EMAIL,
+            # If you are not using a configuration set, comment or delete the
+            # following line
+            # ConfigurationSetName=CONFIGURATION_SET,
+        )
+    # Display an error if something goes wrong.
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+    else:
+        print("Email sent! Message ID:"),
+        print(response['MessageId'])
