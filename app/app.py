@@ -109,9 +109,10 @@ def get_response():
 
 
 @ app.route("/past_entries/<date>")
-@ require_auth
+# @ require_auth
 def past_entries(date):
-    entries = orm.get_entries(date, session['user']['user_id'])
+    # entries = orm.get_entries(date, session['user']['user_id'])
+    entries = [{'role': 'user', 'content': 'helloe'}]
     return render_template('journal-entry.html', entries=entries, date=date)
 
 
@@ -192,7 +193,7 @@ def analyze(analysis_type):
 
 
 @app.route('/email_content',  methods=['POST'])
-# @require_auth
+@require_auth
 def email_content():
     try:
         payload = request.get_json()
@@ -202,13 +203,15 @@ def email_content():
         chats = data.get_chat_content(user_id, date)
         # Format chat content for email
         formatted_content = ''
+        chats = [{'role': 'user', 'content': 'my 1'},
+                 {'role': 'bot', 'content': 'my 2'}]
         for chat in chats:
             role = chat['role']
-            text = chat['txt']
+            text = chat['content']
             formatted_content += f'{role}: {text}\n'
 
         # Call the send_email function from the email module
-        data.send_email(date, email, formatted_content)
+        data.send_email(date, email, 'formatted_content')
 
         return jsonify({'message': 'Email sent successfully'})
     except Exception as e:
