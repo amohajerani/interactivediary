@@ -22,7 +22,7 @@ if ENV_FILE:
 # Email configuration
 
 SENDER_EMAIL = env.get("SMTP_USERNAME")
-AWS_REGION = "us-east-2"
+AWS_REGION = "us-east-1"
 
 
 def init_app():
