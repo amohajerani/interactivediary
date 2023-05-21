@@ -103,16 +103,15 @@ def get_response_test():
 
 
 @app.route('/get_response', methods=['POST'])
-# @require_auth
+@require_auth
 def get_response():
     return data.get_response(request.json, session['user']['user_id'])
 
 
 @ app.route("/past_entries/<date>")
-# @ require_auth
+@ require_auth
 def past_entries(date):
-    # entries = orm.get_entries(date, session['user']['user_id'])
-    entries = [{'role': 'user', 'content': 'helloe'}]
+    entries = orm.get_entries(date, session['user']['user_id'])
     return render_template('journal-entry.html', entries=entries, date=date)
 
 

@@ -18,7 +18,7 @@ def run_wordcloud():
 
 if __name__ == '__main__':
     schedule.every().hour.do(run_get_summary)
-    schedule.every(10).minutes.do(generate_wordcloud)
+    schedule.every(1).hour.do(generate_wordcloud)
     while True:
         schedule.run_pending()
         time.sleep(60)  # after testing change this to 60 seconds or more
