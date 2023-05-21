@@ -7,7 +7,7 @@
       <div>
         <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud" style="margin-bottom: 10px;">
         <h4>Prior entries</h4>
-        {% if summaries %}
+        {% if dates %}
         <ul>
           {% for date in dates %}
           <li>
