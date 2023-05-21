@@ -9,13 +9,9 @@
         <h4>Prior entries</h4>
         {% if summaries %}
         <ul>
-          {% for doc in summaries %}
+          {% for date in dates %}
           <li>
-            <a href="/past_entries/{{doc.date}}">{{doc.date}}</a>
-            <p>Summary</p>
-            <p>{{doc.summary}}</p>
-            <p>Insights</p>
-            <p>{{doc.insights}}</p>
+            <a href="/past_entries/{{doc.date}}">{{date}}</a>
           </li>
           {% endfor %}
         </ul>

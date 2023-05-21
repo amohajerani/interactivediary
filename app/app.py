@@ -50,10 +50,10 @@ def home():
     if not session.get('user', None):
         return render_template('landing.html')
     user_id = session['user']['user_id']
-    summaries = orm.get_summaries(
+    dates = orm.get_dates(
         user_id=user_id)
     wordcloud = orm.get_wordcloud_file(user_id)
-    return render_template('home.html', summaries=summaries, wordcloud=wordcloud)
+    return render_template('home.html', dates=dates, wordcloud=wordcloud)
 
 
 @app.route("/callback", methods=["GET", "POST"])

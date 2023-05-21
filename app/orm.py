@@ -25,13 +25,14 @@ def insert_chat(obj):
     Chats.insert_one(obj)
 
 
-def get_summaries(user_id):
-    summaries = list(Summaries.find(
-        {'user_id': user_id}, {'date': 1, 'summary': 1, 'insights': 1}))
-    for summary in summaries:
-        del summary['_id']
-    summaries = sorted(summaries, key=lambda x: x['date'])
-    return summaries
+def get_dates(user_id):
+    dates = list(Chats.find(
+        {'user_id': user_id}, {'date': 1}))
+    res = []
+    for date in dates:
+        res.append(date['date'])
+    res.sort()
+    return res
 
 
 def get_entries(date, user_id):
