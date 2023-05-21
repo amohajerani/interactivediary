@@ -362,18 +362,12 @@ def get_chat_content(user_id, date):
 def send_email(date, email, content):
     aws_client = boto3.client('ses', region_name=AWS_REGION)
 
-    BODY_TEXT = ("Amazon SES Test (Python)\r\n"
-                 "This email was sent with Amazon SES using the "
-                 "AWS SDK for Python (Boto)."
+    BODY_TEXT = (content
                  )
-    BODY_HTML = """<html>
+    BODY_HTML = f"""<html>
         <head></head>
         <body>
-          <h1>Amazon SES Test (SDK for Python)</h1>
-          <p>This email was sent with
-            <a href='https://aws.amazon.com/ses/'>Amazon SES</a> using the
-            <a href='https://aws.amazon.com/sdk-for-python/'>
-              AWS SDK for Python (Boto)</a>.</p>
+          <h1>{content}</p>
         </body>
         </html>
             """

@@ -1,22 +1,27 @@
-{% extends "base.html" %} 
-{% block title %}Past entries{% endblock %} 
+{% extends "base.html" %}
+{% block title %}Past entries{% endblock %}
 {% block content %}
 <div class="content">
   <div>
     <div>
       <div>
-        <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud">
+        <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud" style="margin-bottom: 10px;">
         <h4>Prior entries</h4>
+        {% if summaries %}
         <ul>
           {% for doc in summaries %}
-          <li><a href="/past_entries/{{doc.date}}">{{doc.date}}</a>
-          <p>Summary</p>
-          <p>{{doc.summary}}</p>
-          <p>Insights</p>
-          <p>{{doc.insights}}</p>
+          <li>
+            <a href="/past_entries/{{doc.date}}">{{doc.date}}</a>
+            <p>Summary</p>
+            <p>{{doc.summary}}</p>
+            <p>Insights</p>
+            <p>{{doc.insights}}</p>
           </li>
           {% endfor %}
         </ul>
+        {% else %}
+        <p>No entries yet</p>
+        {% endif %}
       </div>
     </div>
   </div>
