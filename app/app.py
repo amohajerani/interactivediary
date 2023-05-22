@@ -106,7 +106,7 @@ def get_response():
 @ app.route("/past_entries/<date>")
 @ require_auth
 def past_entries(date):
-    entries = orm.get_entries(date, session['user']['user_id'])
+    entries = data.get_chats_by_date(session['user']['user_id'], date)
     return render_template('journal-entry.html', entries=entries, date=date)
 
 
