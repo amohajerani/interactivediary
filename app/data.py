@@ -95,8 +95,6 @@ def get_response(req_data, user_id):
     messages = [{'role': 'system',
                  "content": chat_system_message}]
     messages.extend(chat_history)
-    import pdb
-    pdb.set_trace()
     try:
         res = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
