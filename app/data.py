@@ -312,28 +312,16 @@ def get_chat_history(user_id):
     # Get today's date as a string
     today = str(date.today())
 
-    # Query the collection for chat history
-    query = {
-        "user_id": user_id,
-        "date": today
-    }
-    projection = {
-        "_id": 0,
-        "role": 1,
-        "txt": 1
-    }
     sort = [("time", 1)]  # Sort by the "time" field in ascending order
 
-    chat_history = list(orm.Chats.find(query, projection).sort(sort))
+    entry = orm.Entries.find_one(
+        {"user_id": user_id, "date": today}, {'chats': 1, '_id': 0})
 
-    # Map the fields to the desired keys in each dictionary
-    chat_history = [
-        {"role": message["role"], "content": message["txt"]}
-        for message in chat_history
-    ]
+    if not entry or not entry.get('chats'):
+        chats = []
 
     # the initial prompt for a new diary entry
-    if not chat_history:
+    if not chats:
         summaries = list(orm.Summaries.find({'user_id': user_id}).sort(
             'date', pymongo.DESCENDING).limit(1))
         if summaries and summaries[0].get('summary'):
@@ -344,7 +332,7 @@ def get_chat_history(user_id):
             content = "This is your first entry. If you prefer, set me on Quiet mode, and start writing. If you prefer to get my input, leave it on interactive mode.\nHere are some suggestions to get started:\nDescibe your day\nTalk about your emotions\nWrite a letter to future self"
             return [{'role': 'initial_prompt', 'content': content}]
 
-    return chat_history
+    return chats
 
 
 def get_chat_content(user_id, date):

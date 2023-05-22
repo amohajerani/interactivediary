@@ -93,7 +93,8 @@ def logout():
 @app.route("/chat")
 @require_auth
 def chat():
-    chat_history = data.get_chat_history(session['user']['user_id'])
+    user_id = session['user']['user_id']
+    chat_history = data.get_chat_history(user_id)
     return render_template('chat.html', chat_history=chat_history)
 
 
