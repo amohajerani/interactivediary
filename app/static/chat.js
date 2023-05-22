@@ -27,45 +27,45 @@ function sendMessage() {
     .then((response) => {
       appendMessageToHistory("user", message)
       if (!quietMode) {
-        appendMessageToHistory("bot", response)
+        appendMessageToHistory("bot", response, true)
       }
     })
     .catch((error) => {
       console.error("Error:", error)
     })
 }
-let historyHTML = ""
-function appendMessageToHistory(role, content) {
-  if (role === "user") {
-    historyHTML += `<p>${content}</p>`
+
+function appendMessageToHistory(role, content, italic = false) {
+  chatHistory.push({ role, content })
+
+  let historyHTML = ""
+  for (const message of chatHistory) {
+    let messageContent = message.content
+    if (message.role === "bot" && italic) {
+      messageContent = `<em>${messageContent}</em>`
+    }
+    if (message.role === "summary") {
+      historyHTML += `<strong><em>Summary: </em></strong>`
+      messageContent = `<em>${messageContent}</em>`
+    }
+    if (message.role === "insights") {
+      historyHTML += `<strong><em>Insights: </em></strong>`
+      messageContent = `<em>${messageContent}</em>`
+    }
+    historyHTML += `<p>${messageContent}</p>`
   }
-  if (role === "bot") {
-    historyHTML += `<em>${content}</em>`
-  }
-  if (role === "summary") {
-    historyHTML += `<strong><em>Summary: </em></strong>`
-  }
-  if (role === "summary") {
-    historyHTML += `<em>${content}</em>`
-  }
-  if (role === "insights") {
-    historyHTML += `<strong><em>Insights: </em></strong>`
-  }
-  if (role === "insights") {
-    historyHTML += `<em>${content}</em>`
-  }
+
   document.getElementById("history").innerHTML = historyHTML
 }
-// the snippet below is not in a function. It runs everytime you load the page.
-//
+
 // Retrieve the chat history from the rendered HTML and update chatHistory array
-//const chatHistoryElement = document.getElementById("history")
-//const initialChatHistory = chatHistoryElement.querySelectorAll("p")
-//for (const messageElement of initialChatHistory) {
-//  const role = "bot" // Assuming all initial messages are from the bot
-//  const content = messageElement.innerHTML
-//  chatHistory.push({ role, content })
-//}
+const chatHistoryElement = document.getElementById("history")
+const initialChatHistory = chatHistoryElement.querySelectorAll("p")
+for (const messageElement of initialChatHistory) {
+  const role = "bot" // Assuming all initial messages are from the bot
+  const content = messageElement.innerHTML
+  chatHistory.push({ role, content })
+}
 
 function sendSummary() {
   fetch("/analyze/summary", {
@@ -76,7 +76,7 @@ function sendSummary() {
   })
     .then((response) => response.text())
     .then((response) => {
-      appendMessageToHistory("summary", response)
+      appendMessageToHistory("summary", response, true)
     })
     .catch((error) => {
       console.error("Error:", error)
@@ -92,7 +92,7 @@ function sendInsights() {
   })
     .then((response) => response.text())
     .then((response) => {
-      appendMessageToHistory("insights", response)
+      appendMessageToHistory("insights", response, true)
     })
     .catch((error) => {
       console.error("Error:", error)
