@@ -108,8 +108,9 @@ def get_response():
 @ app.route("/past_entries/<date>")
 @ require_auth
 def past_entries(date):
-    entries = data.get_chats_by_date(session['user']['user_id'], date)
-    return render_template('journal-entry.html', entries=entries, date=date)
+    entries, summary, insights = data.get_chats_by_date(
+        session['user']['user_id'], date)
+    return render_template('journal-entry.html', entries=entries, summary=summary, insights=insights, date=date)
 
 
 @app.route('/logo')
