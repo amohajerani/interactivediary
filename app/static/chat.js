@@ -27,34 +27,33 @@ function sendMessage() {
     .then((response) => {
       appendMessageToHistory("user", message)
       if (!quietMode) {
-        appendMessageToHistory("bot", response, true)
+        appendMessageToHistory("bot", response)
       }
     })
     .catch((error) => {
       console.error("Error:", error)
     })
 }
-
-function appendMessageToHistory(role, content, italic = false) {
-  chatHistory.push({ role, content })
-
-  let historyHTML = ""
-  for (const message of chatHistory) {
-    let messageContent = message.content
-    if (message.role === "bot" && italic) {
-      messageContent = `<em>${messageContent}</em>`
-    }
-    if (message.role === "summary") {
-      historyHTML += `<strong><em>Summary: </em></strong>`
-      messageContent = `<em>${messageContent}</em>`
-    }
-    if (message.role === "insights") {
-      historyHTML += `<strong><em>Insights: </em></strong>`
-      messageContent = `<em>${messageContent}</em>`
-    }
-    historyHTML += `<p>${messageContent}</p>`
+let historyHTML = ""
+function appendMessageToHistory(role, content) {
+  if (role === "user") {
+    historyHTML += `<p>${content}</p>`
   }
-
+  if (role === "bot") {
+    historyHTML += `<em>${content}</em>`
+  }
+  if (role === "summary") {
+    historyHTML += `<strong><em>Summary: </em></strong>`
+  }
+  if (role === "summary") {
+    historyHTML += `<em>${content}</em>`
+  }
+  if (role === "insights") {
+    historyHTML += `<strong><em>Insights: </em></strong>`
+  }
+  if (role === "insights") {
+    historyHTML += `<em>${content}</em>`
+  }
   document.getElementById("history").innerHTML = historyHTML
 }
 // the snippet below is not in a function. It runs everytime you load the page.
@@ -77,7 +76,7 @@ function sendSummary() {
   })
     .then((response) => response.text())
     .then((response) => {
-      appendMessageToHistory("summary", response, true)
+      appendMessageToHistory("summary", response)
     })
     .catch((error) => {
       console.error("Error:", error)
@@ -93,7 +92,7 @@ function sendInsights() {
   })
     .then((response) => response.text())
     .then((response) => {
-      appendMessageToHistory("insights", response, true)
+      appendMessageToHistory("insights", response)
     })
     .catch((error) => {
       console.error("Error:", error)
