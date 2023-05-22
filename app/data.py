@@ -190,7 +190,7 @@ def get_token_count(message, model="text-curie-001"):
 def summarize(text):
     summary = text
     if len(text) < 150:
-        return summary
+        return "not enough content to summarize."
     prompt = f"{summarize_prompt} ```{text}```"
     try:
         res = openai.Completion.create(
@@ -252,28 +252,28 @@ def generate_wordcloud():
 
 def analyze(user_id, analysis_type, wordcloud=False):
     # get today's chat
+    today = datetime.date.today().strftime('%Y-%m-%d')
+    entry = orm.Entries.find_one(
+        {'user_id': user_id, 'date': today}, {'chats': 1, '_id': 0})
+    if entry and entry.get('chats'):
+        chats = entry.get('chats')
+    else:
+        chats = []
 
-    today = datetime.date.today()
-    today_str = today.strftime('%Y-%m-%d')
-    msgs = list(orm.Chats.find({'user_id': user_id, 'date': today_str, 'role': 'user'}).sort(
-        "time", pymongo.ASCENDING))
-
-    txt = ''
-    for msg in msgs:
-        if msg['summary']:
-            txt = txt+'\n' + msg['summary']
-        else:
-            txt = txt+'\n' + msg['txt']
-    insights = get_insight(txt)
+    content = ''
+    for chat in chats:
+        if chat.get('role') == 'user':
+            content = content + '\n' + chat['content']
+    insights = get_insight(content)
     # get insights from today's chat
-    summary = summarize(txt)
+    summary = summarize(content)
     # make wordcloud from today's chat
     if wordcloud:
         image = WordCloud(collocations=False,
-                          background_color='white').generate(txt)
-        filename = f"{user_id}_{today_str}.png"
+                          background_color='white').generate(content)
+        filename = f"{user_id}_{today}.png"
         image.to_file('./static/'+filename)
-    orm.insert_summary(user_id, today_str,
+    orm.insert_summary(user_id, today,
                        summary=summary, insights=insights)
     if analysis_type == 'insights':
         return insights
@@ -308,6 +308,12 @@ def get_insight(txt):
 
 
 def get_chat_history(user_id):
+    '''
+    preload the chat page with
+    - prior chat from the same day
+    - if none, then summary and insights from the last day
+    - if none, then general prompt
+    '''
 
     # Get today's date as a string
     today = str(date.today())
@@ -322,12 +328,11 @@ def get_chat_history(user_id):
     else:
         chats = entry['chats']
 
-    # the initial prompt for a new diary entry
     if not chats:
-        summaries = list(orm.Summaries.find({'user_id': user_id}).sort(
+        last_entry = list(orm.Summaries.find({'user_id': user_id}).sort(
             'date', pymongo.DESCENDING).limit(1))
-        if summaries and summaries[0].get('summary'):
-            content = f"Here is your latest summary and insights: \n{summaries[0].get('summary')}\n{summaries[0].get('insights')}"
+        if last_entry and last_entry[0].get('summary'):
+            content = f"To help you start a new entry, here are summary ans insights from your last writing: \n {last_entry[0].get('summary')} \n {last_entry[0].get('insights')}"
             return [{'role': 'initial_prompt', 'content': content}]
         # the first ever prompt
         else:

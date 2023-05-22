@@ -195,16 +195,9 @@ def email_content():
         date = payload.get('date')
         email = payload.get('email')
         user_id = session['user']['user_id']
-        chats = data.get_chat_content(user_id, date)
-        # Format chat content for email
-        formatted_content = ''
-        for chat in chats:
-            role = chat.get('role')
-            text = chat.get('content')
-            formatted_content += f'{role}: {text}\n'
-
+        chats = data.get_chats_by_date(user_id, date)
         # Call the send_email function from the email module
-        data.send_email(date, email, formatted_content)
+        data.send_email(date, email, chats)
 
         return jsonify({'message': 'Email sent successfully'})
     except Exception as e:
