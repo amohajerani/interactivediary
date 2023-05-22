@@ -27,7 +27,7 @@ def insert_chat(obj):
 
 
 def get_dates(user_id):
-    dates = list(Chats.find(
+    dates = list(Entries.find(
         {'user_id': user_id}, {'date': 1}).distinct('date'))
 
     dates.sort()
