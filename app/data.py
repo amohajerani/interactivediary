@@ -45,9 +45,9 @@ Finally, list action items that the writer could follow in at most four bullet p
 Passage: """
 
 
-def store_message(user_id, text, role, date):
+def store_message(user_id, content, role, date):
     orm.Entries.update_one({'user_id': user_id, 'date': date},
-                           {"$push": {"chats": {'role': role, 'text': text}}},
+                           {"$push": {"chats": {'role': role, 'content': content}}},
                            )
 
 
@@ -73,11 +73,10 @@ def get_response(req_data, user_id):
     # get the prior chats from today
     entry = orm.Entries.find_one(
         {"user_id": user_id, 'date': today}, {'chats': 1, '_id': 0})
-    if not entry:
-        return []
-    chats = entry.get('chats')
-    if not chats:
+    if not entry or not entry.get('chats'):
         chats = []
+    else:
+        chats = entry.get('chats')
 
     # store the last user message
     thread_input_txt = Thread(target=store_message, args=(
@@ -241,7 +240,7 @@ def generate_wordcloud():
         if not txt:
             continue
         image = WordCloud(collocations=False,
-                          background_color='white').generate(txt)
+                          background_color='white', color_func=lambda *args, **kwargs: "blue").generate(txt)
         file_path = f"./uploads/{user_id}_{today_str}.png"
         image.to_file(file_path)
 
