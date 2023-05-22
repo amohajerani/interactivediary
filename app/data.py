@@ -342,28 +342,6 @@ def get_chat_history(user_id):
     return chats
 
 
-def get_chat_content(user_id, date):
-    query = {
-        "user_id": user_id,
-        "date": date
-    }
-    projection = {
-        "_id": 0,
-        "role": 1,
-        "txt": 1
-    }
-    sort = [("time", 1)]  # Sort by the "time" field in ascending order
-
-    chat_content = list(orm.Chats.find(query, projection).sort(sort))
-
-    # Map the fields to the desired keys in each dictionary
-    chat_content = [
-        {"role": message["role"], "content": message["txt"]}
-        for message in chat_content
-    ]
-    return chat_content
-
-
 def send_email(date, email, content):
     aws_client = boto3.client('ses', region_name=AWS_REGION)
 
@@ -372,7 +350,7 @@ def send_email(date, email, content):
     BODY_HTML = f"""<html>
         <head></head>
         <body>
-          <h1>{content}</p>
+          <p>{content}</p>
         </body>
         </html>
             """
