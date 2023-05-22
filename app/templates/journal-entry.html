@@ -10,7 +10,7 @@
         <button onclick="shareViaEmail('{{ date }}')">Share via Email</button>
         {% for entry in entries %}
         <p style="{% if entry['role']=='bot' %}font-style: italic;background-color: lightgray;{% endif %}">
-            {{ entry['txt'] }}
+            {{ entry['content'] }}
         </p>
         {% endfor %}
     </div>

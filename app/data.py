@@ -114,6 +114,11 @@ def get_response(req_data, user_id):
     return outpt
 
 
+def get_chats_by_date(user_id, date):
+    entry = orm.Entries.find_one({'user_id': user_id, 'date': date})
+    return entry.get('chats')
+
+
 def remove_subscriber(req_data, publisher_user_id, publisher_email):
     subscriber_email = req_data['email']
     orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
