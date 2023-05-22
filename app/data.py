@@ -116,7 +116,10 @@ def get_response(req_data, user_id):
 
 def get_chats_by_date(user_id, date):
     entry = orm.Entries.find_one({'user_id': user_id, 'date': date})
-    return entry.get('chats')
+    if entry:
+        return entry.get('chats')
+    else:
+        return []
 
 
 def remove_subscriber(req_data, publisher_user_id, publisher_email):
