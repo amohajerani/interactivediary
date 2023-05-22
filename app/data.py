@@ -342,18 +342,26 @@ def get_chat_history(user_id):
     return chats
 
 
-def send_email(date, email, content):
+def send_email(date, email, chats):
     aws_client = boto3.client('ses', region_name=AWS_REGION)
 
-    BODY_TEXT = (content
-                 )
-    BODY_HTML = f"""<html>
-        <head></head>
-        <body>
-          <p>{content}</p>
-        </body>
-        </html>
-            """
+    BODY_TEXT = ''
+    for chat in chats:
+        BODY_TEXT = BODY_TEXT + \
+            f"\n{chat.get('role','')}: {chat.get('content','')}"
+
+    BODY_HTML = '<html>\n<body>\n'
+    for chat in chats:
+        role = chat.get('role', '')
+        content = chat.get('content', '')
+
+        if role == 'bot':
+            BODY_HTML += '<p><em>{}</em></p>\n'.format(content)
+        else:
+            BODY_HTML += '<p>{}</p>\n'.format(content)
+
+    BODY_HTML += '</body>\n</html>'
+
     try:
         # Provide the contents of the email.
         response = aws_client.send_email(
