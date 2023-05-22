@@ -48,6 +48,7 @@ Passage: """
 def store_message(user_id, content, role, date):
     orm.Entries.update_one({'user_id': user_id, 'date': date},
                            {"$push": {"chats": {'role': role, 'content': content}}},
+                           upsert=True
                            )
 
 
