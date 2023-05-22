@@ -97,11 +97,6 @@ def chat():
     return render_template('chat.html', chat_history=chat_history)
 
 
-@app.route('/get_response_test', methods=['POST'])
-def get_response_test():
-    return data.get_response(request.json, 'blank', False)
-
-
 @app.route('/get_response', methods=['POST'])
 @require_auth
 def get_response():
@@ -208,7 +203,7 @@ def email_content():
             formatted_content += f'{role}: {text}\n'
 
         # Call the send_email function from the email module
-        data.send_email(date, email, 'formatted_content')
+        data.send_email(date, email, formatted_content)
 
         return jsonify({'message': 'Email sent successfully'})
     except Exception as e:

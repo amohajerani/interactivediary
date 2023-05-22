@@ -17,6 +17,7 @@ db = client.interactivechat
 Users = db.users
 Chats = db.chats
 Summaries = db.summaries
+Entries = db.entries
 
 
 def insert_chat(obj):
@@ -50,7 +51,6 @@ def insert_summary(user_id, date, summary, insights):
 
 
 def update_user(user_id, new_data):
-    Users.find_one({'_id': ObjectId(user_id)})
     update = {"$set": new_data}
     Users.update_one({'_id': ObjectId(user_id)}, update, upsert=True)
 

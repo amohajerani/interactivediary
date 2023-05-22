@@ -21,7 +21,6 @@ function sendMessage() {
     body: JSON.stringify({
       quietMode: quietMode,
       msg: message,
-      history: chatHistory,
     }),
   })
     .then((response) => response.text())
@@ -58,15 +57,16 @@ function appendMessageToHistory(role, content, italic = false) {
 
   document.getElementById("history").innerHTML = historyHTML
 }
-
+// the snippet below is not in a function. It runs everytime you load the page.
+//
 // Retrieve the chat history from the rendered HTML and update chatHistory array
-const chatHistoryElement = document.getElementById("history")
-const initialChatHistory = chatHistoryElement.querySelectorAll("p")
-for (const messageElement of initialChatHistory) {
-  const role = "user" // Assuming all initial messages are from the user
-  const content = messageElement.innerHTML
-  chatHistory.push({ role, content })
-}
+//const chatHistoryElement = document.getElementById("history")
+//const initialChatHistory = chatHistoryElement.querySelectorAll("p")
+//for (const messageElement of initialChatHistory) {
+//  const role = "bot" // Assuming all initial messages are from the bot
+//  const content = messageElement.innerHTML
+//  chatHistory.push({ role, content })
+//}
 
 function sendSummary() {
   fetch("/analyze/summary", {

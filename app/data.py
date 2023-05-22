@@ -23,6 +23,7 @@ if ENV_FILE:
 
 SENDER_EMAIL = env.get("SMTP_USERNAME")
 AWS_REGION = "us-east-1"
+chat_system_message = "You are a therapist. Be brief. Keep your response under 30 words"
 
 
 def init_app():
@@ -44,20 +45,10 @@ Finally, list action items that the writer could follow in at most four bullet p
 Passage: """
 
 
-def store_message(user_id, text, role):
-    '''
-    If the message is from the bot, just store it in mongo.
-    If the message is from the user, first get teh summary. If the summary makes sense, add it to
-    the object and then store it. 
-    If a message does not have summary, it is because it is from bot
-    If a message has an empty summary, it is because we should use the original text.
-    '''
-    obj = {'user_id': user_id, 'txt': text, 'role': role}
-    if role == 'user':
-        summary = summarize(text)
-        obj.update({'summary': summary})
-    orm.insert_chat(obj)
-    orm.update_user(user_id, {'last_msg': datetime.datetime.now()})
+def store_message(user_id, text, role, date):
+    orm.Entries.update_one({'user_id': user_id, 'date': date},
+                           {"$push": {"chats": {'role': role, 'text': text}}},
+                           )
 
 
 def get_user_id(email):
@@ -69,31 +60,40 @@ def get_user_id(email):
     return str(user.inserted_id)
 
 
-def get_response(req_data, user_id, store=True):
+def get_response(req_data, user_id):
     '''
     Send the user's input to GPT and return the response. 
-    If store is set to True, store this exchange to the db.
     '''
     # get the payload
-    user_text = req_data['msg']
+    content = req_data['msg']
     quiet_mode = req_data['quietMode']
     # store the input message immediately so it is retained.
-    if store:
-        thread_input_txt = Thread(target=store_message, args=(
-            user_id, user_text, 'user'))
-        thread_input_txt.start()
+    today = datetime.date.today().strftime('%Y-%m-%d')
+
+    # get the prior chats from today
+    entry = orm.Entries.find_one(
+        {"user_id": user_id, 'date': today}, {'chats': 1, '_id': 0})
+    chats = entry.get('chats')
+    if not chats:
+        chats = []
+
+    # store the last user message
+    thread_input_txt = Thread(target=store_message, args=(
+        user_id, content, 'user', today))
+    thread_input_txt.start()
     # if it is quiet mode, you are done
     if quiet_mode:
         return {'success': True}
-    chat_history = req_data['history']
+
+    chats.append({'role': 'user', 'content': content})
+
     # let's just use the last response from bot as history
-    if chat_history:
-        chat_history = chat_history[-1:]
+    # We need to use more text though unless we run out of token limit.
+    chat_history = chats[-1]
     # get response from the bot
     messages = [{'role': 'system',
-                 "content": "You are a therapist. Be brief. Keep your response under 30 words"}]
+                 "content": chat_system_message}]
     messages.extend(chat_history)
-    messages.append({'role': 'user', 'content': user_text})
     try:
         res = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -106,12 +106,12 @@ def get_response(req_data, user_id, store=True):
         return "Gagali is sorry. She cannot be reached now, you message is safe with her"
 
     # store the user input and bot's response to db
-    if store:
-        thread_output_txt = Thread(target=store_message, args=(
-            user_id, res['choices'][0]['message']['content'], 'bot'))
-        thread_output_txt.start()
+    outpt = res['choices'][0]['message']['content']
+    thread_output_txt = Thread(target=store_message, args=(
+        user_id, outpt, 'bot', today))
+    thread_output_txt.start()
 
-    return res['choices'][0]['message']['content']
+    return outpt
 
 
 def remove_subscriber(req_data, publisher_user_id, publisher_email):
