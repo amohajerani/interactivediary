@@ -73,6 +73,8 @@ def get_response(req_data, user_id):
     # get the prior chats from today
     entry = orm.Entries.find_one(
         {"user_id": user_id, 'date': today}, {'chats': 1, '_id': 0})
+    if not entry:
+        return []
     chats = entry.get('chats')
     if not chats:
         chats = []
