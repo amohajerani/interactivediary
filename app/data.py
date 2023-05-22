@@ -319,6 +319,8 @@ def get_chat_history(user_id):
 
     if not entry or not entry.get('chats'):
         chats = []
+    else:
+        chats = entry['chats']
 
     # the initial prompt for a new diary entry
     if not chats:
