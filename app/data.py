@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from datetime import date
+import datetime
 from flask import request, Flask
 from threading import Thread
 import openai
@@ -23,7 +23,6 @@ if ENV_FILE:
 
 SENDER_EMAIL = env.get("SMTP_USERNAME")
 AWS_REGION = "us-east-1"
-chat_system_message = "You are a therapist. Be brief. Keep your response under 30 words"
 
 
 def init_app():
@@ -34,9 +33,9 @@ def init_app():
 
 
 openai.api_key = env.get("OPENAI_KEY")
-
+chat_system_message = "You are a therapist. Be brief. Keep your response under 30 words"
 summarize_prompt = """Your task is to generate a short summary of a diary entry based on principles of reflective listening. 
-Offer validation for feelings expressed. Summarize the below diary delimited by triple backticks, in 3 sentences or less.
+Offer validation for feelings expressed. Summarize the below diary in 3 sentences or less.
 Diary: """
 insight_prompt = """Provide the overall sentiment of the passage in one sentence.
 Then, analyze the passage and describe the feelings, thoughts and facts, each as one bullet point.
@@ -50,6 +49,14 @@ def store_message(user_id, content, role, date):
                            {"$push": {"chats": {'role': role, 'content': content}}},
                            upsert=True
                            )
+
+
+def store_analysis(user_id, summary, insights, date):
+    orm.Entries.update_one(
+        {'user_id': user_id, 'date': date},
+        {'$set': {'summary': summary, 'insights': insights}},
+        upsert=True
+    )
 
 
 def get_user_id(email):
@@ -118,8 +125,10 @@ def get_response(req_data, user_id):
 
 def get_chats_by_date(user_id, date):
     entry = orm.Entries.find_one({'user_id': user_id, 'date': date})
+    if not entry.get('summary'):
+        analyze(user_id, date, 'done')
     if entry:
-        return entry.get('chats')
+        return entry.get('chats'), entry.get('summary'), entry.get('insights')
     else:
         return []
 
@@ -191,7 +200,7 @@ def summarize(text):
     summary = text
     if len(text) < 150:
         return "not enough content to summarize."
-    prompt = f"{summarize_prompt} ```{text}```"
+    prompt = f"{summarize_prompt}{text}"
     try:
         res = openai.Completion.create(
             model="text-curie-001",
@@ -250,11 +259,9 @@ def generate_wordcloud():
             os.remove(file_path)
 
 
-def analyze(user_id, analysis_type, wordcloud=False):
-    # get today's chat
-    today = datetime.date.today().strftime('%Y-%m-%d')
+def analyze(user_id, date, analysis_type, wordcloud=False):
     entry = orm.Entries.find_one(
-        {'user_id': user_id, 'date': today}, {'chats': 1, '_id': 0})
+        {'user_id': user_id, 'date': date}, {'chats': 1, '_id': 0})
     if entry and entry.get('chats'):
         chats = entry.get('chats')
     else:
@@ -271,10 +278,13 @@ def analyze(user_id, analysis_type, wordcloud=False):
     if wordcloud:
         image = WordCloud(collocations=False,
                           background_color='white').generate(content)
-        filename = f"{user_id}_{today}.png"
+        filename = f"{user_id}_{date}.png"
         image.to_file('./static/'+filename)
-    orm.insert_summary(user_id, today,
-                       summary=summary, insights=insights)
+
+    thread_analyziz = Thread(target=store_analysis, args=(
+        user_id, summary, insights, date))
+    thread_analyziz.start()
+
     if analysis_type == 'insights':
         return insights
     if analysis_type == 'summary':
@@ -316,12 +326,10 @@ def get_chat_history(user_id):
     '''
 
     # Get today's date as a string
-    today = str(date.today())
-
-    sort = [("time", 1)]  # Sort by the "time" field in ascending order
-
+    today = datetime.date.today()
+    today_str = today.strftime('%Y-%m-%d')
     entry = orm.Entries.find_one(
-        {"user_id": user_id, "date": today}, {'chats': 1, '_id': 0})
+        {"user_id": user_id, "date": today_str}, {'chats': 1, '_id': 0})
 
     if not entry or not entry.get('chats'):
         chats = []

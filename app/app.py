@@ -11,6 +11,7 @@ import orm
 import data
 import urllib.parse
 import base64
+import datetime
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -184,7 +185,9 @@ def analyze(analysis_type):
     """
     return a json like {'text':'......'}
     """
-    return data.analyze(session['user']['user_id'], analysis_type)
+    today = datetime.date.today()
+    today_str = today.strftime('%Y-%m-%d')
+    return data.analyze(session['user']['user_id'], today_str, analysis_type)
 
 
 @app.route('/email_content',  methods=['POST'])
@@ -195,9 +198,9 @@ def email_content():
         date = payload.get('date')
         email = payload.get('email')
         user_id = session['user']['user_id']
-        chats = data.get_chats_by_date(user_id, date)
+        chats, summary, insights = data.get_chats_by_date(user_id, date)
         # Call the send_email function from the email module
-        data.send_email(date, email, chats)
+        data.send_email(date, email, chats, summary, insights)
 
         return jsonify({'message': 'Email sent successfully'})
     except Exception as e:
