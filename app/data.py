@@ -90,11 +90,13 @@ def get_response(req_data, user_id):
 
     # let's just use the last response from bot as history
     # We need to use more text though unless we run out of token limit.
-    chat_history = chats[-1]
+    chat_history = chats[-1:]
     # get response from the bot
     messages = [{'role': 'system',
                  "content": chat_system_message}]
     messages.extend(chat_history)
+    import pdb
+    pdb.set_trace()
     try:
         res = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
