@@ -67,7 +67,8 @@ def callback():
     # if user has not signed the agreement, this is the time
     if not terms_conditions:
         redirect('/terms')
-    return redirect("/")
+    else:
+        return redirect("/a")
 
 
 @app.route('/terms')
