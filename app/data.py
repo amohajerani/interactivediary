@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 import datetime
-from flask import request, Flask
+from flask import Flask
 from threading import Thread
 import openai
 import orm
@@ -33,18 +33,31 @@ def init_app():
 
 
 openai.api_key = env.get("OPENAI_KEY")
-chat_system_message = "You are a therapist. Be brief. Keep your response under 30 words"
-summarize_prompt = """Your task is to generate a short summary of a diary entry based on principles of reflective listening. 
+
+# this is the system message for chat echanges
+chat_system_message = "You are a good friend. Acknowledge feelings and ask follow up questions to encourage deeper conversation. say at most 2 sentences."
+
+summarize_prompt = """Your task is to generate a short summary of a diary entry based on principles of reflective listening.
 Offer validation for feelings expressed. Summarize the below diary in 3 sentences or less.
 Diary: """
+
 insight_prompt = """Provide the overall sentiment of the passage in one sentence.
-Then, analyze the passage and describe the feelings, thoughts and facts, each as one bullet point.
-Then, list the writer's beliefs that lead to those feelings and thoughts in three bullet points.
-Finally, list action items that the writer could follow in at most four bullet points.
+Then, analyze the passage and describe the feelings, thoughts and facts.
+Then, list the writer's beliefs that lead to those feelings and thoughts.
+Finally, list action items that the writer could follow. Respond in at most 80 words.
 Passage: """
+
+# the max number of tokens I want to receive from the bot in chat exchanges
+max_chat_tokens = 200
+
+# the max number of tokens I want to receive from the bot in the summary and insights
+max_analysis_tokens = 350
 
 
 def store_message(user_id, content, role, date):
+    '''
+    When a new chat exchange happens, it appends it to the entry document
+    '''
     orm.Entries.update_one({'user_id': user_id, 'date': date},
                            {"$push": {"chats": {'role': role, 'content': content}}},
                            upsert=True
@@ -52,6 +65,9 @@ def store_message(user_id, content, role, date):
 
 
 def store_analysis(user_id, summary, insights, date):
+    '''
+    Store summary and insight to in the entry document
+    '''
     orm.Entries.update_one(
         {'user_id': user_id, 'date': date},
         {'$set': {'summary': summary, 'insights': insights}},
@@ -60,6 +76,9 @@ def store_analysis(user_id, summary, insights, date):
 
 
 def get_user_id(email):
+    '''
+    get user_id for given email address
+    '''
     user = orm.Users.find_one({'email': email})
     if user:
         return str(user['_id'])
@@ -70,7 +89,7 @@ def get_user_id(email):
 
 def get_response(req_data, user_id):
     '''
-    Send the user's input to GPT and return the response. 
+    Send the user's input to GPT and return the response.
     '''
     # get the payload
     content = req_data['msg']
@@ -96,23 +115,31 @@ def get_response(req_data, user_id):
 
     chats.append({'role': 'user', 'content': content})
 
-    # let's just use the last response from bot as history
-    # We need to use more text though unless we run out of token limit.
-    chat_history = chats[-1:]
-    # get response from the bot
-    messages = [{'role': 'system',
-                 "content": chat_system_message}]
-    messages.extend(chat_history)
+    # we want to send the largest piece of text that does not exceed token limit
+    gpt_3p5_token_limit = 4096 - max_chat_tokens - 5  # 5 is the margin for error
+    start = 0
+    exceeds_token_limit = True
+    while exceeds_token_limit and start < len(chats):
+        chats_truncated = chats[start:]
+        messages = [{'role': 'system',
+                     "content": chat_system_message}]
+        messages.extend(chats_truncated)
+        token_cnt = get_token_count_chat_gpt(messages)
+        if token_cnt < gpt_3p5_token_limit:
+            exceeds_token_limit = False
+        else:
+            start += 1
+
     try:
         res = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=messages,
-            max_tokens=200,
-            temperature=0,
+            max_tokens=max_chat_tokens,
+            temperature=0.1,
         )
     except Exception as e:
         print(e)
-        return "Gagali is sorry. She cannot be reached now, you message is safe with her"
+        return "Gagali cannot come up with anything good to say right now. Keep going"
 
     # store the user input and bot's response to db
     outpt = res['choices'][0]['message']['content']
@@ -124,6 +151,9 @@ def get_response(req_data, user_id):
 
 
 def get_chats_by_date(user_id, date):
+    '''
+    return the chat exchanges for a given date
+    '''
     entry = orm.Entries.find_one({'user_id': user_id, 'date': date})
     if not entry.get('summary'):
         analyze(user_id, date, 'done')
@@ -134,6 +164,9 @@ def get_chats_by_date(user_id, date):
 
 
 def remove_subscriber(req_data, publisher_user_id, publisher_email):
+    '''
+    If you don't want your therapist to follow you anymore
+    '''
     subscriber_email = req_data['email']
     orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
         "$pull": {"subscribers": subscriber_email}})
@@ -143,6 +176,9 @@ def remove_subscriber(req_data, publisher_user_id, publisher_email):
 
 
 def add_subscriber(req_data, publisher_user_id, publisher_email):
+    '''
+    add your therapist as your follower
+    '''
     subscriber_email = req_data['email']
     subscriber_exists = orm.Users.find_one({'email': subscriber_email})
     if not subscriber_exists:
@@ -157,56 +193,65 @@ def add_subscriber(req_data, publisher_user_id, publisher_email):
 
 
 def get_subscribers(user_id):
+    '''
+    Make a list of your subscribers , like therapists, etc
+    '''
     user = orm.Users.find_one({'_id': ObjectId(user_id)})
     return user['subscribers']
 
 
 def get_subscriptions(user_id):
+    '''
+    if you are a therapist and you want to get a list of your patients
+    '''
     user = orm.Users.find_one({'_id': ObjectId(user_id)})
     return user['subscriptions']
 
 
-def get_summary():
-    # this assumes the job runs once an hour.
-    today = datetime.date.today()
-    today_str = today.strftime('%Y-%m-%d')
-    start_time = datetime.datetime.now()-datetime.timedelta(hours=1)
-    # get users who had a new msg since the last function run.
-    users = orm.Users.find({'last_msg': {'$gte': start_time}}, {'_id': 1})
-    # for each user, concat all today's messages.
-    for user in users:
-        user_id = str(user['_id'])
-        chats = orm.Chats.find({'user_id': user_id, 'date': today_str, 'role': 'user'}).sort(
-            "time", pymongo.ASCENDING)
-        # make a list of user texts
-        diary = ''
-        for chat in chats:
-            diary = diary + ' ' + chat.get('summary')
-        summary = summarize(diary)
-        orm.insert_summary(user_id, today_str, summary=summary)
+def get_token_count_analysis(content, model="text-curie-001"):
+    """Returns the number of tokens used by a single text body.
+    We use this for completion tasks, like summary and insights"""
+    try:
+        encoding = tiktoken.encoding_for_model(model)
+    except KeyError:
+        encoding = tiktoken.get_encoding("cl100k_base")
+    num_tokens = len(encoding.encode(content))
+    return num_tokens
 
 
-def get_token_count(message, model="text-curie-001"):
+def get_token_count_chat_gpt(messages, model="gpt-3.5-turbo"):
     """Returns the number of tokens used by a list of messages."""
     try:
         encoding = tiktoken.encoding_for_model(model)
     except KeyError:
         encoding = tiktoken.get_encoding("cl100k_base")
-    num_tokens = encoding.encode(message+summarize_prompt)
+
+    # every message follows <|start|>{role/name}\n{content}<|end|>\n
+    tokens_per_message = 4
+    tokens_per_name = -1  # if there's a name, the role is omitted
+
+    num_tokens = 0
+    for message in messages:
+        num_tokens += tokens_per_message
+        for key, value in message.items():
+            num_tokens += len(encoding.encode(value))
+            if key == "name":
+                num_tokens += tokens_per_name
+    num_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
     return num_tokens
 
 
 def summarize(text):
     summary = text
     if len(text) < 150:
-        return "not enough content to summarize."
+        return text
     prompt = f"{summarize_prompt}{text}"
     try:
         res = openai.Completion.create(
             model="text-curie-001",
             prompt=prompt,
             temperature=0.15,
-            max_tokens=500,
+            max_tokens=max_chat_tokens,
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0
@@ -221,45 +266,24 @@ def summarize(text):
     return summary
 
 
-def generate_wordcloud():
-    # get all the messages from the past one week
+def generate_wordcloud(user_id, date, content):
 
     users = orm.Users.find({}, {'_id': 1})
-    for user in users:
-        today = datetime.date.today()
-        today_str = today.strftime('%Y-%m-%d')
-        user_id = str(user['_id'])
-        date = today-datetime.timedelta(days=7)
-        date_str = date.strftime('%Y-%m-%d')
-        messages = orm.Chats.find(
-            {'user_id': user_id, 'date': {'$gte': date_str}, 'role': 'user'}, {'txt': 1})
-        # concat the texts
-        txt = ''
-        for message in messages:
-            txt = txt + ' '+message['txt']
-        # if there is not much text, let's make it a 2 week window
-        if len(txt) < 400:
-            date = today-datetime.timedelta(days=14)
-            date_str = date.strftime('%Y-%m-%d')
-            messages = orm.Chats.find(
-                {'user_id': user_id, 'date': {'$gte': date_str}, 'role': 'user'}, {'txt': 1})
-            # concat the texts
-            txt = ''
-            for message in messages:
-                txt = txt + ' '+message['txt']
-        if not txt:
-            continue
-        image = WordCloud(collocations=False,
-                          background_color='white', color_func=lambda *args, **kwargs: "blue").generate(txt)
-        file_path = f"./uploads/{user_id}_{today_str}.png"
-        image.to_file(file_path)
+    # if there is not much text, skip this
+    if len(content) < 400:
+        return
 
-        if os.path.exists(file_path):
-            orm.upload_to_s3(file_path, user_id, today_str)
-            os.remove(file_path)
+    image = WordCloud(collocations=False,
+                      background_color='white', color_func=lambda *args, **kwargs: "blue").generate(content)
+    file_path = f"./wordcloud/{user_id}_{date}.png"
+    image.to_file(file_path)
+
+    if os.path.exists(file_path):
+        orm.upload_to_s3(file_path, user_id, date)
+        os.remove(file_path)
 
 
-def analyze(user_id, date, analysis_type, wordcloud=False):
+def analyze(user_id, date, analysis_type):
     entry = orm.Entries.find_one(
         {'user_id': user_id, 'date': date}, {'chats': 1, '_id': 0})
     if entry and entry.get('chats'):
@@ -267,20 +291,43 @@ def analyze(user_id, date, analysis_type, wordcloud=False):
     else:
         chats = []
 
-    content = ''
+    content = []
     for chat in chats:
         if chat.get('role') == 'user':
-            content = content + '\n' + chat['content']
-    insights = get_insight(content)
-    # get insights from today's chat
-    summary = summarize(content)
-    # make wordcloud from today's chat
-    if wordcloud:
-        image = WordCloud(collocations=False,
-                          background_color='white').generate(content)
-        filename = f"{user_id}_{date}.png"
-        image.to_file('./static/'+filename)
+            content.append(chat['content'])
 
+    total_words = 0
+    for sentence in content:
+        words = sentence.split()
+        total_words += len(words)
+    if total_words < 30:
+        return 'not enough content'
+
+    # let's make sure we don't go over the token limit
+    completion_token_limit = 2049 - max_analysis_tokens - 5  # 5 for the margin of error
+    start = 0
+    exceeds_token_limit = True
+    if len(summarize_prompt) > len(insight_prompt):
+        longest_prompt = summarize_prompt
+    else:
+        longest_prompt = insight_prompt
+    while start < len(content) and exceeds_token_limit:
+        content_trunc = content[start:]
+
+        token_cnt = get_token_count_analysis(
+            longest_prompt+'. '.join(content_trunc))
+        if token_cnt < completion_token_limit:
+            exceeds_token_limit = False
+        else:
+            start += 1
+    content_trunc = '. '.join(content_trunc)
+    insights = get_insight(content_trunc)
+    # get insights from today's chat
+    summary = summarize(content_trunc)
+    # make wordcloud from today's chat
+    thread_wordcloud = Thread(
+        target=generate_wordcloud, args=(user_id, date, ' '.join(content)))
+    thread_wordcloud.start()
     thread_analyziz = Thread(target=store_analysis, args=(
         user_id, summary, insights, date))
     thread_analyziz.start()
@@ -296,7 +343,7 @@ def analyze(user_id, date, analysis_type, wordcloud=False):
 def get_insight(txt):
 
     if len(txt) < 150:
-        return "Not enough content to get insights from"
+        return "Not enough content for insights"
 
     prompt = f"{insight_prompt} ```{txt}```"
     try:

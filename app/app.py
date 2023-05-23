@@ -176,8 +176,9 @@ def subscription_entry(encoded_email, date):
     subscription_user = orm.Users.find_one({'email': subscription_email})
     if not subscription_user or subscriber_email not in subscription_user['subscribers']:
         return 'you are not allowed'
-    entries = orm.get_entries(date, str(subscription_user['_id']))
-    return render_template('journal-entry-subscription.html', entries=entries, date=date, email=subscription_email)
+    entries, summary, insights = data.get_chats_by_date(
+        str(subscription_user['_id']), date)
+    return render_template('journal-entry-subscription.html', entries=entries, summary=summary, insights=insights, date=date, email=subscription_email)
 
 
 @app.route('/analyze/<analysis_type>')
