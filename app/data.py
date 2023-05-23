@@ -129,7 +129,7 @@ def get_response(req_data, user_id):
     # we want to send the largest piece of text that does not exceed token limit
     gpt_3p5_token_limit = 4096 - max_chat_tokens - 5  # 5 is the margin for error
     start = 0
-    exceeds_token_limit = True
+    exceeds_token_limit = False
     while exceeds_token_limit and start < len(chats):
         chats_truncated = chats[start:]
         messages = [{'role': 'system',
