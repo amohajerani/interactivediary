@@ -87,7 +87,7 @@ def login():
 @require_auth
 def register_terms():
     try:
-        res = data.register_terms(session['user']['user_id'])
+        data.register_terms(session['user']['user_id'])
         return redirect("/")
     except:
         return 'please try again'
