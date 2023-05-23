@@ -149,7 +149,7 @@ def get_response(req_data, user_id):
             temperature=0.1,
         )
     except Exception as e:
-        logger.info(e)
+        logger.exception('openai exception occured')
         return "Gagali cannot respond. Sorry about that. Go on."
 
     # store the user input and assistant's response to db

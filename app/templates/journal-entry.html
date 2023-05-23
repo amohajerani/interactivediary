@@ -14,7 +14,7 @@
         <p>{{insights}}</p>
         <h4>Entry</h4>
         {% for entry in entries %}
-        <p style="{% if entry['role']=='bot' %}font-style: italic;background-color: lightgray;{% endif %}">
+        <p style="{% if entry['role']=='assistant' %}font-style: italic;background-color: lightgray;{% endif %}">
             {{ entry['content'] }}
         </p>
         {% endfor %}
