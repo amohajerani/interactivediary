@@ -27,7 +27,7 @@ function sendMessage() {
     .then((response) => {
       appendMessageToHistory("user", message)
       if (!quietMode) {
-        appendMessageToHistory("bot", response, true)
+        appendMessageToHistory("assistant", response, true)
       }
     })
     .catch((error) => {
@@ -41,7 +41,7 @@ function appendMessageToHistory(role, content, italic = false) {
   let historyHTML = ""
   for (const message of chatHistory) {
     let messageContent = message.content
-    if (message.role === "bot" && italic) {
+    if (message.role === "assistant" && italic) {
       messageContent = `<em>${messageContent}</em>`
     }
     if (message.role === "summary") {
@@ -62,7 +62,7 @@ function appendMessageToHistory(role, content, italic = false) {
 const chatHistoryElement = document.getElementById("history")
 const initialChatHistory = chatHistoryElement.querySelectorAll("p")
 for (const messageElement of initialChatHistory) {
-  const role = "bot" // Assuming all initial messages are from the bot
+  const role = "assistant" // Assuming all initial messages are from the assistant
   const content = messageElement.innerHTML
   chatHistory.push({ role, content })
 }

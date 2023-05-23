@@ -55,10 +55,10 @@ Then, list the writer's beliefs that lead to those feelings and thoughts.
 Finally, list action items that the writer could follow. Respond in at most 80 words.
 Passage: """
 
-# the max number of tokens I want to receive from the bot in chat exchanges
+# the max number of tokens I want to receive from the assistant in chat exchanges
 max_chat_tokens = 200
 
-# the max number of tokens I want to receive from the bot in the summary and insights
+# the max number of tokens I want to receive from the assistant in the summary and insights
 max_analysis_tokens = 350
 
 
@@ -148,26 +148,14 @@ def get_response(req_data, user_id):
             max_tokens=max_chat_tokens,
             temperature=0.1,
         )
-    except openai.error.RateLimitError:
-        return "   *** The OpenAI API rate limit has been exceeded. Waiting 10 seconds and trying again. ***"
-    except openai.error.Timeout:
-        return "   *** OpenAI API timeout occurred. Waiting 10 seconds and trying again. ***"
+    except Exception as e:
+        logger.info(e)
+        return "Gagali cannot respond. Sorry about that. Go on."
 
-    except openai.error.APIError:
-        return "   *** OpenAI API error occurred. Waiting 10 seconds and trying again. ***"
-
-    except openai.error.APIConnectionError:
-        return 'APIConnectionError'
-
-    except openai.error.InvalidRequestError:
-        return 'InvalidRequestError'
-    except openai.error.ServiceUnavailableError:
-        return 'ServiceUnavailableError'
-
-    # store the user input and bot's response to db
+    # store the user input and assistant's response to db
     outpt = res['choices'][0]['message']['content']
     thread_output_txt = Thread(target=store_message, args=(
-        user_id, outpt, 'bot', today))
+        user_id, outpt, 'assistant', today))
     thread_output_txt.start()
 
     return outpt
@@ -440,7 +428,7 @@ def send_email(date, email, chats, summary, insights):
         role = chat.get('role', '')
         content = chat.get('content', '')
 
-        if role == 'bot':
+        if role == 'assistant':
             BODY_HTML += '<p><em>{}</em></p>\n'.format(content)
         else:
             BODY_HTML += '<p>{}</p>\n'.format(content)
