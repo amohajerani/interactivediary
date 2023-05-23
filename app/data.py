@@ -129,7 +129,7 @@ def get_response(req_data, user_id):
     # we want to send the largest piece of text that does not exceed token limit
     gpt_3p5_token_limit = 4096 - max_chat_tokens - 5  # 5 is the margin for error
     start = 0
-    exceeds_token_limit = False
+    exceeds_token_limit = True
     while exceeds_token_limit and start < len(chats):
         chats_truncated = chats[start:]
         messages = [{'role': 'system',
@@ -148,9 +148,21 @@ def get_response(req_data, user_id):
             max_tokens=max_chat_tokens,
             temperature=0.1,
         )
-    except Exception as e:
-        logging.info(e)
-        return "Gagali cannot come up with anything good to say right now. Keep going"
+    except openai.error.RateLimitError:
+        return "   *** The OpenAI API rate limit has been exceeded. Waiting 10 seconds and trying again. ***"
+    except openai.error.Timeout:
+        return "   *** OpenAI API timeout occurred. Waiting 10 seconds and trying again. ***"
+
+    except openai.error.APIError:
+        return "   *** OpenAI API error occurred. Waiting 10 seconds and trying again. ***"
+
+    except openai.error.APIConnectionError:
+        return 'APIConnectionError'
+
+    except openai.error.InvalidRequestError:
+        return 'InvalidRequestError'
+    except openai.error.ServiceUnavailableError:
+        return 'ServiceUnavailableError'
 
     # store the user input and bot's response to db
     outpt = res['choices'][0]['message']['content']
