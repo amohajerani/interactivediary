@@ -86,8 +86,11 @@ def login():
 @app.route("/register_terms")
 @require_auth
 def register_terms():
-    data.register_terms(session['user']['user_id'])
-    return redirect("/")
+    try:
+        data.register_terms(session['user']['user_id'])
+        return redirect("/")
+    except:
+        return 'please try again'
 
 
 @app.route("/logout")

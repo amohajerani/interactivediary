@@ -465,5 +465,8 @@ def send_email(date, email, chats, summary, insights):
 
 
 def register_terms(user_id):
-    orm.Users.update_one({'user_id': user_id}, {'$set': {'terms_conditions': True}}
-                         )
+    try:
+        orm.Users.update_one({'user_id': user_id}, {'$set': {'terms_conditions': False}}
+                             )
+    except Exception as e:
+        print(e)
