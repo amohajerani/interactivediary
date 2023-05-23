@@ -77,14 +77,17 @@ def store_analysis(user_id, summary, insights, date):
 
 def get_user_id(email):
     '''
-    get user_id for given email address
+    return 
+    - user_id for given email address. 
+    - true or false for signing terms and conditions
+
     '''
     user = orm.Users.find_one({'email': email})
     if user:
-        return str(user['_id'])
+        return str(user['_id']), user.get('terms_conditions')
     user = orm.Users.insert_one(
         {'email': email, 'subscriptions': [], 'subscribers': []})
-    return str(user.inserted_id)
+    return str(user.inserted_id), False
 
 
 def get_response(req_data, user_id):
@@ -384,7 +387,7 @@ def get_chat_history(user_id):
         chats = entry['chats']
 
     if not chats:
-        last_entry = list(orm.Summaries.find({'user_id': user_id}).sort(
+        last_entry = list(orm.Entries.find({'user_id': user_id}).sort(
             'date', pymongo.DESCENDING).limit(1))
         if last_entry and last_entry[0].get('summary'):
             content = f"To help you start a new entry, here are summary ans insights from your last writing: \n {last_entry[0].get('summary')} \n {last_entry[0].get('insights')}"
@@ -459,3 +462,8 @@ def send_email(date, email, chats, summary, insights):
     else:
         print("Email sent! Message ID:"),
         print(response['MessageId'])
+
+
+def register_terms(user_id):
+    orm.Users.update_one({'user_id': user_id}, {'$set': {'terms_conditions': True}}
+                         )

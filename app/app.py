@@ -61,16 +61,32 @@ def home():
 def callback():
     token = oauth.auth0.authorize_access_token()
     session["user"] = token
-    session['user']['user_id'] = data.get_user_id(
+    session['user']['user_id'], terms_conditions = data.get_user_id(
         session['user']['userinfo']['email'])
 
+    # if user has not signed the agreement, this is the time
+    if not terms_conditions:
+        redirect('/terms')
     return redirect("/")
+
+
+@app.route('/terms')
+@require_auth
+def terms():
+    return render_template('terms.html')
 
 
 @app.route("/login")
 def login():
     redirect_uri = url_for("callback", _scheme='https', _external=True)
     return oauth.auth0.authorize_redirect(redirect_uri=redirect_uri)
+
+
+@app.route("/register_terms")
+@require_auth
+def register_terms():
+    data.register_terms(session['user']['user_id'])
+    return redirect("/")
 
 
 @app.route("/logout")
