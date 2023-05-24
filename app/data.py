@@ -49,9 +49,9 @@ summarize_prompt = """Your task is to generate a short summary of a diary based 
 Offer validation for feelings expressed. Summarize the diary in 3 sentences or less.
 Diary: """
 
-insight_prompt = """You are a therapist. Provide the overall sentiment of the entry in one sentence.
-Then, analyze the entry and describe the feelings, thoughts and facts.
-Then, list the beliefs that lead to those feelings and thoughts. Say at most 3 sentences.
+insight_prompt = """Your task is to extract insights from the entry. Provide the overall sentiment of the entry in one sentence.
+Then, analyze the entry and describe the feelings, thoughts and facts in one sentence.
+Then, list the beliefs that lead to those feelings and thoughts. Say at most two sentences.
 Entry: """
 
 actions_prompt = """List action items that the writer of the diary could follow. Respond in at most 80 words.
