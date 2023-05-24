@@ -43,7 +43,7 @@ def init_app():
 openai.api_key = env.get("OPENAI_KEY")
 
 # this is the system message for chat echanges
-chat_system_message = "You are a good friend. Acknowledge feelings and ask follow up questions to encourage deeper conversation. say at most 2 sentences."
+chat_system_message = "You are a good friend. Your task is to be a good listener, and encourage deeper conversation. You may aknowledge what you were said or ask follow up questions. Say at most 2 sentences."
 
 summarize_prompt = """Your task is to generate a short summary of a diary entry based on principles of reflective listening.
 Offer validation for feelings expressed. Summarize the below diary in 3 sentences or less.
@@ -398,7 +398,7 @@ def get_actions(txt):
             frequency_penalty=0,
             presence_penalty=0
         )
-        insight = res['choices'][0]['text']
+        actions = res['choices'][0]['text']
     except Exception as e:
         print(e)
         return ''
