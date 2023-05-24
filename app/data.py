@@ -51,7 +51,7 @@ Diary: """
 
 insight_prompt = """You are a therapist. Provide the overall sentiment of the text in one sentence.
 Then, analyze the passage and describe the feelings, thoughts and facts.
-Then, list the beliefs that lead to those feelings and thoughts.
+Then, list the beliefs that lead to those feelings and thoughts. Say at most 3 sentences.
 Text: """
 
 actions_prompt = """List action items that the writer could follow. Respond in at most 80 words.
