@@ -47,15 +47,18 @@ chat_system_message = "Your task is to be a good listener, and encourage deeper 
 
 summarize_prompt = """Your task is to generate a short summary of a diary based on principles of reflective listening.
 Offer validation for feelings expressed. Summarize the diary in 3 sentences or less.
-Diary: """
+Diary: {text}
+Summary:"""
 
 insight_prompt = """Your task is to extract insights from the entry. Provide the overall sentiment of the entry in one sentence.
 Then, analyze the entry and describe the feelings, thoughts and facts in one sentence.
 Then, list the beliefs that lead to those feelings and thoughts. Say at most two sentences.
-Entry: """
+Entry: {text}
+Insights:"""
 
 actions_prompt = """List action items that the writer of the diary could follow. Respond in at most 80 words.
-Diary: """
+Diary: {text}
+Actions:"""
 
 # the max number of tokens I want to receive from the assistant in chat exchanges
 max_chat_tokens = 200
@@ -258,7 +261,7 @@ def summarize(text):
     summary = text
     if len(text) < 150:
         return text
-    prompt = f"{summarize_prompt}{text}\nSummary: "
+    prompt = summarize_prompt.format(text)
     try:
         res = openai.Completion.create(
             model="text-curie-001",
@@ -358,12 +361,12 @@ def analyze(user_id, date, analysis_type):
         return actions
 
 
-def get_insight(txt):
+def get_insight(text):
 
-    if len(txt) < 150:
+    if len(text) < 150:
         return "Not enough content for insights"
 
-    prompt = f"{insight_prompt}{txt}\nInsights: "
+    prompt = insight_prompt.format(text)
     try:
         res = openai.Completion.create(
             model="text-curie-001",
@@ -382,12 +385,12 @@ def get_insight(txt):
     return insight
 
 
-def get_actions(txt):
+def get_actions(text):
 
-    if len(txt) < 150:
+    if len(text) < 150:
         return "Not enough content for analysis"
 
-    prompt = f"{actions_prompt}{txt}\nAction items: "
+    prompt = actions_prompt.format(text)
     try:
         res = openai.Completion.create(
             model="text-curie-001",
