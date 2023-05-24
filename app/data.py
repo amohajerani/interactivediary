@@ -45,17 +45,17 @@ openai.api_key = env.get("OPENAI_KEY")
 # this is the system message for chat echanges
 chat_system_message = "You are a good friend. Your task is to be a good listener, and encourage deeper conversation. You may aknowledge what you were said or ask follow up questions. Say at most 2 sentences."
 
-summarize_prompt = """Your task is to generate a short summary of a diary entry based on principles of reflective listening.
-Offer validation for feelings expressed. Summarize the below diary in 3 sentences or less.
+summarize_prompt = """Your task is to generate a short summary of a diary based on principles of reflective listening.
+Offer validation for feelings expressed. Summarize the diary in 3 sentences or less.
 Diary: """
 
-insight_prompt = """You are a therapist. Provide the overall sentiment of the text in one sentence.
-Then, analyze the passage and describe the feelings, thoughts and facts.
+insight_prompt = """You are a therapist. Provide the overall sentiment of the entry in one sentence.
+Then, analyze the entry and describe the feelings, thoughts and facts.
 Then, list the beliefs that lead to those feelings and thoughts. Say at most 3 sentences.
-Text: """
+Entry: """
 
-actions_prompt = """List action items that the writer could follow. Respond in at most 80 words.
-Actions items: """
+actions_prompt = """List action items that the writer of the diary could follow. Respond in at most 80 words.
+Diary: """
 
 # the max number of tokens I want to receive from the assistant in chat exchanges
 max_chat_tokens = 200
@@ -258,7 +258,7 @@ def summarize(text):
     summary = text
     if len(text) < 150:
         return text
-    prompt = f"{summarize_prompt}{text}"
+    prompt = f"{summarize_prompt}{text}\nSummary: "
     try:
         res = openai.Completion.create(
             model="text-curie-001",
@@ -363,7 +363,7 @@ def get_insight(txt):
     if len(txt) < 150:
         return "Not enough content for insights"
 
-    prompt = f"{insight_prompt} ```{txt}```"
+    prompt = f"{insight_prompt}{txt}\nInsights: "
     try:
         res = openai.Completion.create(
             model="text-curie-001",
@@ -387,7 +387,7 @@ def get_actions(txt):
     if len(txt) < 150:
         return "Not enough content for analysis"
 
-    prompt = f"{actions_prompt} ```{txt}```"
+    prompt = f"{actions_prompt}{txt}\nAction items: "
     try:
         res = openai.Completion.create(
             model="text-curie-001",
