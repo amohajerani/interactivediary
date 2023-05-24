@@ -45,20 +45,15 @@ openai.api_key = env.get("OPENAI_KEY")
 # this is the system message for chat echanges
 chat_system_message = "Your task is to be a good listener, and encourage deeper conversation. You may aknowledge what you were said or ask follow up questions. Respond 'I am listening' if not sure about the answer. Be as brief as possible. Say at most 30 words."
 
-summarize_prompt = """Your task is to generate a short summary of a diary based on principles of reflective listening.
-Offer validation for feelings expressed. Summarize in 'I' form and in 3 sentences or less.
+summarize_prompt = """Summarize my diary, in at most 3 bullet points, based on the principles of reflective listening. Offer validation for feelings expressed.
 Diary: {text}
 Summary:"""
 
-insight_prompt = """Your task is to extract insights from the entry. Provide the overall sentiment of the entry in one sentence.
-Then, analyze the entry and describe the feelings, thoughts and facts in one sentence.
-Then, list the beliefs that lead to those feelings and thoughts. Write in 'You' form. Write less than three sentences.
-Example of output: The overall sentiment is that of frustration. You are feeling a mix of emotions including excitement, anxiety, \
-    uncertainty and frustration. You believe that you have a promising product. You also fear there is a lot of competition. 
-Entry: {text}
+insight_prompt = """Extract insights from the diary in three sentences. In the first sentences, provide the overall sentiment of the diary. In the second sentence, analyze the entry and describe the feelings, thoughts and facts in the diary. In the third sentence, list the beliefs that lead to those feelings and thoughts.
+Diary: {text}
 Insights:"""
 
-actions_prompt = """List action items that the writer of the diary could follow. Respond in at most 80 words.
+actions_prompt = """List, in at most 100 words, the action items that the writer of the diary could follow.
 Diary: {text}
 Actions:"""
 
@@ -153,7 +148,7 @@ def get_response(req_data, user_id):
             model="gpt-3.5-turbo",
             messages=messages,
             max_tokens=max_chat_tokens,
-            temperature=0.1,
+            temperature=0.0,
         )
     except Exception as e:
         logger.exception('openai exception occured')
@@ -264,6 +259,7 @@ def summarize(text):
     if len(text) < 150:
         return text
     prompt = summarize_prompt.format(text=text)
+
     try:
         res = openai.Completion.create(
             model="text-curie-001",
@@ -369,6 +365,7 @@ def get_insight(text):
         return "Not enough content for insights"
 
     prompt = insight_prompt.format(text=text)
+    print(prompt)
     try:
         res = openai.Completion.create(
             model="text-curie-001",
