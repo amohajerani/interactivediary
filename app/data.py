@@ -273,7 +273,7 @@ def summarize(text):
         if len(summary)/len(text) > 0.9:  # use the summary if it is sufficiently shorter
             summary = text
     except Exception as e:
-        print(e)
+        logger.exception('there was an error with summarize')
         return "there was an error in the summary"
     summary = summary.strip()
     return summary
@@ -376,7 +376,7 @@ def get_insight(txt):
         )
         insight = res['choices'][0]['text']
     except Exception as e:
-        print(e)
+        logger.exception('insights error')
         return ''
     insight = insight.strip()
     return insight
@@ -400,7 +400,7 @@ def get_actions(txt):
         )
         actions = res['choices'][0]['text']
     except Exception as e:
-        print(e)
+        logger.exception('actions error')
         return ''
     actions = actions.strip()
     return actions
@@ -497,7 +497,7 @@ def send_email(date, email, chats, summary, insights):
         )
     # Display an error if something goes wrong.
     except ClientError as e:
-        print(e.response['Error']['Message'])
+        logger.exception('email error')
     else:
         print("Email sent! Message ID:"),
         print(response['MessageId'])
@@ -508,4 +508,4 @@ def register_terms(user_id):
         orm.Users.update_one({'_id': ObjectId(user_id)}, {'$set': {'terms_conditions': True}}
                              )
     except Exception as e:
-        print(e)
+        logger.exception('register terms error')
