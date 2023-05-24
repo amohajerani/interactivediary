@@ -46,13 +46,15 @@ openai.api_key = env.get("OPENAI_KEY")
 chat_system_message = "Your task is to be a good listener, and encourage deeper conversation. You may aknowledge what you were said or ask follow up questions. Respond 'I am listening' if not sure about the answer. Be as brief as possible. Say at most 30 words."
 
 summarize_prompt = """Your task is to generate a short summary of a diary based on principles of reflective listening.
-Offer validation for feelings expressed. Respond in 'I' form and in 3 sentences or less.
+Offer validation for feelings expressed. Summarize in 'I' form and in 3 sentences or less.
 Diary: {text}
 Summary:"""
 
 insight_prompt = """Your task is to extract insights from the entry. Provide the overall sentiment of the entry in one sentence.
 Then, analyze the entry and describe the feelings, thoughts and facts in one sentence.
-Then, list the beliefs that lead to those feelings and thoughts. Respond in 'You' form and in at most two sentences.
+Then, list the beliefs that lead to those feelings and thoughts. Write in 'You' form. Write less than three sentences.
+Example of output: The overall sentiment is that of frustration. You are feeling a mix of emotions including excitement, anxiety, \
+    uncertainty and frustration. You believe that you have a promising product. You also fear there is a lot of competition. 
 Entry: {text}
 Insights:"""
 
