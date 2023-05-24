@@ -49,11 +49,13 @@ summarize_prompt = """Your task is to generate a short summary of a diary entry 
 Offer validation for feelings expressed. Summarize the below diary in 3 sentences or less.
 Diary: """
 
-insight_prompt = """Provide the overall sentiment of the passage in one sentence.
+insight_prompt = """You are a therapist. Provide the overall sentiment of the text in one sentence.
 Then, analyze the passage and describe the feelings, thoughts and facts.
-Then, list the writer's beliefs that lead to those feelings and thoughts.
-Finally, list action items that the writer could follow. Respond in at most 80 words.
-Passage: """
+Then, list the beliefs that lead to those feelings and thoughts.
+Text: """
+
+actions_prompt = """List action items that the writer could follow. Respond in at most 80 words.
+Actions items: """
 
 # the max number of tokens I want to receive from the assistant in chat exchanges
 max_chat_tokens = 200
@@ -72,13 +74,13 @@ def store_message(user_id, content, role, date):
                            )
 
 
-def store_analysis(user_id, summary, insights, date):
+def store_analysis(user_id, summary, insights, actions, date):
     '''
     Store summary and insight to in the entry document
     '''
     orm.Entries.update_one(
         {'user_id': user_id, 'date': date},
-        {'$set': {'summary': summary, 'insights': insights}},
+        {'$set': {'summary': summary, 'insights': insights, 'actions': actions}},
         upsert=True
     )
 
@@ -335,12 +337,15 @@ def analyze(user_id, date, analysis_type):
     insights = get_insight(content_trunc)
     # get insights from today's chat
     summary = summarize(content_trunc)
+    # get actions
+    actions = get_actions(content_trunc)
+
     # make wordcloud from today's chat
     thread_wordcloud = Thread(
         target=generate_wordcloud, args=(user_id, date, ' '.join(content)))
     thread_wordcloud.start()
     thread_analyziz = Thread(target=store_analysis, args=(
-        user_id, summary, insights, date))
+        user_id, summary, insights, actions, date))
     thread_analyziz.start()
 
     if analysis_type == 'insights':
@@ -349,6 +354,8 @@ def analyze(user_id, date, analysis_type):
         return summary
     if analysis_type == 'done':
         return None
+    if analysis_type == 'actions':
+        return actions
 
 
 def get_insight(txt):
@@ -373,6 +380,30 @@ def get_insight(txt):
         return ''
     insight = insight.strip()
     return insight
+
+
+def get_actions(txt):
+
+    if len(txt) < 150:
+        return "Not enough content for analysis"
+
+    prompt = f"{actions_prompt} ```{txt}```"
+    try:
+        res = openai.Completion.create(
+            model="text-curie-001",
+            prompt=prompt,
+            temperature=0.15,
+            max_tokens=500,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        insight = res['choices'][0]['text']
+    except Exception as e:
+        print(e)
+        return ''
+    actions = actions.strip()
+    return actions
 
 
 def get_chat_history(user_id):

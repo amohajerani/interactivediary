@@ -99,6 +99,22 @@ function sendInsights() {
     })
 }
 
+function sendActions() {
+  fetch("/analyze/actions", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.text())
+    .then((response) => {
+      appendMessageToHistory("actions", response, true)
+    })
+    .catch((error) => {
+      console.error("Error:", error)
+    })
+}
+
 function doneFunc() {
   window.location.href = "/"
   fetch("/analyze/done")
