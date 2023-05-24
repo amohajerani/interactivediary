@@ -43,7 +43,7 @@ def init_app():
 openai.api_key = env.get("OPENAI_KEY")
 
 # this is the system message for chat echanges
-chat_system_message = "You are a good friend. Your task is to be a good listener, and encourage deeper conversation. You may aknowledge what you were said or ask follow up questions. Say at most 2 sentences."
+chat_system_message = "You are a good friend. Your task is to be a good listener, and encourage deeper conversation. You may aknowledge what you were said or ask follow up questions. Be as brief as possible. Say at most 30 words."
 
 summarize_prompt = """Your task is to generate a short summary of a diary based on principles of reflective listening.
 Offer validation for feelings expressed. Summarize the diary in 3 sentences or less.
