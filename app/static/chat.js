@@ -52,6 +52,10 @@ function appendMessageToHistory(role, content, italic = false) {
       historyHTML += `<strong><em>Insights: </em></strong>`
       messageContent = `<em>${messageContent}</em>`
     }
+    if (message.role === "actions") {
+      historyHTML += `<strong><em>Actions: </em></strong>`
+      messageContent = `<em>${messageContent}</em>`
+    }
     historyHTML += `<p>${messageContent}</p>`
   }
 
