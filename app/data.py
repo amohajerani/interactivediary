@@ -261,7 +261,7 @@ def summarize(text):
     summary = text
     if len(text) < 150:
         return text
-    prompt = summarize_prompt.format(text)
+    prompt = summarize_prompt.format(text=text)
     try:
         res = openai.Completion.create(
             model="text-curie-001",
@@ -366,7 +366,7 @@ def get_insight(text):
     if len(text) < 150:
         return "Not enough content for insights"
 
-    prompt = insight_prompt.format(text)
+    prompt = insight_prompt.format(text=text)
     try:
         res = openai.Completion.create(
             model="text-curie-001",
@@ -390,7 +390,7 @@ def get_actions(text):
     if len(text) < 150:
         return "Not enough content for analysis"
 
-    prompt = actions_prompt.format(text)
+    prompt = actions_prompt.format(text=text)
     try:
         res = openai.Completion.create(
             model="text-curie-001",
