@@ -51,10 +51,10 @@ def home():
     if not session.get('user', None):
         return render_template('landing.html')
     user_id = session['user']['user_id']
-    dates = orm.get_dates(
+    entries = orm.get_entries(
         user_id=user_id)
     wordcloud = orm.get_wordcloud_file(user_id)
-    return render_template('home.html', dates=dates, wordcloud=wordcloud)
+    return render_template('home.html', entries=entries, wordcloud=wordcloud)
 
 
 @app.route("/callback", methods=["GET", "POST"])
@@ -114,9 +114,12 @@ def logout():
 @app.route("/chat")
 @require_auth
 def chat():
+    '''
+    Create a new chat
+    '''
     user_id = session['user']['user_id']
-    chat_history = data.get_chat_history(user_id)
-    return render_template('chat.html', chat_history=chat_history)
+    entry_id = orm.create_entry(user_id)
+    return render_template('chat.html', entry_id=entry_id)
 
 
 @app.route('/get_response', methods=['POST'])
@@ -201,15 +204,23 @@ def subscription_entry(encoded_email, date):
     return render_template('journal-entry-subscription.html', entries=entries, summary=summary, insights=insights, date=date, email=subscription_email)
 
 
-@app.route('/analyze/<analysis_type>')
+@app.route('/analyze/<analysis_type>/<entry_id>')
 @require_auth
-def analyze(analysis_type):
+def analyze(entry_id, analysis_type):
     """
     return a json like {'text':'......'}
     """
-    today = datetime.date.today()
-    today_str = today.strftime('%Y-%m-%d')
-    return data.analyze(session['user']['user_id'], today_str, analysis_type)
+    return data.analyze(entry_id, analysis_type)
+
+
+@app.route('/entry-done/<entry_id>')
+@require_auth
+def entry_done(entry_id):
+    """
+    run analyziz and change the completed field in the entry doc
+    """
+    data.analyze(entry_id, 'done')
+    return redirect("/")
 
 
 @app.route('/email_content',  methods=['POST'])
@@ -227,6 +238,11 @@ def email_content():
         return jsonify({'message': 'Email sent successfully'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/essay-title', methods=['POST'])
+def update_essay_title():
+    essay_title = request.form['essaytitle']
 
 
 if __name__ == "__main__":

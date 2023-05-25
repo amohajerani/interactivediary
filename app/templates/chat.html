@@ -103,6 +103,12 @@ Entry
       </label>
       <label for="toggle">Solo</label>
     </div>
+    <div>
+      <form action="/essay-title" method="POST">
+        <input type="text" id="essayTitle" name="essayTitle" placeholder="Title">
+        <button type="submit">Submit</button>
+      </form>
+    </div>
     <div id="chat-history">
       <div id="history">
         {% for message in chat_history %}
@@ -113,12 +119,12 @@ Entry
     </div>
     <div id="chat-message">
       <textarea id="message" autofocus></textarea>
-      <button class="fa fa-paper-plane-o" onclick="sendMessage()"></button>
+      <button class="fa fa-paper-plane-o" onclick="sendMessage(entry_id)"></button>
       <div class="button-container">
-        <button class="button" onclick="doneFunc()">Done</button>
-        <button class="button" onclick="sendSummary()">Summarize</button>
-        <button class="button" onclick="sendInsights()">Insights</button>
-        <button class="button" onclick="sendActions()">Actions</button>
+        <button class="button" onclick="doneFunc(entry_id)">Done</button>
+        <button class="button" onclick="sendSummary(entry_id)">Summarize</button>
+        <button class="button" onclick="sendInsights(entry_id)">Insights</button>
+        <button class="button" onclick="sendActions(entry_id)">Actions</button>
       </div>
       
     </div>

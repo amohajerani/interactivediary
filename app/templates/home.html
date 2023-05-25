@@ -7,11 +7,11 @@
       <div>
         <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud" style="margin-bottom: 10px;">
         <h4>Prior entries</h4>
-        {% if dates %}
+        {% if entries %}
         <ul>
-          {% for date in dates %}
+          {% for entry in entries %}
           <li>
-            <a href="/past_entries/{{date}}">{{date}}</a>
+            <a href="/past_entries/{{entry['_id']}}">{{entry['title']}}</a>
           </li>
           {% endfor %}
         </ul>

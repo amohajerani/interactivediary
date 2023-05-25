@@ -6,6 +6,8 @@ import datetime
 from bson.objectid import ObjectId
 import boto3
 import os
+import pymongo
+import time
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -17,14 +19,23 @@ Users = db.users
 Entries = db.entries
 
 
-def get_dates(user_id):
+def create_entry(user_id):
+    entry_id = Entries.insert_one(
+        {'user_id': user_id, 'completed': False, 'last_update': int(time.time())})
+    return str(entry_id.inserted_id)
+
+
+def get_entries(user_id):
     '''
-    Get the dates for which the user has entries
+    Get user entries
     '''
-    dates = list(Entries.find(
-        {'user_id': user_id}, {'date': 1}).distinct('date'))
-    dates.sort()
-    return dates
+    # from newest to oldest
+    entries = Entries.find(
+        {'user_id': user_id}, {'title': 1, 'done': 1, 'last_update': 1}).sort(
+            'last_update', pymongo.DESCENDING)
+    for entry in entries:
+        entry['_id'] = str(entry['_id'])
+    return entries
 
 
 def upload_to_s3(file_location, user_id, date):

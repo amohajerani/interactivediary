@@ -107,8 +107,6 @@ def get_response(req_data, user_id):
     # get the payload
     content = req_data['msg']
     quiet_mode = req_data['quietMode']
-    # store the input message immediately so it is retained.
-    today = datetime.date.today().strftime('%Y-%m-%d')
 
     # get the prior chats from today
     entry = orm.Entries.find_one(
@@ -168,8 +166,6 @@ def get_chats_by_date(user_id, date):
     return the chat exchanges for a given date
     '''
     entry = orm.Entries.find_one({'user_id': user_id, 'date': date})
-    if not entry.get('summary'):
-        analyze(user_id, date, 'done')
     if entry:
         return entry.get('chats'), entry.get('summary'), entry.get('insights')
     else:
@@ -297,9 +293,9 @@ def generate_wordcloud(user_id, date, content):
         os.remove(file_path)
 
 
-def analyze(user_id, date, analysis_type):
+def analyze(entry_id, analysis_type):
     entry = orm.Entries.find_one(
-        {'user_id': user_id, 'date': date}, {'chats': 1, '_id': 0})
+        {'entry_id': entry_id}, {'chats': 1, '_id': 0})
     if entry and entry.get('chats'):
         chats = entry.get('chats')
     else:
@@ -511,3 +507,8 @@ def register_terms(user_id):
                              )
     except Exception as e:
         logger.exception('register terms error')
+
+
+def create_entry(user_id):
+    entry_id = orm.Entries.insert_one({'user_id': user_id, 'completed': False})
+    return str(entry_id.inserted_id)

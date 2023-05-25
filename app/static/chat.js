@@ -8,7 +8,7 @@ checkbox.addEventListener("change", function () {
 
 let chatHistory = []
 
-function sendMessage() {
+function sendMessage(entry_id) {
   const message = document.getElementById("message").value.trim()
   if (message === "") return
   document.getElementById("message").value = ""
@@ -21,6 +21,7 @@ function sendMessage() {
     body: JSON.stringify({
       quietMode: quietMode,
       msg: message,
+      entry_id: entry_id,
     }),
   })
     .then((response) => response.text())
@@ -71,8 +72,8 @@ for (const messageElement of initialChatHistory) {
   chatHistory.push({ role, content })
 }
 
-function sendSummary() {
-  fetch("/analyze/summary", {
+function sendSummary(entry_id) {
+  fetch("/analyze/summary/" + entry_id, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -87,8 +88,8 @@ function sendSummary() {
     })
 }
 
-function sendInsights() {
-  fetch("/analyze/insights", {
+function sendInsights(entry_id) {
+  fetch("/analyze/insights/" + entry_id, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -103,8 +104,8 @@ function sendInsights() {
     })
 }
 
-function sendActions() {
-  fetch("/analyze/actions", {
+function sendActions(entry_id) {
+  fetch("/analyze/actions/" + entry_id, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -121,5 +122,5 @@ function sendActions() {
 
 function doneFunc() {
   window.location.href = "/"
-  fetch("/analyze/done")
+  fetch("/entry-done/" + entry_id)
 }
