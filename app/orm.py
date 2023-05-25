@@ -41,7 +41,7 @@ def get_entries(user_id):
             completed_entries.append(entry)
         else:
             in_progress_entries.append(entry) 
-    return entries
+    return in_progress_entries, completed_entries
 
 
 def update_entry(entry_id, update_obj):

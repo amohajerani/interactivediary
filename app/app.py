@@ -247,7 +247,7 @@ def update_entry_title():
     entry_title = request.json['title']
     entry_id = request.json['entry_id']
     orm.update_entry(entry_id, {'title': entry_title})
-    return {'success': True}
+    return jsonify({'success': True})
 
 
 if __name__ == "__main__":
