@@ -13,6 +13,19 @@ Entry
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
+  #title-message {
+    display: flex;
+    align-items: center;
+  }
+  #title-message input {
+    width: 100%;
+    resize: none;
+    font-size: 16px;
+    padding: 10px;
+    border: none;
+    background-color: #FDF2E9;
+    color: #333;
+  }
 
   #chat-message textarea {
     width: 100%;
@@ -61,24 +74,7 @@ Entry
     color: #333;
   }
 
-  #analyze {
-    text-align: center;
-    margin-top: 20px;
-  }
 
-  #analyze button {
-    padding: 10px 20px;
-    background-color: #FFA07A;
-    border: none;
-    color: #FFF;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  #analyze button:hover {
-    background-color: #FF7F50;
-  }
   .button-container {
       display: flex;
       justify-content: center;
@@ -103,9 +99,8 @@ Entry
       </label>
       <label for="toggle">Solo</label>
     </div>
-    <div>
-        <input type="text" id="entryTitle" name="entryTitle" placeholder={{entry.title}}>
-        <button class="button" onclick="submitEntryTitle('{{ entry._id }}')">Update title</button>
+    <div id="title-message">
+        <input type="text" id="entryTitle" name="entryTitle" placeholder={{entry.title}} oninput="submitEntryTitle('{{ entry._id }}')">
     </div>
     <div id="chat-history">
       <div id="history">

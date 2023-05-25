@@ -126,7 +126,8 @@ function doneFunc() {
 }
 
 function submitEntryTitle(entry_id) {
-  var entryTitle = document.getElementById("entryTitle").value
+  var entryTitle = document.getElementById("entryTitle").value;
+  var entryTitle = titleInput.value.trim();
   // Make a POST request to the server
   fetch("/entry-title", {
     method: "POST",
