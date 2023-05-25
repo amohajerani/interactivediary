@@ -6,20 +6,35 @@
     <div>
       <div>
         <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud" style="margin-bottom: 10px;">
-        <h4>Prior entries</h4>
-        {% if entries %}
+        <div>
+        <h4>In-progress entries</h4>
+        {% if in_progress_entries %}
         <ul>
-          {% for entry in entries %}
+          {% for entry in in_progress_entries %}
           <li>
-            <a href="/past_entries/{{entry['_id']}}">{{entry['title']}}</a>
+            <a href="/chat/{{entry['_id']}}">{{entry['title']}}</a>
           </li>
           {% endfor %}
         </ul>
         {% else %}
-        <p>No entries yet</p>
-        <br>
+        <p>No entries in progress.</p>
         <button onclick="location.href='/chat'">Create your new entry</button>
         {% endif %}
+        </div>
+        <div>
+          <h4>Completed entries</h4>
+          {% if completed_entries %}
+          <ul>
+            {% for entry in completed_entries %}
+            <li>
+              <a href="/past_entries/{{entry['_id']}}">{{entry['title']}}</a>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p>No completed entries.</p>
+          {% endif %}
+          </div>
       </div>
     </div>
   </div>

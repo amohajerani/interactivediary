@@ -119,10 +119,10 @@ Entry
       <textarea id="message" autofocus></textarea>
       <button class="fa fa-paper-plane-o" onclick="sendMessage(entry_id)"></button>
       <div class="button-container">
-        <button class="button" onclick="doneFunc(entry_id)">Done</button>
-        <button class="button" onclick="sendSummary(entry_id)">Summarize</button>
-        <button class="button" onclick="sendInsights(entry_id)">Insights</button>
-        <button class="button" onclick="sendActions(entry_id)">Actions</button>
+        <button class="button" onclick="doneFunc('{{ entry_id }}')">Done</button>
+        <button class="button" onclick="sendSummary('{{ entry_id }}')">Summarize</button>
+        <button class="button" onclick="sendInsights('{{ entry_id }}')">Insights</button>
+        <button class="button" onclick="sendActions('{{ entry_id }}')">Actions</button>
       </div>
       
     </div>
