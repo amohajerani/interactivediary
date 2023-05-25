@@ -110,14 +110,14 @@ def logout():
         )
     )
 
-
+@app.route('/chat/', defaults={'entry_id': 'new'}, methods=['GET'])
 @app.route("/chat/<entry_id>")
 @require_auth
-def chat(entry_id=None):
+def chat(entry_id):
     '''
     Create a new chat
     '''
-    if not entry_id:
+    if entry_id=='new':
         user_id = session['user']['user_id']
         entry_id = orm.create_entry(user_id)
     return render_template('chat.html', entry_id=entry_id)
