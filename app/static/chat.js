@@ -128,7 +128,7 @@ function doneFunc() {
 function submitEntryTitle(entry_id) {
   var entryTitle = document.getElementById("entryTitle").value
   // Make a POST request to the server
-  fetch("entry-title", {
+  fetch("/entry-title", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
