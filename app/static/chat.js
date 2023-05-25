@@ -130,6 +130,7 @@ function submitEntryTitle(entry_id) {
   var entryData = {
     title: entryTitle,
     entry_id: entry_id,
+    test: "test",
   }
 
   // Make a POST request to the server

@@ -21,7 +21,7 @@ Entries = db.entries
 
 def create_entry(user_id):
     entry_id = Entries.insert_one(
-        {'user_id': user_id, 'completed': False, 'last_update': int(time.time())})
+        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time())})
     return str(entry_id.inserted_id)
 
 
