@@ -125,7 +125,7 @@ function doneFunc() {
   fetch("/entry-done/" + entry_id)
 }
 
-function submitEntryTitle() {
+function submitEntryTitle(entry_id) {
   var entryTitle = document.getElementById("entryTitle").value
   // Make a POST request to the server
   fetch("entry-title", {
