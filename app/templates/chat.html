@@ -100,7 +100,7 @@ Entry
       <label for="toggle">Solo</label>
     </div>
     <div id="title-message">
-        <input type="text" id="entryTitle" name="entryTitle" placeholder={{entry.title}} oninput="submitEntryTitle('{{ entry._id }}')">
+        <input type="text" id="entryTitle" name="entryTitle" placeholder="Title: "+{{entry.title}} oninput="submitEntryTitle('{{ entry._id }}')">
     </div>
     <div id="chat-history">
       <div id="history">
