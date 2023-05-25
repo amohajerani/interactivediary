@@ -51,10 +51,10 @@ def home():
     if not session.get('user', None):
         return render_template('landing.html')
     user_id = session['user']['user_id']
-    entries = orm.get_entries(
+    in_progress_entries , completed_entries = orm.get_entries(
         user_id=user_id)
     wordcloud = orm.get_wordcloud_file(user_id)
-    return render_template('home.html', entries=entries, wordcloud=wordcloud)
+    return render_template('home.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
 
 
 @app.route("/callback", methods=["GET", "POST"])
