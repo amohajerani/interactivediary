@@ -120,7 +120,8 @@ def chat(entry_id):
     if entry_id=='new':
         user_id = session['user']['user_id']
         entry_id = orm.create_entry(user_id)
-    return render_template('chat.html', entry_id=entry_id)
+    entry = orm.get_entry(entry_id)
+    return render_template('chat.html', entry=entry)
 
 
 @app.route('/get_response', methods=['POST'])

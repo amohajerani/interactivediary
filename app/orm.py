@@ -20,8 +20,10 @@ Entries = db.entries
 
 
 def create_entry(user_id):
+    # assign a default title
+    today_str = datetime.date.today().strftime('%Y-%m-%d')
     entry_id = Entries.insert_one(
-        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time())})
+        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time()), 'title':today_str})
     return str(entry_id.inserted_id)
 
 
@@ -49,6 +51,10 @@ def update_entry(entry_id, update_obj):
     update_data = {'$set': update_obj}
     Entries.update_one({'_id': ObjectId(entry_id)}, update_data)
 
+def get_entry(entry_id:str):
+    entry = Entries.find_one({'_id':ObjectId(entry_id)})
+    entry['_id']=str(entry['_id'])
+    return entry
 
 def upload_to_s3(file_location, user_id, date):
     s3_client = boto3.client('s3',
