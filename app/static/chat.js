@@ -134,8 +134,8 @@ function submitEntryTitle(entry_id) {
   console.log(
     "jasonify: ",
     JSON.stringify({
-      title: entryTitle,
-      entry_id: entry_id,
+      "title": entryTitle,
+      "entry_id": entry_id,
     })
   )
 
