@@ -38,6 +38,12 @@ def get_entries(user_id):
     return entries
 
 
+def update_entry(entry_id, update_obj):
+    update_obj.update({'last_update': int(time.time())})
+    update_data = {'$set': update_obj}
+    Entries.update_one({'_id': ObjectId(entry_id)}, update_data)
+
+
 def upload_to_s3(file_location, user_id, date):
     s3_client = boto3.client('s3',
                              aws_access_key_id=os.environ.get('S3_KEY'),

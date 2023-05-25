@@ -507,8 +507,3 @@ def register_terms(user_id):
                              )
     except Exception as e:
         logger.exception('register terms error')
-
-
-def create_entry(user_id):
-    entry_id = orm.Entries.insert_one({'user_id': user_id, 'completed': False})
-    return str(entry_id.inserted_id)

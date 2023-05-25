@@ -240,9 +240,11 @@ def email_content():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/essay-title', methods=['POST'])
-def update_essay_title():
-    essay_title = request.form['essaytitle']
+@app.route('/entry-title', methods=['POST'])
+def update_entry_title():
+    entry_title = request.form['essayTitle']
+    entry_id = request.form['entry_id']
+    orm.update_entry(entry_id, {'title': entry_title})
 
 
 if __name__ == "__main__":
