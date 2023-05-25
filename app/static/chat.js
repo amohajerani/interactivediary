@@ -137,13 +137,7 @@ function submitEntryTitle(entry_id) {
       title: entryTitle,
       entry_id: entry_id,
     }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      // Handle the response from the server if needed
-      console.log(data)
-    })
-    .catch((error) => {
+  }).catch((error) => {
       // Handle any errors that occurred during the request
       console.error("Error:", error)
     })
