@@ -127,27 +127,15 @@ function doneFunc() {
 
 function submitEntryTitle(entry_id) {
   var entryTitle = document.getElementById("entryTitle").value
-  console.log({
-    title: entryTitle,
-    entry_id: entry_id,
-  })
-  console.log(
-    "jasonify: ",
-    JSON.stringify({
-      "title": entryTitle,
-      "entry_id": entry_id,
-    })
-  )
-
   // Make a POST request to the server
   fetch("entry-title", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     body: JSON.stringify({
-      title: entryTitle,
-      entry_id: entry_id,
+      "title": entryTitle,
+      "entry_id": entry_id,
     }),
   })
     .then((response) => response.json())
