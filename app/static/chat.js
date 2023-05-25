@@ -131,7 +131,7 @@ function submitEntryTitle(entry_id) {
   fetch("entry-title", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json;charset=utf-8",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       title: "entryTitle",
