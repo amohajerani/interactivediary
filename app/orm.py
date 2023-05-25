@@ -37,7 +37,7 @@ def get_entries(user_id):
     completed_entries = []
     for entry in entries:
         entry['_id'] = str(entry['_id'])
-        if entry.completed:
+        if entry.get('completed'):
             completed_entries.append(entry)
         else:
             in_progress_entries.append(entry) 
