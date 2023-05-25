@@ -124,3 +124,29 @@ function doneFunc() {
   window.location.href = "/"
   fetch("/entry-done/" + entry_id)
 }
+
+function submitEntryTitle(entry_id) {
+  var entryTitle = document.getElementById("entryTitle").value
+  var entryData = {
+    title: entryTitle,
+    entry_id: entry_id,
+  }
+
+  // Make a POST request to the server
+  fetch("entry-title", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(entryData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // Handle the response from the server if needed
+      console.log(data)
+    })
+    .catch((error) => {
+      // Handle any errors that occurred during the request
+      console.error("Error:", error)
+    })
+}
