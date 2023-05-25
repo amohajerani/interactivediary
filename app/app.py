@@ -242,6 +242,7 @@ def email_content():
 
 @app.route('/entry-title', methods=['POST'])
 def update_entry_title():
+    print('request.json ', request.json)
     entry_title = request.json['title']
     entry_id = request.json['entry_id']
     orm.update_entry(entry_id, {'title': entry_title})
