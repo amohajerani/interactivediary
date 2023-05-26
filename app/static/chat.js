@@ -121,11 +121,8 @@ function sendActions(entry_id) {
 }
 
 async function doneFunc(entry_id) {
-  try {
-    await fetch("/entry-done/" + entry_id);
-  } catch (error) {
-    console.error("An error occurred:", error);
-  }
+  window.location.href = "/";
+  await fetch("/entry-done/" + entry_id);
 }
 
 function submitEntryTitle(entry_id) {

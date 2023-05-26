@@ -227,8 +227,7 @@ def entry_done(entry_id):
         data.close_entry(entry_id)
     except Exception as e:
         logger.exception('error occured in entry_done')
-    return redirect('/')
-
+    return {'success':True}
 
 @app.route('/email_content',  methods=['POST'])
 @require_auth
