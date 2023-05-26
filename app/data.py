@@ -90,7 +90,7 @@ def get_response(req_data):
     # get the payload
     content = req_data['msg']
     quiet_mode = req_data['quietMode']
-    entry_id = req_data['quietMode']
+    entry_id = req_data['entry_id']
 
     # get the prior chats from today
     entry = orm.get_entry(entry_id)
