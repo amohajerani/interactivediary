@@ -23,7 +23,7 @@ def create_entry(user_id):
     # assign a default title
     today_str = datetime.date.today().strftime('%Y-%m-%d')
     entry_id = Entries.insert_one(
-        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time()), 'title':today_str})
+        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time()), 'title':today_str, 'chats':[]})
     return str(entry_id.inserted_id)
 
 

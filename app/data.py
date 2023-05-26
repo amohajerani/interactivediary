@@ -295,7 +295,8 @@ def generate_wordcloud(user_id, date, content):
 
 def analyze(entry_id, analysis_type):
     entry = orm.Entries.find_one(
-        {'entry_id': entry_id}, {'chats': 1, '_id': 0})
+        {'_id': ObjectId(entry_id)})
+    user_id = entry.get('user_id')
     if entry and entry.get('chats'):
         chats = entry.get('chats')
     else:
@@ -339,10 +340,15 @@ def analyze(entry_id, analysis_type):
 
     # make wordcloud from today's chat
     thread_wordcloud = Thread(
-        target=generate_wordcloud, args=(user_id, date, ' '.join(content)))
+        target=generate_wordcloud, args=(user_id, ' '.join(content)))
     thread_wordcloud.start()
-    thread_analyziz = Thread(target=store_analysis, args=(
-        user_id, summary, insights, actions, date))
+    entry_updates = {'summary':summary, 'insights':insights, 'actions':actions}
+    if analysis_type == 'done':
+        entry_updates.update({'completed':True})
+    thread_analyziz = Thread(target=orm.update_entry, args=(
+        entry_id, entry_updates))
+    
+
     thread_analyziz.start()
 
     if analysis_type == 'insights':
