@@ -120,8 +120,12 @@ function sendActions(entry_id) {
     })
 }
 
-function doneFunc() {
-  fetch("/entry-done/" + entry_id)
+async function doneFunc() {
+  try {
+    await fetch("/entry-done/" + entry_id);
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
 }
 
 function submitEntryTitle(entry_id) {
