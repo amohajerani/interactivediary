@@ -248,7 +248,7 @@ def analyze(entry_id, analysis_type):
     if analysis_type=='summary':
         return summarize(content_trunc)
     # get actions
-    if analysis_type=='action':
+    if analysis_type=='actions':
         return get_actions(content_trunc)
     if analysis_type=='done':
         # make wordcloud from today's chat
@@ -266,7 +266,7 @@ def analyze(entry_id, analysis_type):
 def get_insight(text):
     insight=''
     if len(text) < 150:
-        return "Not enough content for insights"
+        return insight
 
     prompt = insight_prompt.format(text=text)
 
@@ -291,7 +291,7 @@ def get_insight(text):
 def get_actions(text):
     actions=''
     if len(text) < 150:
-        return "Not enough content for analysis"
+        return actions
 
     prompt = actions_prompt.format(text=text)
     try:
