@@ -257,6 +257,7 @@ def update_entry_title():
 @app.route('/delete-entry/<entry_id>', methods=['DELETE'])
 def delte_entry(entry_id):
     orm.delete_entry(entry_id)
+    return {'success':True}
 
 
 if __name__ == "__main__":
