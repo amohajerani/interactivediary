@@ -12,7 +12,7 @@
     .then(response => {
       if (response.ok) {
         // On successful deletion, remove the list item from the DOM
-        listItem.remove();
+        listItem.parentNode.removeChild(listItem);
       } else {
         // Handle error case
         console.log('Failed to delete item');
