@@ -15,7 +15,7 @@
         <h4>Insights</h4>
         <p>{{entry.insights}}</p>
         <h4>Entry</h4>
-        {% for chat in entry.chats|slice(2) %}
+        {% for chat in entry.chats[2:] %}
         <p style="{% if chat['role']=='assistant' %}font-style: italic;background-color: lightgray;{% endif %}">
             {{ chat.content }}
         </p>

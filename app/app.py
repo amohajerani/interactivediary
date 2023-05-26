@@ -195,5 +195,13 @@ def delte_entry(entry_id):
     return {'success':True}
 
 
+
+
+@app.route('/change-to-in-progress', methods=['POST'])
+def change_to_in_progress():
+    entry_id = request.json['entry_id']
+    orm.update_entry(entry_id, {'completed':False})
+    return {'success':True}
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)

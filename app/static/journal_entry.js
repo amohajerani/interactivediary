@@ -32,7 +32,7 @@ function change_to_in_progress(entry_id) {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({'compleeted':false})
+    body: JSON.stringify({'entry_id':entry_id})
   })
   .then(response => {
     if (response.ok) {
