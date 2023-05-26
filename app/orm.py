@@ -8,7 +8,7 @@ import boto3
 import os
 import pymongo
 import time
-
+from logger import logger
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)

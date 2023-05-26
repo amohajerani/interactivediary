@@ -14,15 +14,7 @@ from wordcloud import WordCloud
 import os
 import boto3
 from botocore.exceptions import ClientError
-import logging
-import time
-
-# Configure logging
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
-
-# Create a logger
-logger = logging.getLogger('app_logger')
+from logger import logger
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:

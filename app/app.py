@@ -12,6 +12,7 @@ import data
 import urllib.parse
 import base64
 import datetime
+from logger import logger
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -221,7 +222,10 @@ def entry_done(entry_id):
     """
     run analyziz and change the completed field in the entry doc
     """
-    data.close_entry(entry_id)
+    try:
+        data.close_entry(entry_id)
+    except Exception as e:
+        logger.exception('error occured in entry_done')
     return redirect("/")
 
 
