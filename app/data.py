@@ -97,19 +97,17 @@ def get_response(req_data):
     chats.append({'role': 'user', 'content': content})
 
     # we want to send the largest piece of text that does not exceed token limit
-    gpt_3p5_token_limit = 4096 - max_chat_tokens - 30 - 5  # 5 is the margin for error. 30 for the initial prompt
+    gpt_3p5_token_limit = 4096 - max_chat_tokens - 5  # 5 is the margin for error.
     start = 2 # instead of zero to ensure initial prompting messages are retained
     exceeds_token_limit = True
     while exceeds_token_limit and start < len(chats):
         chats_truncated = chats[start:]
-        messages = chats[:2]
-        messages.extend(chats_truncated)
+        messages = chats[:2]+chats_truncated
         token_cnt = get_token_count_chat_gpt(messages)
         if token_cnt < gpt_3p5_token_limit:
             exceeds_token_limit = False
         else:
             start += 1
-
     try:
         res = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",

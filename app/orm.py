@@ -22,7 +22,7 @@ first_user_message = "Be a good listener. Validate emotions and feelings, or ask
 first_assistant_message = "Understood. I will be brief and encourage deeper conversations"
 def create_entry(user_id):
     
-    initial_chats =[{'role':'user'},{'content': first_user_message},{'role':'user'},{'content': first_assistant_message}]
+    initial_chats =[{'role':'user','content': first_user_message},{'role':'assistant', 'content': first_assistant_message}]
     # assign a default title
     today_str = datetime.date.today().strftime('%Y-%m-%d')
     entry_id = Entries.insert_one(
