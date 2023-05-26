@@ -121,7 +121,6 @@ function sendActions(entry_id) {
 }
 
 function doneFunc() {
-  window.location.href = "/"
   fetch("/entry-done/" + entry_id)
 }
 

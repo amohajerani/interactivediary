@@ -222,11 +222,12 @@ def entry_done(entry_id):
     """
     run analyziz and change the completed field in the entry doc
     """
+    logger.info('request received to close entry ')
     try:
         data.close_entry(entry_id)
     except Exception as e:
         logger.exception('error occured in entry_done')
-    return redirect("/")
+    return redirect('/')
 
 
 @app.route('/email_content',  methods=['POST'])
