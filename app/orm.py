@@ -18,12 +18,15 @@ db = client.interactivechat
 Users = db.users
 Entries = db.entries
 
-
+first_user_message = "Be a good listener. Validate emotions and feelings, or ask a follow up question to encourage more conversation. be casual. Say 'I am listening' when appropriate. Respond in at most 15 words."
+first_assistant_message = "Understood. I will be brief and encourage deeper conversations"
 def create_entry(user_id):
+    
+    initial_chats =[{'role':'user'},{'content': first_user_message},{'role':'user'},{'content': first_assistant_message}]
     # assign a default title
     today_str = datetime.date.today().strftime('%Y-%m-%d')
     entry_id = Entries.insert_one(
-        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time()), 'title':today_str, 'chats':[]})
+        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time()), 'title':today_str, 'chats':initial_chats})
     return str(entry_id.inserted_id)
 
 

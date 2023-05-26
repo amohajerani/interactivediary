@@ -15,6 +15,7 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 from logger import logger
+import time
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -57,17 +58,6 @@ max_chat_tokens = 200
 max_analysis_tokens = 350
 
 
-def store_analysis(user_id, summary, insights, actions, date):
-    '''
-    Store summary and insight to in the entry document
-    '''
-    orm.Entries.update_one(
-        {'user_id': user_id, 'date': date},
-        {'$set': {'summary': summary, 'insights': insights, 'actions': actions}},
-        upsert=True
-    )
-
-
 def get_user_id(email):
     '''
     return 
@@ -107,13 +97,12 @@ def get_response(req_data):
     chats.append({'role': 'user', 'content': content})
 
     # we want to send the largest piece of text that does not exceed token limit
-    gpt_3p5_token_limit = 4096 - max_chat_tokens - 5  # 5 is the margin for error
-    start = 0
+    gpt_3p5_token_limit = 4096 - max_chat_tokens - 30 - 5  # 5 is the margin for error. 30 for the initial prompt
+    start = 2 # instead of zero to ensure initial prompting messages are retained
     exceeds_token_limit = True
     while exceeds_token_limit and start < len(chats):
         chats_truncated = chats[start:]
-        messages = [{'role': 'system',
-                     "content": chat_system_message}]
+        messages = chats[:2]
         messages.extend(chats_truncated)
         token_cnt = get_token_count_chat_gpt(messages)
         if token_cnt < gpt_3p5_token_limit:
@@ -140,61 +129,6 @@ def get_response(req_data):
 
     return outpt
 
-
-def get_chats_by_date(user_id, date):
-    '''
-    return the chat exchanges for a given date
-    '''
-    entry = orm.Entries.find_one({'user_id': user_id, 'date': date})
-    if entry:
-        return entry.get('chats'), entry.get('summary'), entry.get('insights')
-    else:
-        return []
-
-
-def remove_subscriber(req_data, publisher_user_id, publisher_email):
-    '''
-    If you don't want your therapist to follow you anymore
-    '''
-    subscriber_email = req_data['email']
-    orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
-        "$pull": {"subscribers": subscriber_email}})
-
-    orm.Users.update_one({"email": subscriber_email}, {
-        "$pull": {"subscriptions": publisher_email}})
-
-
-def add_subscriber(req_data, publisher_user_id, publisher_email):
-    '''
-    add your therapist as your follower
-    '''
-    subscriber_email = req_data['email']
-    subscriber_exists = orm.Users.find_one({'email': subscriber_email})
-    if not subscriber_exists:
-        return False
-
-    orm.Users.update_one({"_id": ObjectId(publisher_user_id)}, {
-        "$push": {"subscribers": subscriber_email}})
-
-    orm.Users.update_one({"email": subscriber_email}, {
-        "$push": {"subscriptions": publisher_email}})
-    return True
-
-
-def get_subscribers(user_id):
-    '''
-    Make a list of your subscribers , like therapists, etc
-    '''
-    user = orm.Users.find_one({'_id': ObjectId(user_id)})
-    return user['subscribers']
-
-
-def get_subscriptions(user_id):
-    '''
-    if you are a therapist and you want to get a list of your patients
-    '''
-    user = orm.Users.find_one({'_id': ObjectId(user_id)})
-    return user['subscriptions']
 
 
 def get_token_count_analysis(content, model="text-curie-001"):
@@ -341,7 +275,7 @@ def get_insight(text):
         return "Not enough content for insights"
 
     prompt = insight_prompt.format(text=text)
-    print(prompt)
+
     try:
         res = openai.Completion.create(
             model="text-curie-001",
@@ -382,40 +316,6 @@ def get_actions(text):
         return ''
     actions = actions.strip()
     return actions
-
-
-def get_chat_history(user_id):
-    '''
-    preload the chat page with
-    - prior chat from the same day
-    - if none, then summary and insights from the last day
-    - if none, then general prompt
-    '''
-
-    # Get today's date as a string
-    today = datetime.date.today()
-    today_str = today.strftime('%Y-%m-%d')
-    entry = orm.Entries.find_one(
-        {"user_id": user_id, "date": today_str}, {'chats': 1, '_id': 0})
-
-    if not entry or not entry.get('chats'):
-        chats = []
-    else:
-        chats = entry['chats']
-
-    if not chats:
-        last_entry = list(orm.Entries.find({'user_id': user_id}).sort(
-            'date', pymongo.DESCENDING).limit(1))
-        if last_entry and last_entry[0].get('summary'):
-            content = f"To help you start a new entry, here are summary ans insights from your last writing: \n {last_entry[0].get('summary')} \n {last_entry[0].get('insights')}"
-            return [{'role': 'initial_prompt', 'content': content}]
-        # the first ever prompt
-        else:
-            content = "This is your first entry. If you prefer, set me on Quiet mode, and start writing. If you prefer to get my input, leave it on interactive mode.\nHere are some suggestions to get started:\nDescibe your day\nTalk about your emotions\nWrite a letter to future self"
-            return [{'role': 'initial_prompt', 'content': content}]
-
-    return chats
-
 
 def send_email(entry, email):
     aws_client = boto3.client('ses', region_name=AWS_REGION)

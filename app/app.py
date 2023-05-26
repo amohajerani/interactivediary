@@ -143,69 +143,6 @@ def get_log0():
     return send_file('./static/gagalilogo.jpg', mimetype='image/jpg')
 
 
-@app.route('/subscriptions')
-@require_auth
-def subscriptions():
-    return render_template('subscriptions.html')
-
-
-@app.route('/remove-subscriber', methods=['POST'])
-@require_auth
-def remove_subscriber():
-    data.remove_subscriber(
-        request.form, session['user']['user_id'], session['user']['userinfo']['email'])
-    return render_template('subscriptions.html')
-
-
-@app.route('/add-subscriber', methods=['POST'])
-@require_auth
-def add_subscriber():
-    success = data.add_subscriber(
-        request.form, session['user']['user_id'], session['user']['userinfo']['email'])
-
-    if success:
-        return request.form.get('email')
-    return ''
-
-
-@app.route('/get-subscribers')
-@require_auth
-def get_subscribers():
-    return data.get_subscribers(session['user']['user_id'])
-
-
-@app.route('/get-subscriptions')
-@require_auth
-def get_subscriptions():
-    return data.get_subscriptions(session['user']['user_id'])
-
-
-@app.route('/subscription/<encoded_email>')
-@require_auth
-def subscription_content(encoded_email):
-    subscriber_email = session['user']['userinfo']['email']
-    subscription_email = urllib.parse.unquote(encoded_email)
-    subscription_user = orm.Users.find_one({'email': subscription_email})
-    if not subscription_user or subscriber_email not in subscription_user['subscribers']:
-        return 'you are not allowed'
-    summaries = orm.get_summaries(user_id=str(subscription_user['_id']))
-    wordcloud = orm.get_wordcloud_file(str(subscription_user['_id']))
-    return render_template('home_subscription.html', summaries=summaries, wordcloud=wordcloud, email=subscription_email, encoded_email=urllib.parse.quote(subscription_email))
-
-
-@app.route('/subscription/past_entry/<encoded_email>/<date>')
-@require_auth
-def subscription_entry(encoded_email, date):
-    subscription_email = urllib.parse.unquote(encoded_email)
-    subscriber_email = session['user']['userinfo']['email']
-    subscription_user = orm.Users.find_one({'email': subscription_email})
-    if not subscription_user or subscriber_email not in subscription_user['subscribers']:
-        return 'you are not allowed'
-    entries, summary, insights = data.get_chats_by_date(
-        str(subscription_user['_id']), date)
-    return render_template('journal-entry-subscription.html', entries=entries, summary=summary, insights=insights, date=date, email=subscription_email)
-
-
 @app.route('/analyze/<analysis_type>/<entry_id>')
 @require_auth
 def analyze(entry_id, analysis_type):
