@@ -104,8 +104,8 @@ Entry
     </div>
     <div id="chat-history">
       <div id="history">
-        {% for message in chat_history %}
-        <p>{{ message.content }}</p>
+        {% for chat in entry.chats %}
+        <p>{{ chat.content }}</p>
         {% endfor %}
 
       </div>

@@ -134,7 +134,7 @@ def get_response():
 @ app.route("/past_entries/<entry_id>")
 @ require_auth
 def past_entries(entry_id):
-    entry = data.get_entry(entry_id)
+    entry = orm.get_entry(entry_id)
     return render_template('journal-entry.html', entry=entry)
 
 
@@ -235,7 +235,7 @@ def email_content():
         payload = request.get_json()
         entry_id = payload.get('entry_id')
         email = payload.get('email')
-        entry = data.get_entry(entry_id)
+        entry = orm.get_entry(entry_id)
         # Call the send_email function from the email module
         data.send_email(entry, email)
 
