@@ -112,7 +112,7 @@ Entry
     </div>
     <div id="chat-message">
       <textarea id="message" autofocus></textarea>
-      <button class="fa fa-paper-plane-o" onclick="sendMessage(entry._id)"></button>
+      <button class="fa fa-paper-plane-o" onclick="sendMessage('{{ entry._id }}')"></button>
       <div class="button-container">
         <button class="button" onclick="doneFunc('{{ entry._id }}')">Done</button>
         <button class="button" onclick="sendSummary('{{ entry._id }}')">Summarize</button>
