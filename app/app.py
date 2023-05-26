@@ -221,7 +221,7 @@ def entry_done(entry_id):
     """
     run analyziz and change the completed field in the entry doc
     """
-    data.analyze(entry_id, 'done')
+    data.close_entry(entry_id)
     return redirect("/")
 
 

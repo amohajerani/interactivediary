@@ -252,6 +252,8 @@ def get_token_count_chat_gpt(messages, model="gpt-3.5-turbo"):
 
 
 def summarize(text):
+    if not text:
+        return 'No entry yet'
     summary = text
     if len(text) < 150:
         return text
@@ -312,13 +314,13 @@ def analyze(entry_id, analysis_type):
     for sentence in content:
         words = sentence.split()
         total_words += len(words)
-    if total_words < 30:
-        return 'not enough content'
+
 
     # let's make sure we don't go over the token limit
     completion_token_limit = 2049 - max_analysis_tokens - 5  # 5 for the margin of error
     start = 0
     exceeds_token_limit = True
+    content_trunc=[]# for the edge case where there are no chats
     if len(summarize_prompt) > len(insight_prompt):
         longest_prompt = summarize_prompt
     else:
@@ -333,37 +335,29 @@ def analyze(entry_id, analysis_type):
         else:
             start += 1
     content_trunc = '. '.join(content_trunc)
-    insights = get_insight(content_trunc)
+    if analysis_type=='insights':
+        return get_insight(content_trunc)
     # get insights from today's chat
-    summary = summarize(content_trunc)
+    if analysis_type=='summary':
+        return summarize(content_trunc)
     # get actions
-    actions = get_actions(content_trunc)
+    if analysis_type=='action':
+        return get_actions(content_trunc)
+    if analysis_type=='done':
+        # make wordcloud from today's chat
+        thread_wordcloud = Thread(
+            target=generate_wordcloud, args=(user_id, ' '.join(content)))
+        thread_wordcloud.start()
 
-    # make wordcloud from today's chat
-    thread_wordcloud = Thread(
-        target=generate_wordcloud, args=(user_id, ' '.join(content)))
-    thread_wordcloud.start()
-    entry_updates = {'summary':summary, 'insights':insights, 'actions':actions}
-    if analysis_type == 'done':
-        entry_updates.update({'completed':True})
-    thread_analyziz = Thread(target=orm.update_entry, args=(
-        entry_id, entry_updates))
-    
-
-    thread_analyziz.start()
-
-    if analysis_type == 'insights':
-        return insights
-    if analysis_type == 'summary':
-        return summary
-    if analysis_type == 'done':
+        entry_updates = {'summary':summarize(content_trunc),
+                        'insights':get_insight(content_trunc),
+                        'actions':get_actions(content_trunc)}
+        orm.update_entry(entry_id, entry_updates)
         return None
-    if analysis_type == 'actions':
-        return actions
 
 
 def get_insight(text):
-
+    insight=''
     if len(text) < 150:
         return "Not enough content for insights"
 
@@ -388,7 +382,7 @@ def get_insight(text):
 
 
 def get_actions(text):
-
+    actions=''
     if len(text) < 150:
         return "Not enough content for analysis"
 
@@ -514,3 +508,10 @@ def register_terms(user_id):
                              )
     except Exception as e:
         logger.exception('register terms error')
+
+def close_entry(entry_id):
+    orm.update_entry(entry_id, {'completed':1})
+    thread_analyze = Thread(target=analyze, args=(
+        entry_id, 'done'))
+    thread_analyze.start()
+    return
