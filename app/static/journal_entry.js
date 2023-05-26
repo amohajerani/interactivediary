@@ -25,3 +25,24 @@ function shareViaEmail(entry_id) {
       })
   }
 }
+
+function change_to_in_progress(entry_id) {
+  fetch('/change-to-in-progress', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({'compleeted':false})
+  })
+  .then(response => {
+    if (response.ok) {
+      // If the POST request is successful, redirect the browser to the second endpoint
+      window.location.href = '/chat/'+entry_id;
+    } else {
+      throw new Error('Failed to send POST request.');
+    }
+  })
+  .catch(error => {
+    console.error(error);
+  });
+}

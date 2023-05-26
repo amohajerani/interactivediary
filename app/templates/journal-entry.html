@@ -17,9 +17,12 @@
         <h4>Entry</h4>
         {% for chat in entry.chats|slice(2) %}
         <p style="{% if chat['role']=='assistant' %}font-style: italic;background-color: lightgray;{% endif %}">
-            {{ chat['content'] }}
+            {{ chat.content }}
         </p>
         {% endfor %}
     </div>
+    <div style="text-align: right;">
+        <button class="btn btn-primary" onclick="change_to_in_progress('{{ entry._id }}')">Keep writing</button>
+    </div> 
     <script src="{{ url_for('static', filename='journal_entry.js') }}"></script>
 {% endblock %}

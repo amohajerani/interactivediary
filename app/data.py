@@ -211,13 +211,9 @@ def analyze(entry_id, analysis_type):
     entry = orm.Entries.find_one(
         {'_id': ObjectId(entry_id)})
     user_id = entry.get('user_id')
-    if entry and entry.get('chats'):
-        chats = entry.get('chats')
-    else:
-        chats = []
-
+    chats = entry.get('chats')
     content = []
-    for chat in chats:
+    for chat in chats[2:]:
         if chat.get('role') == 'user':
             content.append(chat['content'])
 
