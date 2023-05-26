@@ -120,7 +120,7 @@ function sendActions(entry_id) {
     })
 }
 
-async function doneFunc() {
+async function doneFunc(entry_id) {
   try {
     await fetch("/entry-done/" + entry_id);
   } catch (error) {
