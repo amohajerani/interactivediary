@@ -51,6 +51,11 @@ def update_entry(entry_id, update_obj):
     update_data = {'$set': update_obj}
     Entries.update_one({'_id': ObjectId(entry_id)}, update_data)
 
+def add_chat_to_entry(entry_id, role, content):
+    update_data = {'$push': {"chats":{'role': role, 'content': content}},
+    '$set':{'last_update': int(time.time())}}
+    Entries.update_one({'_id': ObjectId(entry_id)}, update_data)
+
 def get_entry(entry_id:str):
     entry = Entries.find_one({'_id':ObjectId(entry_id)})
     entry['_id']=str(entry['_id'])

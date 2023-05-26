@@ -57,16 +57,6 @@ max_chat_tokens = 200
 max_analysis_tokens = 350
 
 
-def store_message(user_id, content, role, date):
-    '''
-    When a new chat exchange happens, it appends it to the entry document
-    '''
-    orm.Entries.update_one({'user_id': user_id, 'date': date},
-                           {"$push": {"chats": {'role': role, 'content': content}}},
-                           upsert=True
-                           )
-
-
 def store_analysis(user_id, summary, insights, actions, date):
     '''
     Store summary and insight to in the entry document
@@ -93,25 +83,22 @@ def get_user_id(email):
     return str(user.inserted_id), False
 
 
-def get_response(req_data, user_id):
+def get_response(req_data):
     '''
     Send the user's input to GPT and return the response.
     '''
     # get the payload
     content = req_data['msg']
     quiet_mode = req_data['quietMode']
+    entry_id = req_data['quietMode']
 
     # get the prior chats from today
-    entry = orm.Entries.find_one(
-        {"user_id": user_id, 'date': today}, {'chats': 1, '_id': 0})
-    if not entry or not entry.get('chats'):
-        chats = []
-    else:
-        chats = entry.get('chats')
+    entry = orm.get_entry(entry_id)
+    chats = entry.get('chats')
 
     # store the last user message
-    thread_input_txt = Thread(target=store_message, args=(
-        user_id, content, 'user', today))
+    thread_input_txt = Thread(target=orm.add_chat_to_entry, args=(
+        entry_id, 'user',content))
     thread_input_txt.start()
     # if it is quiet mode, you are done
     if quiet_mode:
@@ -145,10 +132,10 @@ def get_response(req_data, user_id):
         logger.exception('openai exception occured')
         return "Gagali cannot respond. Sorry about that. Go on."
 
-    # store the user input and assistant's response to db
+    # store the assistant's response to db
     outpt = res['choices'][0]['message']['content']
-    thread_output_txt = Thread(target=store_message, args=(
-        user_id, outpt, 'assistant', today))
+    thread_output_txt = Thread(target=orm.add_chat_to_entry, args=(
+        entry_id, 'assistant', outpt))
     thread_output_txt.start()
 
     return outpt
