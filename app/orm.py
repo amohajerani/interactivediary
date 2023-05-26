@@ -56,6 +56,9 @@ def get_entry(entry_id:str):
     entry['_id']=str(entry['_id'])
     return entry
 
+def delete_entry(entry_id):
+    Entries.delete_one({'_id':ObjectId(entry_id)})
+
 def upload_to_s3(file_location, user_id, date):
     s3_client = boto3.client('s3',
                              aws_access_key_id=os.environ.get('S3_KEY'),

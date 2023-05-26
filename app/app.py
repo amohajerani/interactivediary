@@ -254,5 +254,10 @@ def update_entry_title():
     return {'success':True}
 
 
+@app.route('/delete-entry/<entry_id>', methods=['DELETE'])
+def delte_entry(entry_id):
+    orm.delete_entry(entry_id)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)

@@ -222,3 +222,8 @@ button:hover {
     margin: 0 auto; /* Center the content horizontally */
     padding: 20px;
   }
+
+  .delete-icon {
+    color: red;
+    cursor: pointer;
+  }

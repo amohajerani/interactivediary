@@ -13,6 +13,7 @@
           {% for entry in in_progress_entries %}
           <li>
             <a href="/chat/{{entry['_id']}}">{{entry['title']}}</a>
+            <i class="delete-icon" onclick="deleteItem(this, '{{ entry._id }}')">🗑️</i>
           </li>
           {% endfor %}
         </ul>
@@ -28,6 +29,7 @@
             {% for entry in completed_entries %}
             <li>
               <a href="/past_entries/{{entry['_id']}}">{{entry['title']}}</a>
+              <i class="delete-icon" onclick="deleteItem(this, '{{ entry._id }}')">🗑️</i>
             </li>
             {% endfor %}
           </ul>
@@ -39,4 +41,5 @@
     </div>
   </div>
 </div>
+<script src="{{ url_for('static', filename='home.js') }}"></script>
 {% endblock %}
