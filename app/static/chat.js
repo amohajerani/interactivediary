@@ -120,10 +120,24 @@ function sendActions(entry_id) {
     })
 }
 
-async function doneFunc(entry_id) {
-  window.location.href = "/";
-  await fetch("/entry-done/" + entry_id);
+function doneFunc(entry_id) {
+fetch("/entry-done/" + entry_id).then()
 }
+
+function doneFunc(entry_id) {
+  fetch("/entry-done/" + entry_id)
+    .then(function(response) {
+      if (response.ok) {
+        window.location.href = '/';
+      } else {
+        console.error('Redirect failed');
+      }
+    })
+    .catch(function(error) {
+      console.error('An error occurred:', error);
+    });
+}
+
 
 function submitEntryTitle(entry_id) {
   var entryTitle = document.getElementById("entryTitle").value;
