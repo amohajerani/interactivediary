@@ -7,7 +7,9 @@
     <div class="post">
 
         <h4>{{ date }}</h4>
-        <button onclick="shareViaEmail('{{ entry._id }}')">Share via Email</button>
+        <div style="text-align: right;">
+            <button class="btn btn-primary" onclick="shareViaEmail('{{ entry._id }}')">Share via Email</button>
+        </div>
         <h4>Summary</h4>
         <p>{{entry.summary}}</p>
         <h4>Insights</h4>

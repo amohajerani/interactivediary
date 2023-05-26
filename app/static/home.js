@@ -1,6 +1,8 @@
 
   function deleteItem(element, entry_id) {
     var listItem = element.parentNode;
+    var confirmation = confirm("Are you sure you want to delete the entry?");
+    if (confirmation) {
 
     // Send a fetch request to remove the item from the database
     fetch('/delete-entry/' + entry_id, {
@@ -23,3 +25,4 @@
       console.log('Network error occurred');
     });
   }
+}

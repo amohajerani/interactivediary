@@ -120,9 +120,6 @@ function sendActions(entry_id) {
     })
 }
 
-function doneFunc(entry_id) {
-fetch("/entry-done/" + entry_id).then()
-}
 
 function doneFunc(entry_id) {
   fetch("/entry-done/" + entry_id)
