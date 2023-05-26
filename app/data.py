@@ -15,6 +15,7 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 import logging
+import time
 
 # Configure logging
 logging.basicConfig(level=logging.INFO,
@@ -276,15 +277,15 @@ def summarize(text):
     return summary
 
 
-def generate_wordcloud(user_id, date, content):
-
-    users = orm.Users.find({}, {'_id': 1})
+def generate_wordcloud(user_id, content):
+    # make word cloud for the content provided. 
     # if there is not much text, skip this
     if len(content) < 400:
         return
 
     image = WordCloud(collocations=False,
                       background_color='white', color_func=lambda *args, **kwargs: "blue").generate(content)
+    date=str(int(time.time()))
     file_path = f"./wordcloud/{user_id}_{date}.png"
     image.to_file(file_path)
 
