@@ -7,15 +7,15 @@
     <div class="post">
 
         <h4>{{ date }}</h4>
-        <button onclick="shareViaEmail('{{ date }}')">Share via Email</button>
+        <button onclick="shareViaEmail('{{ entry._id }}')">Share via Email</button>
         <h4>Summary</h4>
-        <p>{{summary}}</p>
+        <p>{{entry.summary}}</p>
         <h4>Insights</h4>
-        <p>{{insights}}</p>
+        <p>{{entry.insights}}</p>
         <h4>Entry</h4>
-        {% for entry in entries %}
-        <p style="{% if entry['role']=='assistant' %}font-style: italic;background-color: lightgray;{% endif %}">
-            {{ entry['content'] }}
+        {% for chat in entry.chats %}
+        <p style="{% if chat['role']=='assistant' %}font-style: italic;background-color: lightgray;{% endif %}">
+            {{ chat['content'] }}
         </p>
         {% endfor %}
     </div>

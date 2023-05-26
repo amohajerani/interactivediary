@@ -417,23 +417,23 @@ def get_chat_history(user_id):
     return chats
 
 
-def send_email(date, email, chats, summary, insights):
+def send_email(entry, email):
     aws_client = boto3.client('ses', region_name=AWS_REGION)
 
     BODY_TEXT = ''
-    for chat in chats:
+    for chat in entry.chats:
         BODY_TEXT = BODY_TEXT + \
             f"\n{chat.get('role','')}: {chat.get('content','')}"
 
     BODY_HTML = '<html>\n<body>\n'
-    if summary:
+    if entry.summary:
         BODY_HTML += '<h4>Summary</h4>\n'
-        BODY_HTML += '<p><em>{}</em></p>\n'.format(summary)
-    if insights:
+        BODY_HTML += '<p><em>{}</em></p>\n'.format(entry.summary)
+    if entry.insights:
         BODY_HTML += '<h4>Insights</h4>\n'
-        BODY_HTML += '<p><em>{}</em></p>\n'.format(insights)
+        BODY_HTML += '<p><em>{}</em></p>\n'.format(entry.insights)
         BODY_HTML += '<h4>Entry</h4>\n'
-    for chat in chats:
+    for chat in entry.chats:
         role = chat.get('role', '')
         content = chat.get('content', '')
 
@@ -465,7 +465,7 @@ def send_email(date, email, chats, summary, insights):
                 },
                 'Subject': {
                     'Charset': "UTF-8",
-                    'Data': f'Chat Content for {date}',
+                    'Data': f'Entry: {entry.title}',
                 },
             },
             Source=SENDER_EMAIL,

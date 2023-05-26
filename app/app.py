@@ -128,15 +128,14 @@ def chat(entry_id):
 @app.route('/get_response', methods=['POST'])
 @require_auth
 def get_response():
-    return data.get_response(request.json, session['user']['user_id'])
+    return data.get_response(request.json)
 
 
-@ app.route("/past_entries/<date>")
+@ app.route("/past_entries/<entry_id>")
 @ require_auth
-def past_entries(date):
-    entries, summary, insights = data.get_chats_by_date(
-        session['user']['user_id'], date)
-    return render_template('journal-entry.html', entries=entries, summary=summary, insights=insights, date=date)
+def past_entries(entry_id):
+    entry = data.get_entry(entry_id)
+    return render_template('journal-entry.html', entry=entry)
 
 
 @app.route('/logo')
@@ -234,12 +233,11 @@ def entry_done(entry_id):
 def email_content():
     try:
         payload = request.get_json()
-        date = payload.get('date')
+        entry_id = payload.get('entry_id')
         email = payload.get('email')
-        user_id = session['user']['user_id']
-        chats, summary, insights = data.get_chats_by_date(user_id, date)
+        entry = data.get_entry(entry_id)
         # Call the send_email function from the email module
-        data.send_email(date, email, chats, summary, insights)
+        data.send_email(entry, email)
 
         return jsonify({'message': 'Email sent successfully'})
     except Exception as e:

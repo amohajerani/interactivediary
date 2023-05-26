@@ -1,8 +1,8 @@
-function shareViaEmail(date) {
+function shareViaEmail(entry_id) {
   var email = prompt("Please enter your email address:")
   if (email) {
     var payload = {
-      date: date,
+      entry_id: entry_id,
       email: email,
     }
     fetch("/email_content", {
