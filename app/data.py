@@ -107,7 +107,6 @@ def get_response(req_data):
             exceeds_token_limit = False
         else:
             start += 1
-    import pdb; pdb.set_trace()
     try:
         res = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
