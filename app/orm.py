@@ -18,7 +18,11 @@ db = client.interactivechat
 Users = db.users
 Entries = db.entries
 
-first_user_message = "Be a good listener. Validate emotions and feelings, or ask a follow up question to encourage more conversation. be casual. Say 'I am listening' when appropriate. Respond in at most 15 words."
+first_user_message = '''open with a statement like "I hear you say", or "You indicate that", or "You have noted that", or “you say that”. This statement should capture the most salient sentiment and "feeling" of the paragraph.
+Ask a follow up question about that feeling. Follow up question can start with "why do you feel.." or "how do you feel..." or tell me more about..." 
+If no clear "sentiment" or "feeling" is expressed, then ask the writer what they feel about the situation. 
+Keep overall response to less than 3 sentences. 
+Don not give advice unless specifically asked for.'''
 first_assistant_message = "Understood. I will be brief and encourage deeper conversations"
 def create_entry(user_id):
     
