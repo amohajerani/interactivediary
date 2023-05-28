@@ -39,12 +39,6 @@ openai.api_key = env.get("OPENAI_KEY")
 # this is the system message for chat echanges
 
 summarize_prompt = """Identify the most salient sentiment of my diary.  List most important facts, organized into 4 brief bullets.
-example of summary:
-The most salient sentiment is that of excitement.
-- I am looking forward to the product launch
--  We are making some final edits
-- Most of the technical parts are done.
-
 Diary: {text}
 Summary:"""
 
@@ -220,7 +214,9 @@ def analyze(entry_id, analysis_type):
     content = []
     for chat in chats[2:]:
         if chat.get('role') == 'user':
-            content.append(chat['content'])
+            processed_content = chat['content'].replace("'", "\\'")
+            processed_content = chat['content'].replace('"', '\\"') 
+            content.append(processed_content)
 
     total_words = 0
     for sentence in content:
