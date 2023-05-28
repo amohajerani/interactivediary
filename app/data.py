@@ -38,7 +38,13 @@ openai.api_key = env.get("OPENAI_KEY")
 
 # this is the system message for chat echanges
 
-summarize_prompt = """Summarize my diary, in at most 3 bullet points, based on the principles of reflective listening. Offer validation for feelings expressed.
+summarize_prompt = """Identify the most salient sentiment of my diary.  List most important facts, organized into 4 brief bullets.
+example of summary:
+The most salient sentiment is that of excitement.
+- I am looking forward to the product launch
+-  We are making some final edits
+- Most of the technical parts are done.
+
 Diary: {text}
 Summary:"""
 
