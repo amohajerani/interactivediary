@@ -16,6 +16,7 @@ import boto3
 from botocore.exceptions import ClientError
 from logger import logger
 import time
+import re
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -46,7 +47,7 @@ insight_prompt = """Extract insights from the diary in three sentences. In the f
 Diary: {text}
 Insights:"""
 
-actions_prompt = """List, in at most 100 words, the action items that the writer of the diary could follow. Your response should be an array of action items.
+actions_prompt = """List, in at most 100 words, the action items that the writer of the diary could follow. Do not number the action items.
 Diary: {text}
 Actions:"""
 
@@ -310,8 +311,19 @@ def get_actions(text):
         logger.exception('actions error')
         return ''
     actions = actions.strip()
-    actions = actions.split('-')
-    return actions
+    if '1.' in actions:
+        actions = re.split(r'\d+\.\s', actions)
+    elif '- ' in actions:
+        actions = actions.split('- ')
+    else:
+        actions = actions.split('. ')
+    cleaned_actions = []
+    for action in actions:
+        if len(action)>2:
+            action = action.strip()
+            action = action.rstrip('\n')
+            cleaned_actions.append(action)
+    return cleaned_actions
 
 def send_email(entry, email):
     aws_client = boto3.client('ses', region_name=AWS_REGION)
