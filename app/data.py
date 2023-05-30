@@ -46,7 +46,7 @@ insight_prompt = """Extract insights from the diary in three sentences. In the f
 Diary: {text}
 Insights:"""
 
-actions_prompt = """List, in at most 100 words, the action items that the writer of the diary could follow.
+actions_prompt = """List, in at most 100 words, the action items that the writer of the diary could follow. Your response should be an array of action items.
 Diary: {text}
 Actions:"""
 
@@ -310,6 +310,7 @@ def get_actions(text):
         logger.exception('actions error')
         return ''
     actions = actions.strip()
+    actions = actions.split('-')
     return actions
 
 def send_email(entry, email):

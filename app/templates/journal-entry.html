@@ -15,7 +15,11 @@
         <h4>Insights</h4>
         <p>{{entry.insights}}</p>
         <h4>Action items</h4>
-        <p>{{entry.actions}}</p>
+        <ul>
+            {% for action in entry.actions %}
+                <li>{{ action }}</li>
+            {% endfor %}
+        </ul>
         <h4>Entry</h4>
         {% for chat in entry.chats[2:] %}
         <p style="{% if chat['role']=='assistant' %}font-style: italic;background-color: lightgray;{% endif %}">
