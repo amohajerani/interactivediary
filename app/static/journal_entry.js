@@ -46,3 +46,19 @@ function change_to_in_progress(entry_id) {
     console.error(error);
   });
 }
+
+function downloadAsPDF() {
+  // Create a new jsPDF instance
+  const doc = new jspdf.jsPDF();
+  
+  // Get the HTML content to be converted
+  const content = document.documentElement.outerHTML;
+  
+  // Convert HTML to PDF
+  doc.html(content, {
+      callback: function (pdf) {
+          // Save the PDF file
+          pdf.save("gagali_entry.pdf");
+      }
+  });
+}
