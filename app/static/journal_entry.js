@@ -49,7 +49,14 @@ function change_to_in_progress(entry_id) {
 
 function downloadAsPDF() {
   // Create a new jsPDF instance
-  const doc = new jspdf.jsPDF();
+  const doc = new jspdf.jsPDF({
+    unit: 'px',
+    format: 'a4',
+    orientation: 'portrait',
+    hotfixes: ['px_scaling'],
+    precision: 4,
+    dpi: 144
+});
   
   // Get the HTML content to be converted
   const content = document.documentElement.outerHTML;
