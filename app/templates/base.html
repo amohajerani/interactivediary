@@ -33,12 +33,12 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbar">
-        <div class="navbar-nav">
+      <div id="navbar">
+        <div class="navbar-nav ml-auto">
           {% if session %}
+          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="new_entry" href="/chat">Write journal</a>
-          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% else %}
           <a class="nav-item nav-link" id="login" href="/login">Login or sign up</a>
           {% endif %}

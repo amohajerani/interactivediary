@@ -9,7 +9,7 @@
         <h4>{{ date }}</h4>
         <div style="text-align: right;">
             <button class="btn btn-primary" onclick="shareViaEmail('{{ entry._id }}')">Share via Email</button>
-            <button onclick="downloadAsPDF()">Download as PDF</button>
+            <button class="btn btn-primary" onclick="downloadAsPDF()">Print</button>
         </div>
         <h4>Summary</h4>
         <p>{{entry.summary}}</p>
