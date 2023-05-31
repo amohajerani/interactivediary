@@ -231,3 +231,10 @@ button:hover {
   .assistant-text {
     margin-left: 20px; /* Adjust the indentation as needed */
   }
+
+  .entry-option {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+}
