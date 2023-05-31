@@ -18,6 +18,9 @@
         <h4>Action items</h4>
         <ul>
             {% for action in entry.actions %}
+            {% if chat.role == 'assistant' %}
+            <p class="assistant-text"><em>{{ chat.content }}</em></p>
+            {% else %}
                 <li>{{ action }}</li>
             {% endfor %}
         </ul>

@@ -227,3 +227,7 @@ button:hover {
     color: red;
     cursor: pointer;
   }
+
+  .assistant-text {
+    margin-left: 20px; /* Adjust the indentation as needed */
+  }
