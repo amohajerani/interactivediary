@@ -64,13 +64,13 @@ function appendMessageToHistory(role, content, italic = false) {
 }
 
 // Retrieve the chat history from the rendered HTML and update chatHistory array
-const chatHistoryElement = document.getElementById("history")
-const initialChatHistory = chatHistoryElement.querySelectorAll("p")
-for (const messageElement of initialChatHistory) {
-  const role = "assistant" // Assuming all initial messages are from the assistant
-  const content = messageElement.innerHTML
-  chatHistory.push({ role, content })
-}
+//const chatHistoryElement = document.getElementById("history")
+//const initialChatHistory = chatHistoryElement.querySelectorAll("p")
+//for (const messageElement of initialChatHistory) {
+//  const role = "assistant" // Assuming all initial messages are from the assistant
+//  const content = messageElement.innerHTML
+//  chatHistory.push({ role, content })
+//}
 
 function sendSummary(entry_id) {
   fetch("/analyze/summary/" + entry_id, {
