@@ -105,7 +105,10 @@ Entry
     <div id="chat-history">
       <div id="history">
         {% for chat in entry.chats[2:] %}
-        <p>{{ chat.content }}</p>
+        {% if chat.role=='assistant' %}
+        <p class="assistant-text"><em>{{ chat.content }}</em></p>
+        {% else %}
+        <p>{{ chat.content }}</p> 
         {% endfor %}
 
       </div>
