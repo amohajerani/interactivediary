@@ -71,7 +71,7 @@ for (const messageElement of initialChatHistory) {
   const content = messageElement.innerHTML
   chatHistory.push({ role, content })
   if (role=='user') {
-    var role = "assistant"}
+     role = "assistant"}
   else {role = 'user'}
 }
 
