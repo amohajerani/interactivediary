@@ -238,3 +238,7 @@ button:hover {
     padding: 10px;
     border: 1px solid black;
 }
+.button-container {
+  display: flex;
+  justify-content: space-between; /* Adjust the spacing between buttons */
+}
