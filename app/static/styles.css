@@ -242,3 +242,62 @@ button:hover {
   display: flex;
   justify-content: space-between; /* Adjust the spacing between buttons */
 }
+
+/* new */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.entries {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+}
+
+.entries-list {
+  flex-basis: 48%;
+}
+
+.in-progress-entries h4,
+.completed-entries h4 {
+  margin-bottom: 10px;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.delete-icon {
+  margin-left: 10px;
+  color: red;
+  cursor: pointer;
+}
+
+.word-cloud {
+  flex-basis: 48%;
+  text-align: right;
+}
+
+.word-cloud img {
+  margin-bottom: 10px;
+}
+.entry-columns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.in-progress-entries,
+.completed-entries {
+  flex-basis: 48%; /* Adjust the width of each column as needed */
+}

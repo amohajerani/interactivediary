@@ -1,27 +1,27 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Past entries{% endblock %}
 {% block content %}
 <div class="content">
-  <div>
-    <div>
-      <div>
-        <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud" style="margin-bottom: 10px;">
-        <div>
-        <h4>In-progress entries</h4>
-        {% if in_progress_entries %}
-        <ul>
-          {% for entry in in_progress_entries %}
-          <li>
-            <a href="/chat/{{entry['_id']}}">{{entry['title']}}</a>
-            <i class="delete-icon" onclick="deleteItem(this, '{{ entry._id }}')">🗑️</i>
-          </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <p>No entries in progress. <a href="/chat">Write a new entry</a></p>
-        {% endif %}
+  <div class="entries">
+    <div class="entries-list">
+      <p> <a href="/chat">Write a new entry</a></p>
+      <div class="entry-columns">
+        <div class="in-progress-entries">
+          <h4>In-progress entries</h4>
+          {% if in_progress_entries %}
+          <ul>
+            {% for entry in in_progress_entries %}
+            <li>
+              <a href="/chat/{{entry['_id']}}">{{entry['title']}}</a>
+              <i class="delete-icon" onclick="deleteItem(this, '{{ entry._id }}')">🗑️</i>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p>No entries in progress.</p>
+          {% endif %}
         </div>
-        <div>
+        <div class="completed-entries">
           <h4>Completed entries</h4>
           {% if completed_entries %}
           <ul>
@@ -35,8 +35,11 @@
           {% else %}
           <p>No completed entries.</p>
           {% endif %}
-          </div>
+        </div>
       </div>
+    </div>
+    <div class="word-cloud">
+      <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud">
     </div>
   </div>
 </div>
