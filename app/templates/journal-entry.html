@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block title %}
-    {{ date }}
+    {{ entry.title }}
 {% endblock %}
 
 {% block content %}
     <div class="post">
 
-        <h4>{{ date }}</h4>
+        <h4>{{ entry.title }}</h4>
         <div style="text-align: right;">
             <div class="button-container">
             <h3 onclick="shareViaEmail('{{ entry._id }}')">&#x1F4E7;</h3>
