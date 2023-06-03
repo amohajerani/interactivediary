@@ -197,7 +197,7 @@ def generate_wordcloud(user_id, content):
         return
 
     image = WordCloud(collocations=False,
-                      background_color='white', color_func=lambda *args, **kwargs: "blue").generate(content)
+                      background_color='white', color_func=lambda *args, **kwargs: "black").generate(content)
     date=str(int(time.time()))
     file_path = f"./wordcloud/{user_id}_{date}.png"
     image.to_file(file_path)
@@ -287,7 +287,7 @@ def get_insight(text):
         logger.exception('insights error')
         return ''
     insight = insight.strip()
-    return insight
+    return insight+'\n prompt was: prompt'
 
 
 def get_actions(text):

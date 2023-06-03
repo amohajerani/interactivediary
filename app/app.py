@@ -206,11 +206,9 @@ def change_to_in_progress():
 @ app.route("/tmp")
 #@ require_auth
 def tmp():
-    user_id = '645db31405e1973b595c0422'
-    in_progress_entries , completed_entries = orm.get_entries(
-        user_id=user_id)
-    wordcloud = orm.get_wordcloud_file(user_id)
-    return render_template('home.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
+    entry_id = '647275dc06343ac6a5645f1b'
+    entry = orm.get_entry(entry_id)
+    return render_template('journal-entry.html', entry=entry)
 
 @app.route('/feedback', methods=['GET','POST'])
 def submit_feedback():
