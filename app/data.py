@@ -287,7 +287,7 @@ def get_insight(text):
         logger.exception('insights error')
         return ''
     insight = insight.strip()
-    return insight+'\n prompt was: prompt'
+    return insight+'\n prompt was: '+prompt
 
 
 def get_actions(text):
