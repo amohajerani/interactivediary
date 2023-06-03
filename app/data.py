@@ -43,7 +43,7 @@ summarize_prompt = """Identify the most salient sentiment of my diary.  List mos
 Diary: {text}
 Summary:"""
 
-insight_prompt = """Extract insights from the diary in three sentences. In the first sentences, provide the overall sentiment of the diary. In the second sentence, analyze the entry and describe the feelings, thoughts and facts in the diary. In the third sentence, list the beliefs that lead to those feelings and thoughts.
+insight_prompt = """Respond in a friendly and thoughtful tone. Refer to the writer as "you". Analyze my diary and write the following 3 bullet points: First, describe my overall sentiment from the diary. Start with "It sounds like". Second, summarize main conflict conveyed in my diary. Start with "The issue is that" Third, list the my beliefs that lead to those feelings and thoughts. Provide validation for the sentiment in one sentence. Then, under heading "challenge", gently invite or challenge me to do one thing that could lead to improved well being. If poor exhaustion, negative feelings, poor self care is noted in the diary, lovingly suggest more self care. Also gently suggest an alternative to my belief outlined earlier.
 Diary: {text}
 Insights:"""
 

@@ -2,33 +2,36 @@
 {% block title %}Past entries{% endblock %}
 {% block content %}
 <div class="content">
-  <div class="entries">
-    <div class="entries-list">
-      <p> <a href="/chat">Write a new entry</a></p>
-      <div class="entry-columns">
+  <div class="word-cloud">
+    <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud">
+  </div>
+  <p> <a href="/chat">Write a new entry</a></p>
+
+    <div class="notebook">
+      
         <div class="in-progress-entries">
-          <h4>In-progress entries</h4>
+          <h4>In-progress <span class="symbol">&#9998;</span></h4>
           {% if in_progress_entries %}
           <ul>
             {% for entry in in_progress_entries %}
             <li>
-              <a href="/chat/{{entry['_id']}}">{{entry['title']}}</a>
-              <i class="delete-icon" onclick="deleteItem(this, '{{ entry._id }}')">🗑️</i>
+              <span style="float: left;"><a href="/chat/{{entry['_id']}}">{{entry['title']}} </a> <em> {{entry['last_update']|timestamp_to_local_time }}</em></span>
+              <span style="float: right;"><i class="delete-icon" onclick="deleteItem(this, '{{ entry._id }}')">🗑️</i></span>
             </li>
             {% endfor %}
           </ul>
           {% else %}
-          <p>No entries in progress.</p>
+          <p>None. <a href="/chat">Start a new entry</a></p>
           {% endif %}
         </div>
         <div class="completed-entries">
-          <h4>Completed entries</h4>
+          <h4>Completed <span class="symbol">&#10003;</span></h4>
           {% if completed_entries %}
           <ul>
             {% for entry in completed_entries %}
             <li>
-              <a href="/past_entries/{{entry['_id']}}">{{entry['title']}}</a>
-              <i class="delete-icon" onclick="deleteItem(this, '{{ entry._id }}')">🗑️</i>
+              <span style="float: left;"><a href="/past_entries/{{entry['_id']}}">{{entry['title']}} </a> <em > {{entry['last_update']|timestamp_to_local_time }}</span></span>
+              <span style="float: right;"><i class="delete-icon" onclick="deleteItem(this, '{{ entry._id }}')">🗑️</i></span>
             </li>
             {% endfor %}
           </ul>
@@ -36,12 +39,7 @@
           <p>No completed entries.</p>
           {% endif %}
         </div>
-      </div>
     </div>
-    <div class="word-cloud">
-      <img src="data:image/png;base64,{{ wordcloud|b64encode }}" alt="Word cloud">
-    </div>
-  </div>
 </div>
 <script src="{{ url_for('static', filename='home.js') }}"></script>
 {% endblock %}

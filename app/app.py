@@ -212,6 +212,22 @@ def tmp():
     wordcloud = orm.get_wordcloud_file(user_id)
     return render_template('home.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
 
+@app.route('/feedback', methods=['GET','POST'])
+def submit_feedback():
+    if request.method=='GET':
+        return render_template('feedback.html')
+    else:
+        feedback = request.form.get('feedback')
+        orm.insert_feedback(feedback)
+        return redirect("/")
+
+@app.route('/how-it-works')
+def how_it_works():
+    return render_template('how-it-works.html')
+
+@app.template_filter('timestamp_to_local_time')
+def timestamp_to_local_time(timestamp):
+    return datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)

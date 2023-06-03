@@ -17,6 +17,7 @@ client = MongoClient(MONGO_URL)
 db = client.interactivechat
 Users = db.users
 Entries = db.entries
+Feedbacks = db.feedback
 
 first_user_message = '''You are an interactive diary assistant, named Gagali. Open with a statement like "I hear you say", or "You indicate that", or "You have noted that", or “you say that”. This statement should capture the most salient sentiment and "feeling" of the paragraph.
 Ask a follow up question about that feeling. Follow up question can start with "why do you feel.." or "how do you feel..." or tell me more about..." 
@@ -114,3 +115,6 @@ def get_wordcloud_file(user_id):
     response = s3_client.get_object(Bucket='diary-gagali', Key=file_name)
     file_contents = response['Body'].read()
     return file_contents
+
+def insert_feedback(feedback):
+    Feedbacks.insert_one({'feedback':feedback, 'last_update': int(time.time())})
