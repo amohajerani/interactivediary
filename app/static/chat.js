@@ -45,10 +45,6 @@ function appendMessageToHistory(role, content, italic = false) {
     if (message.role === "assistant" && italic) {
       messageContent = `<em>${messageContent}</em>`
     }
-    if (message.role === "summary") {
-      historyHTML += `<strong><em>Summary: </em></strong>`
-      messageContent = `<em>${messageContent}</em>`
-    }
     if (message.role === "insights") {
       historyHTML += `<strong><em>Insights: </em></strong>`
       messageContent = `<em>${messageContent}</em>`
@@ -75,21 +71,6 @@ for (const messageElement of initialChatHistory) {
   else {role = 'user'}
 }
 
-function sendSummary(entry_id) {
-  fetch("/analyze/summary/" + entry_id, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.text())
-    .then((response) => {
-      appendMessageToHistory("summary", response, true)
-    })
-    .catch((error) => {
-      console.error("Error:", error)
-    })
-}
 
 function sendInsights(entry_id) {
   fetch("/analyze/insights/" + entry_id, {
