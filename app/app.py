@@ -211,11 +211,13 @@ def change_to_in_progress():
 @ app.route("/tmp")
 #@ require_auth
 def tmp():
+    entry_id ='647275dc06343ac6a5645f1b'
     user_id = '645db31405e1973b595c0422'
-    in_progress_entries , completed_entries = orm.get_entries(
-        user_id=user_id)
-    wordcloud = orm.get_wordcloud_file(user_id)
-    return render_template('home.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
+    if entry_id=='new':
+        user_id = session['user']['user_id']
+        entry_id = orm.create_entry(user_id)
+    entry = orm.get_entry(entry_id)
+    return render_template('chat.html', entry=entry)
 
 @app.route('/feedback', methods=['GET','POST'])
 def submit_feedback():
@@ -234,7 +236,14 @@ def how_it_works():
 def timestamp_to_local_time(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d')
 
-
+@app.route('/chat-feedback', methods=['POST'])
+@ require_auth
+def chat_feedback():
+    content = request.json['content']
+    entry_id = request.json['entry_id']
+    feedback = request.json['feedback']
+    orm.insert_chat_feedback({'entry_id': entry_id, 'content':content, 'feedback':feedback })
+    return {'success':True}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)

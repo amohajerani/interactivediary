@@ -18,6 +18,7 @@ db = client.interactivechat
 Users = db.users
 Entries = db.entries
 Feedbacks = db.feedback
+ChatFeedbacks = db.chatfeedback
 
 first_user_message = '''You are an interactive diary assistant, named Gagali. Open with a statement like "I hear you say", or "You indicate that", or "You have noted that", or “you say that”. This statement should capture the most salient sentiment and "feeling" of the paragraph.
 Ask a follow up question about that feeling. Follow up question can start with "why do you feel.." or "how do you feel..." or tell me more about..." 
@@ -118,3 +119,8 @@ def get_wordcloud_file(user_id):
 
 def insert_feedback(feedback):
     Feedbacks.insert_one({'feedback':feedback, 'last_update': int(time.time())})
+
+    
+def insert_chat_feedback(obj):
+    obj.update({'last_update': int(time.time())})
+    ChatFeedbacks.insert_one(obj)

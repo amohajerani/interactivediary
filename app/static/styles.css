@@ -217,8 +217,10 @@ button:hover {
     font-family: Arial, sans-serif;
   }
 
+
+
   .container {
-    max-width: 800px; /* Set the maximum width for the content */
+    max-width: 1200px; /* Set the maximum width for the content */
     margin: 0 auto; /* Center the content horizontally */
     padding: 20px;
   }

@@ -12,6 +12,8 @@ Entry
     background-color: #FEEEDD;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: calc(100vh - 100px);
   }
   #title-message {
     display: flex;
@@ -67,6 +69,38 @@ Entry
   #chat-history p {
     font-size: 16px;
     margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px;
+  }
+
+  
+
+  #chat-history p .feedback {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+  }
+
+  #chat-history p .feedback button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #888;
+  }
+
+  #chat-history p .feedback button:focus {
+    outline: none;
+  }
+
+  #chat-history p.assistant-text {
+    padding-right: 35px;
+    background-color: #f0ebebe3;
+
   }
 
   #history {
@@ -90,41 +124,49 @@ Entry
       }
     }
 </style>
-  <div id="chat-box">
-    <div>
-      <label for="toggle">Interactive</label>
-      <label class="switch">
-        <input type="checkbox", id="quietToggle">
-        <span class="slider round"></span>
-      </label>
-      <label for="toggle">Solo</label>
-    </div>
-    <div id="title-message">
-        <input type="text" id="entryTitle" name="entryTitle" placeholder="Title: {{entry.title}}" oninput="submitEntryTitle('{{ entry._id }}')">
-    </div>
-    <div id="chat-history">
-      <div id="history">
-        {% for chat in entry.chats[2:] %}
-        {% if chat.role=='assistant' %}
-        <p class="assistant-text"><em>{{ chat.content }}</em></p>
-        {% else %}
-        <p>{{ chat.content }}</p> 
-        {% endif %}
-        {% endfor %}
-
-      </div>
-    </div>
-    <div id="chat-message">
-      <textarea id="message" autofocus></textarea>
-      <button class="fa fa-paper-plane-o" onclick="sendMessage('{{ entry._id }}')"></button>
-      <div class="button-container">
-        <button class="button" onclick="doneFunc('{{ entry._id }}')">Done</button>
-        <button class="button" onclick="sendInsights('{{ entry._id }}')">Insights</button>
-        <button class="button" onclick="sendActions('{{ entry._id }}')">Actions</button>
-      </div>
-      
+<div id="chat-box">
+  <div>
+    <label for="toggle">Interactive</label>
+    <label class="switch">
+      <input type="checkbox" id="quietToggle">
+      <span class="slider round"></span>
+    </label>
+    <label for="toggle">Solo</label>
+  </div>
+  <div id="title-message">
+    <input type="text" id="entryTitle" name="entryTitle" placeholder="Title: {{entry.title}}" oninput="submitEntryTitle('{{ entry._id }}')">
+  </div>
+  <div id="chat-history">
+    <div id="history">
+      {% for chat in entry.chats[2:] %}
+      {% if chat.role=='assistant' %}
+      {% if loop.last %}
+      <p class="assistant-text">
+        {{ chat.content }}
+        <span class="feedback">
+          <button class="fa fa-thumbs-up" onclick="sendFeedback('{{ entry._id }}','{{chat.content}}', 1)"></button>
+          <button class="fa fa-thumbs-down" onclick="sendFeedback('{{ entry._id }}','{{chat.content}}', -1)"></button>
+        </span>
+      </p>
+      {% else %}
+      <p class="assistant-text">{{ chat.content }}</p>
+      {% endif %}
+      {% else %}
+      <p>{{ chat.content }}</p> 
+      {% endif %}
+      {% endfor %}
     </div>
   </div>
-  <script src="{{ url_for('static', filename='chat.js') }}"></script>
+  <div id="chat-message">
+    <textarea id="message" autofocus></textarea>
+    <button class="fa fa-paper-plane-o" onclick="sendMessage('{{ entry._id }}')"></button>
+    <div class="button-container">
+      <button class="button" onclick="doneFunc('{{ entry._id }}')">Done</button>
+      <button class="button" onclick="sendInsights('{{ entry._id }}')">Insights</button>
+      <button class="button" onclick="sendActions('{{ entry._id }}')">Actions</button>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
 
 {% endblock %}
