@@ -15,6 +15,7 @@
       if (response.ok) {
         // On successful deletion, remove the list item from the DOM
         listItem.parentNode.removeChild(listItem);
+        window.location.href = '/';
       } else {
         // Handle error case
         console.log('Failed to delete item');

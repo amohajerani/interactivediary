@@ -112,6 +112,7 @@ function doneFunc(entry_id) {
   fetch("/entry-done/" + entry_id)
     .then(function(response) {
       if (response.ok) {
+        sendMessage(entry_id);
         window.location.href = '/';
       } else {
         console.error('Redirect failed');
