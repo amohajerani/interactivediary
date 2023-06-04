@@ -114,13 +114,16 @@ function sendActions(entry_id) {
       "Content-Type": "application/json",
     },
   })
-    .then((response) => response.text())
+    .then((response) => response.json()) // Parse the response as JSON
     .then((response) => {
-      appendMessageToHistory("actions", response, true)
+      response.forEach((item) => {
+        // Perform operations with each item in the array
+        appendMessageToHistory("actions", item, true);
+      });
     })
     .catch((error) => {
-      console.error("Error:", error)
-    })
+      console.error("Error:", error);
+    });
 }
 
 
