@@ -143,6 +143,11 @@ def get_log0():
     return send_file('./static/gagalilogo.jpg', mimetype='image/jpg')
 
 
+@app.route('/static/<filename>')
+def get_static_file(filename):
+    return send_file('./static/'+filename, mimetype='image/jpg')
+
+
 @app.route('/analyze/<analysis_type>/<entry_id>')
 @require_auth
 def analyze(entry_id, analysis_type):
@@ -226,6 +231,8 @@ def how_it_works():
 @app.template_filter('timestamp_to_local_time')
 def timestamp_to_local_time(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d')
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)

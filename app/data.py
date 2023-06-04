@@ -274,10 +274,10 @@ def get_insight(text):
 
     try:
         res = openai.Completion.create(
-            model="text-curie-001",
+            model="text-davinci-003",
             prompt=prompt,
-            temperature=0.15,
-            max_tokens=500,
+            temperature=0.1,
+            max_tokens=400,
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0
@@ -287,7 +287,7 @@ def get_insight(text):
         logger.exception('insights error')
         return ''
     insight = insight.strip()
-    return insight+'\n prompt was: '+prompt
+    return insight
 
 
 def get_actions(text):

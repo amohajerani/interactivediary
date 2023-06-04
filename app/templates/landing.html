@@ -1,20 +1,104 @@
-{% extends "base.html" %} {% block title %}Gagali{% endblock %} {% block content
-    %}
-	<div class="container">
-		<h2>Welcome to a new realm of self-discovery and personal growth - our groundbreaking interactive journal awaits!</h2>
-		<p>On this journey, your GPT powered personal assistant will provide:</p>
-		<ul style="list-style-type: disc;">
-			<li>Thought-provoking prompts</li>
-			<li>Verbal summaries and picture clouds of prior entries</li>
-			<li>Insights</li>
-			<li>Action items</li>
-		</ul>
-		<p>This journal becomes your guide to unearthing new perspectives and forging a deeper connection with yourself. Prepare to embark on an extraordinary adventure, rewriting the narrative of your life one page at a time.</p>
-		<a href="/login" class="btn">Start Journaling Now!</a>
-        <div class="image-container">
-			<img src="https://i.imgur.com/D8CoAEd.png" alt="Interactive Diary Screenshot">
-		</div>
+{% extends "base.html" %} 
+{% block title %}Gagali{% endblock %} 
+{% block content %}
+<style>
+/* CSS for the container */
+.landingcontainer {
+    display: flex;
+    flex-wrap: wrap;
+    width: 90%;
+    margin: 0 auto;
+}
 
-	</div>
-</main>
-    {% endblock %}
+/* CSS for the left division */
+.landing-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CSS for the upper division */
+.landing-upper {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+/* CSS for the right division */
+.landing-right {
+    flex: 1;
+    margin-top: 1em;
+}
+
+/* CSS for the lower division */
+.landing-lower {
+    margin: 1em;
+}
+
+/* CSS for the image container */
+.image-container {
+    text-align: center;
+    margin-top: 2em;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .landingcontainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .landing-left, .landing-right {
+        flex: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .landing-upper {
+        margin-top: 2em;
+    }
+
+    .image-container {
+        margin-top: 1em;
+    }
+}
+</style>
+
+<h2 style="margin-top: 3em; margin-bottom: 2em; text-align: center;">Welcome to a new realm of self-discovery and personal growth</h2>
+
+<div class="landingcontainer">
+    <div class="landing-left">
+        <div class="landing-upper">
+            <!-- Content for the upper division -->
+            <img src="/static/paper_pen.jpg" style="max-width: 100%;">
+            <br>
+            <a href="/login" style="margin-top:1em; text-align: center;"><h4>Start your journey</h4></a>
+        </div>
+        <div class="landing-lower">
+            <!-- Content for the lower division -->
+            <h5><span class="symbol">&#10003;</span> Unearth new perspective</h5>
+            <h5><span class="symbol">&#10003;</span> Forge deeper connection to yourself</h5>
+        </div>
+    </div>
+    <div class="landing-right">
+        <!-- Content for the right division -->
+        <h5>Designed by board certified psychiatrists and therapists, your interactive GPT powered journal provides:</h5>
+		<br>
+            <h5><span class="symbol">&#10003;</span> Thought-provoking interactive prompts to help you dig deeper</h5>
+			<br>
+            <h5><span class="symbol">&#10003;</span> Insights about your feelings and thoughts</h5>
+			<br>
+            <h5><span class="symbol">&#10003;</span> Action items to make positive change</h5>
+			<br>
+            <h5><span class="symbol">&#10003;</span> Succinct summaries and visualization of your writing.</h5>
+        
+        <br>
+        
+    </div>
+</div>
+
+<div class="image-container">
+    <img src="https://i.imgur.com/D8CoAEd.png" alt="Interactive Diary Screenshot">
+</div>
+{% endblock %}
