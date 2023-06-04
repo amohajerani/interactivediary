@@ -357,7 +357,7 @@ button:hover {
   border-top: 1px solid #946947;
 }
 
-.com1pleted-entry:after {
+.completed-entry:after {
     position: absolute;
     content: '';
     bottom: -1px;
@@ -372,7 +372,7 @@ button:hover {
     background-image: radial-gradient(40% 100%, circle, transparent 20%, #946947 35%);
 }
 
-.compl1eted-entry:before{
+.completed-entry:before{
     position: absolute;
     content: '';
     top: -5px;
