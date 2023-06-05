@@ -147,7 +147,6 @@ Entry
           <button class="fa fa-thumbs-down" onclick='sendFeedback("{{ entry._id }}", {{chat.content | tojson }}, -1)'></button>
         </span>
       </p>
-      {% endif %}
       {% else %}
       <p>{{ chat.content }}</p> 
       {% endif %}
