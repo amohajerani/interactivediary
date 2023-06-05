@@ -140,7 +140,6 @@ Entry
     <div id="history">
       {% for chat in entry.chats[2:] %}
       {% if chat.role=='assistant' %}
-      {% if loop.last %}
       <p class="assistant-text">
         {{ chat.content }}
         <span class="feedback">
@@ -148,8 +147,6 @@ Entry
           <button class="fa fa-thumbs-down" onclick='sendFeedback("{{ entry._id }}", {{chat.content | tojson }}, -1)'></button>
         </span>
       </p>
-      {% else %}
-      <p class="assistant-text">{{ chat.content }}</p>
       {% endif %}
       {% else %}
       <p>{{ chat.content }}</p> 
