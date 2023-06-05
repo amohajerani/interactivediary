@@ -237,7 +237,7 @@ def timestamp_to_local_time(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d')
 
 @app.route('/chat-feedback', methods=['POST'])
-@ require_auth
+@require_auth
 def chat_feedback():
     content = request.json['content']
     entry_id = request.json['entry_id']
