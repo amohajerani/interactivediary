@@ -144,8 +144,8 @@ Entry
       <p class="assistant-text">
         {{ chat.content }}
         <span class="feedback">
-          <button class="fa fa-thumbs-up" onclick="sendFeedback('{{ entry._id }}', '{{chat.content}}', 1)"></button>
-          <button class="fa fa-thumbs-down" onclick="sendFeedback('{{ entry._id }}', '{{chat.content}}', -1)"></button>
+          <button class="fa fa-thumbs-up" onclick="sendFeedback('{{ entry._id }}', '{{chat.content| tojson}}', 1)"></button>
+          <button class="fa fa-thumbs-down" onclick="sendFeedback('{{ entry._id }}', '{{chat.content| tojson}}', -1)"></button>
         </span>
       </p>
       {% else %}
