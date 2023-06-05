@@ -28,7 +28,7 @@ function sendMessage(entry_id) {
     .then((response) => {
       appendMessageToHistory("user", message)
       if (!quietMode) {
-        appendMessageToHistory("assistant", response, true)
+        appendMessageToHistory("assistant", response)
       }
     })
     .catch((error) => {
@@ -36,28 +36,41 @@ function sendMessage(entry_id) {
     })
 }
 
-function appendMessageToHistory(role, content, italic = false) {
+function appendMessageToHistory(role, content) {
   chatHistory.push({ role, content })
 
   let historyHTML = ""
   for (const message of chatHistory) {
     let messageContent = message.content
-    if (message.role === "assistant" && italic) {
-      messageContent = `<em>${messageContent}</em>`
+    let messageHTML = `<p>${messageContent}</p>`;
+    if (message.role === "assistant") {
+      if (message === chatHistory[chatHistory.length - 1]) { // Check if it's the last message in the history
+        messageHTML = `
+        <p class="assistant-text">
+          ${messageContent}
+          <span class="feedback">
+            <button class="fa fa-thumbs-up" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, 1)'></button>
+            <button class="fa fa-thumbs-down" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, -1)'></button>
+          </span>
+        </p>`;
+      } else {
+        messageHTML = `<p class="assistant-text">${messageContent}</p>`;
+      }
     }
     if (message.role === "insights") {
       historyHTML += `<strong><em>Insights: </em></strong>`
-      messageContent = `<em>${messageContent}</em>`
+      messageHTML = `<em>${messageHTML}</em>`
     }
     if (message.role === "actions") {
       historyHTML += `<strong><em>Actions: </em></strong>`
-      messageContent = `<em>${messageContent}</em>`
+      messageHTML = `<em>${messageHTML}</em>`
     }
-    historyHTML += `<p>${messageContent}</p>`
+    historyHTML += messageHTML
   }
 
   document.getElementById("history").innerHTML = historyHTML
 }
+
 
 // Retrieve the chat history from the rendered HTML and update chatHistory array
 const chatHistoryElement = document.getElementById("history")

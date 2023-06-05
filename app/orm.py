@@ -31,9 +31,9 @@ def create_entry(user_id):
     
     initial_chats =[{'role':'user','content': first_user_message},{'role':'assistant', 'content': first_assistant_message}]
     # assign a default title
-    today_str = datetime.date.today().strftime('%Y-%m-%d')
+    default_title = 'Entry'
     entry_id = Entries.insert_one(
-        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time()), 'title':today_str, 'chats':initial_chats})
+        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time()), 'title':default_title, 'chats':initial_chats})
     return str(entry_id.inserted_id)
 
 
