@@ -49,8 +49,8 @@ function appendMessageToHistory(role, content) {
         <p class="assistant-text">
           ${messageContent}
           <span class="feedback">
-            <button class="fa fa-thumbs-up" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, 1)'></button>
-            <button class="fa fa-thumbs-down" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, -1)'></button>
+            <button class="fa fa-thumbs-up" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, 1, event)'></button>
+            <button class="fa fa-thumbs-down" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, -1, event)'></button>
           </span>
         </p>`;
       } else {
@@ -154,37 +154,34 @@ function submitEntryTitle(entry_id) {
       console.error("Error:", error)
     })
 }
+function sendFeedback(entry_id, content, feedback, event) {
+  // Toggle the clicked class on the button that was clicked
+  event.target.classList.toggle('clicked');
 
-function sendFeedback(entry_id, content, feedback) {
   const feedbackData = {
     entry_id: entry_id,
-    content: content,
-    feedback: feedback,
+    content:content,
+    feedback: feedback
   };
-
-  const clickedButton = event.target;
-  const siblingButton = clickedButton.nextElementSibling;
 
   fetch('/chat-feedback', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(feedbackData),
+    body: JSON.stringify(feedbackData)
   })
-    .then(response => {
-      if (response.ok) {
-        console.log('Feedback sent successfully');
-        clickedButton.classList.add('highlighted');
-        siblingButton.classList.remove('highlighted');
-        // Perform any additional actions upon successful feedback submission
-      } else {
-        console.log('Failed to send feedback');
-        // Handle any errors or display appropriate error message
-      }
-    })
-    .catch(error => {
-      console.log('Error:', error);
+  .then(response => {
+    if (response.ok) {
+      console.log('Feedback sent successfully');
+      // Perform any additional actions upon successful feedback submission
+    } else {
+      console.log('Failed to send feedback');
       // Handle any errors or display appropriate error message
-    });
+    }
+  })
+  .catch(error => {
+    console.log('Error:', error);
+    // Handle any errors or display appropriate error message
+  });
 }
