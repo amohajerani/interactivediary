@@ -49,8 +49,8 @@ function appendMessageToHistory(role, content) {
         <p class="assistant-text">
           ${messageContent}
           <span class="feedback">
-            <button class="fa fa-thumbs-up" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, 1, event)'></button>
-            <button class="fa fa-thumbs-down" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, -1, event)'></button>
+            <button class="fa fa-thumbs-up" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, 1)'></button>
+            <button class="fa fa-thumbs-down" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, -1)'></button>
           </span>
         </p>`;
       } else {
@@ -154,16 +154,12 @@ function submitEntryTitle(entry_id) {
       console.error("Error:", error)
     })
 }
-function sendFeedback(entry_id, content, feedback, event) {
-  // Toggle the clicked class on the button that was clicked
-  event.target.classList.toggle('clicked');
-
+function sendFeedback(entry_id, content, feedback) {
   const feedbackData = {
     entry_id: entry_id,
     content:content,
     feedback: feedback
   };
-
   fetch('/chat-feedback', {
     method: 'POST',
     headers: {
