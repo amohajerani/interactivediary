@@ -50,8 +50,8 @@ function appendMessageToHistory(role, content) {
         <p class="assistant-text">
           ${messageContent}
           <span class="feedback">
-            <button class="fa fa-thumbs-up" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContentModified)}, 1)'></button>
-            <button class="fa fa-thumbs-down" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContentModified)}, -1)'></button>
+            <button class="fa fa-thumbs-up" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContentModified)}, 1, this)'></button>
+            <button class="fa fa-thumbs-down" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContentModified)}, -1, this)'></button>
           </span>
         </p>`;
       } else {
@@ -156,10 +156,10 @@ function submitEntryTitle(entry_id) {
     })
 }
 
-function sendFeedback(entry_id, content, feedback) {
+function sendFeedback(entry_id, content, feedback, button) {
   const feedbackData = {
     entry_id: entry_id,
-    content:content,
+    content: content,
     feedback: feedback
   };
 
@@ -173,7 +173,8 @@ function sendFeedback(entry_id, content, feedback) {
   .then(response => {
     if (response.ok) {
       console.log('Feedback sent successfully');
-      // Perform any additional actions upon successful feedback submission
+      // Highlight the button
+      button.classList.add("highlighted");
     } else {
       console.log('Failed to send feedback');
       // Handle any errors or display appropriate error message

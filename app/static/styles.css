@@ -389,10 +389,6 @@ button:hover {
     background-image: radial-gradient(circle at 5% 40%, transparent 70%, #555 20%);
 }
 
-.fa-thumbs-up.clicked, .fa-thumbs-down.clicked {
-  color: green; /* change to whatever color you want for highlight */
-}
-
-.fa-thumbs-up:not(.clicked), .fa-thumbs-down:not(.clicked) {
-  color: black; /* change to whatever color you want for not highlighted */
+.highlighted {
+  background-color: #00ff00; /* You can change this color to suit your needs */
 }
