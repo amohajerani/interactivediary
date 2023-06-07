@@ -1,24 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pen and Paper Symbol</title>
+    <style>
+        .info-icon {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .info-icon:hover .info-text,
+        .info-icon.active .info-text {
+            display: block;
+        }
+        
+        .info-text {
+            display: none;
+            position: absolute;
+            top: 25px;
+            left: 0;
+            width: 200px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            z-index: 1;
+        }
+    </style>
 </head>
 <body>
-  <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-    <g fill="#000000">
-      <path d="M167.43,6.25c-7.28-7.28-19.07-7.28-26.35,0L19.72,139.04c-1.15,1.15-1.96,2.52-2.36,4.05L0.23,190.89
-        c-0.68,2.18,0.25,4.49,2.2,6.45c1.94,1.95,4.26,2.87,6.45,2.2l47.79-16.14c1.53-0.41,2.9-1.21,4.05-2.36L193.76,58.92
-        c7.28-7.28,7.28-19.07,0-26.35L167.43,6.25z M59.44,167.42L47.19,183.8l16.37-12.25L59.44,167.42z M168.18,42.76
-        l8.07,8.07L75.16,167.42l-8.07-8.07L168.18,42.76z M20.09,182.63l18.23-54.69l36.8,36.8L20.09,182.63z M151.6,51.12l-94.92,94.92
-        l-36.8-36.8L151.6,51.12z"/>
-      <path d="M122.64,107.75L73.51,158.3l-6.89-6.89L115.75,100.86L122.64,107.75z M70.42,152.77l49.14-49.14l6.89,6.89
-        L77.31,159.66L70.42,152.77z"/>
-      <path d="M116.49,104.24L86.06,133.1l-6.89-6.89L109.6,97.35L116.49,104.24z M83.82,129.3l32.67-32.67l6.89,6.89L90.71,136.19
-        L83.82,129.3z"/>
-    </g>
-  </svg>
+    <div class="info-icon">
+        &#9432;
+        <div class="info-text">
+            <p>This is some additional information.</p>
+            <p>You can add more content here.</p>
+        </div>
+    </div>
 </body>
 </html>
+
 
 
 

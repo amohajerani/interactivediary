@@ -329,19 +329,19 @@ def send_email(entry, email):
     aws_client = boto3.client('ses', region_name=AWS_REGION)
 
     BODY_TEXT = ''
-    for chat in entry.chats:
+    for chat in entry['chats']:
         BODY_TEXT = BODY_TEXT + \
             f"\n{chat.get('role','')}: {chat.get('content','')}"
 
     BODY_HTML = '<html>\n<body>\n'
-    if entry.summary:
+    if entry['summary']:
         BODY_HTML += '<h4>Summary</h4>\n'
-        BODY_HTML += '<p><em>{}</em></p>\n'.format(entry.summary)
-    if entry.insights:
+        BODY_HTML += '<p><em>{}</em></p>\n'.format(entry['summary'])
+    if entry['insights']:
         BODY_HTML += '<h4>Insights</h4>\n'
-        BODY_HTML += '<p><em>{}</em></p>\n'.format(entry.insights)
+        BODY_HTML += '<p><em>{}</em></p>\n'.format(entry['insights'])
         BODY_HTML += '<h4>Entry</h4>\n'
-    for chat in entry.chats:
+    for chat in entry['chats']:
         role = chat.get('role', '')
         content = chat.get('content', '')
 
@@ -351,6 +351,7 @@ def send_email(entry, email):
             BODY_HTML += '<p>{}</p>\n'.format(content)
 
     BODY_HTML += '</body>\n</html>'
+    entry_title = entry['title']
 
     try:
         # Provide the contents of the email.
@@ -373,7 +374,7 @@ def send_email(entry, email):
                 },
                 'Subject': {
                     'Charset': "UTF-8",
-                    'Data': f'Entry: {entry.title}',
+                    'Data': f'Entry: {entry_title}',
                 },
             },
             Source=SENDER_EMAIL,

@@ -143,9 +143,9 @@ def get_log0():
     return send_file('./static/gagalilogo.jpg', mimetype='image/jpg')
 
 
-@app.route('/static/paper_pen.jpg')
-def get_static_file():
-    return send_file('./static/paper_pen.jpg', mimetype='image/jpg')
+@app.route('/static/images/<filename>')
+def get_static_file(filename):
+    return send_file('./static/images/'+filename, mimetype='image/png')
 
 
 @app.route('/analyze/<analysis_type>/<entry_id>')
