@@ -389,4 +389,6 @@ button:hover {
     background-image: radial-gradient(circle at 5% 40%, transparent 70%, #555 20%);
 }
 
-
+.highlighted {
+  color: blue;
+}

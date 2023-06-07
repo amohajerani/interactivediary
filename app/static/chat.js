@@ -158,28 +158,33 @@ function submitEntryTitle(entry_id) {
 function sendFeedback(entry_id, content, feedback) {
   const feedbackData = {
     entry_id: entry_id,
-    content:content,
-    feedback: feedback
+    content: content,
+    feedback: feedback,
   };
+
+  const clickedButton = event.target;
+  const siblingButton = clickedButton.nextElementSibling;
 
   fetch('/chat-feedback', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(feedbackData)
+    body: JSON.stringify(feedbackData),
   })
-  .then(response => {
-    if (response.ok) {
-      console.log('Feedback sent successfully');
-      // Perform any additional actions upon successful feedback submission
-    } else {
-      console.log('Failed to send feedback');
+    .then(response => {
+      if (response.ok) {
+        console.log('Feedback sent successfully');
+        clickedButton.classList.add('highlighted');
+        siblingButton.classList.remove('highlighted');
+        // Perform any additional actions upon successful feedback submission
+      } else {
+        console.log('Failed to send feedback');
+        // Handle any errors or display appropriate error message
+      }
+    })
+    .catch(error => {
+      console.log('Error:', error);
       // Handle any errors or display appropriate error message
-    }
-  })
-  .catch(error => {
-    console.log('Error:', error);
-    // Handle any errors or display appropriate error message
-  });
+    });
 }
