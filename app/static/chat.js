@@ -45,14 +45,22 @@ function appendMessageToHistory(role, content) {
     let messageHTML = `<p>${messageContent}</p>`;
     if (message.role === "assistant") {
       if (message === chatHistory[chatHistory.length - 1]) { // Check if it's the last message in the history
+        const upButton = document.createElement('button');
+        upButton.className = "fa fa-thumbs-up";
+        upButton.addEventListener('click', () => sendFeedback("entry_id", messageContent, 1));
+
+        const downButton = document.createElement('button');
+        downButton.className = "fa fa-thumbs-down";
+        downButton.addEventListener('click', () => sendFeedback("entry_id", messageContent, -1));
+
         messageHTML = `
-        <p class="assistant-text">
-          ${messageContent}
-          <span class="feedback">
-            <button class="fa fa-thumbs-up" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, 1)'></button>
-            <button class="fa fa-thumbs-down" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContent)}, -1)'></button>
-          </span>
-        </p>`;
+<p class="assistant-text">
+  ${messageContent}
+  <span class="feedback">
+    ${upButton.outerHTML}
+    ${downButton.outerHTML}
+  </span>
+</p>`;
       } else {
         messageHTML = `<p class="assistant-text">${messageContent}</p>`;
       }
