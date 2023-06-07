@@ -45,31 +45,45 @@ function appendMessageToHistory(role, content) {
     let messageHTML = `<p>${messageContent}</p>`;
     if (message.role === "assistant") {
       if (message === chatHistory[chatHistory.length - 1]) { // Check if it's the last message in the history
+        let messageContentModified = messageContent.replace(/["']/g, '_');
         messageHTML = `
-<p class="assistant-text">
-  ${messageContent}
-  <span class="feedback">
-    <button id="upButton" class="fa fa-thumbs-up"></button>
-    <button id="downButton" class="fa fa-thumbs-down"></button>
-  </span>
-</p>`;
+        <p class="assistant-text">
+          ${messageContent}
+          <span class="feedback">
+            <button class="fa fa-thumbs-up" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContentModified)}, 1)'></button>
+            <button class="fa fa-thumbs-down" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContentModified)}, -1)'></button>
+          </span>
+        </p>`;
       } else {
         messageHTML = `<p class="assistant-text">${messageContent}</p>`;
       }
     }
-    // ... rest of your code
+    if (message.role === "insights") {
+      historyHTML += `<strong><em>Insights: </em></strong>`
+      messageHTML = `<em>${messageHTML}</em>`
+    }
+    if (message.role === "actions") {
+      historyHTML += `<strong><em>Actions: </em></strong>`
+      messageHTML = `<em>${messageHTML}</em>`
+    }
+    historyHTML += messageHTML
+  }
 
   document.getElementById("history").innerHTML = historyHTML
-
-  // Add event listeners after the buttons have been added to the page
-  const upButton = document.getElementById("upButton")
-  const downButton = document.getElementById("downButton")
-  if (upButton && downButton) {
-    upButton.addEventListener('click', () => sendFeedback("entry_id", messageContent, 1));
-    downButton.addEventListener('click', () => sendFeedback("entry_id", messageContent, -1));
-  }
 }
 
+
+// Retrieve the chat history from the rendered HTML and update chatHistory array
+const chatHistoryElement = document.getElementById("history")
+const initialChatHistory = chatHistoryElement.querySelectorAll("p")
+var role = "user"
+for (const messageElement of initialChatHistory) {
+  const content = messageElement.innerHTML
+  chatHistory.push({ role, content })
+  if (role=='user') {
+     role = "assistant"}
+  else {role = 'user'}
+}
 
 
 function sendInsights(entry_id) {
@@ -141,12 +155,14 @@ function submitEntryTitle(entry_id) {
       console.error("Error:", error)
     })
 }
+
 function sendFeedback(entry_id, content, feedback) {
   const feedbackData = {
     entry_id: entry_id,
     content:content,
     feedback: feedback
   };
+
   fetch('/chat-feedback', {
     method: 'POST',
     headers: {
