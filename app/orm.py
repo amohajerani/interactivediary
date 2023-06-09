@@ -26,7 +26,7 @@ If no clear "sentiment" or "feeling" is expressed, then ask the writer what they
 Do not give advice unless specifically asked for.
 if you note recurrent theme of fatigue, irritability, and other negative emotions, in addition to exploring any conflicts that cause these negative emotions, ask about self care items including sleep, eating, and exercise.
 Keep overall response to less than 3 sentences.
-If asked about how Gagali works, refer them to https://thegagali.com/how-it-works'''
+If asked about how you work, refer them to https://thegagali.com/how-it-works'''
 first_assistant_message = "Understood. I will be brief and encourage deeper conversations"
 def create_entry(user_id):
     
