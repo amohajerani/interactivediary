@@ -236,6 +236,11 @@ def how_it_works():
 def timestamp_to_local_time(timestamp):
     return datetime.datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d')
 
+
+@app.route('/about')
+def about_is():
+    return render_template('about.html')
+
 @app.route('/chat-feedback', methods=['POST'])
 @require_auth
 def chat_feedback():
