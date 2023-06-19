@@ -217,7 +217,9 @@ def tmp():
         user_id = session['user']['user_id']
         entry_id = orm.create_entry(user_id)
     entry = orm.get_entry(entry_id)
-    return render_template('chat.html', entry=entry)
+    return render_template('tmp.html', entry=entry)
+
+
 
 @app.route('/feedback', methods=['GET','POST'])
 def submit_feedback():

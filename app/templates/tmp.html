@@ -1,42 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .info-icon {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-        }
-        
-        .info-icon:hover .info-text,
-        .info-icon.active .info-text {
-            display: block;
-        }
-        
-        .info-text {
-            display: none;
-            position: absolute;
-            top: 25px;
-            left: 0;
-            width: 200px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            z-index: 1;
-        }
-    </style>
+<title>Speech Recognition Example</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webspeechapi/latest/speech-api.min.js"></script>
 </head>
 <body>
-    <div class="info-icon">
-        &#9432;
-        <div class="info-text">
-            <p>This is some additional information.</p>
-            <p>You can add more content here.</p>
-        </div>
-    </div>
+<h1>Speech Recognition Example</h1>
+<div id="transcript"></div>
+<button id="startButton">Start Speech Recognition</button>
+<script>
+let transcript = document.getElementById("transcript");
+
+let recognition = new SpeechRecognition();
+
+recognition.onstart = function() {
+  console.log("The user started speaking.");
+};
+
+recognition.onresult = function(event) {
+  transcript.innerHTML = event.results[0].transcript;
+};
+
+document.getElementById("startButton").onclick = function() {
+  recognition.startListening();
+};
+</script>
 </body>
 </html>
+
+
 
 
 
