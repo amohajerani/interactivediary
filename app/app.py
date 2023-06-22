@@ -132,7 +132,7 @@ def get_response():
 
 
 @ app.route("/past_entries/<entry_id>")
-#@ require_auth
+@ require_auth
 def past_entries(entry_id):
     entry = orm.get_entry(entry_id)
     return render_template('journal-entry.html', entry=entry)

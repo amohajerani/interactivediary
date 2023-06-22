@@ -50,8 +50,8 @@ function appendMessageToHistory(role, content, entry_id) {
         <p class="assistant-text">
           ${messageContent}
           <span class="feedback">
-            <button class="fa fa-thumbs-up" onclick='sendFeedback('${entry_id}', ${JSON.stringify(messageContentModified)}, 1, this)'></button>
-            <button class="fa fa-thumbs-down" onclick='sendFeedback('${entry_id}', ${JSON.stringify(messageContentModified)}, -1, this)'></button>
+            <button class="fa fa-thumbs-up" onclick='sendFeedback(${entry_id}, ${JSON.stringify(messageContentModified)}, 1, this)'></button>
+            <button class="fa fa-thumbs-down" onclick='sendFeedback(${entry_id}, ${JSON.stringify(messageContentModified)}, -1, this)'></button>
           </span>
         </p>`;
       } else {
