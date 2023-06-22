@@ -26,9 +26,9 @@ function sendMessage(entry_id) {
   })
     .then((response) => response.text())
     .then((response) => {
-      appendMessageToHistory("user", message)
+      appendMessageToHistory("user", message, entry_id)
       if (!quietMode) {
-        appendMessageToHistory("assistant", response)
+        appendMessageToHistory("assistant", response, entry_id)
       }
     })
     .catch((error) => {
@@ -36,7 +36,7 @@ function sendMessage(entry_id) {
     })
 }
 
-function appendMessageToHistory(role, content) {
+function appendMessageToHistory(role, content, entry_id) {
   chatHistory.push({ role, content })
 
   let historyHTML = ""
@@ -50,8 +50,8 @@ function appendMessageToHistory(role, content) {
         <p class="assistant-text">
           ${messageContent}
           <span class="feedback">
-            <button class="fa fa-thumbs-up" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContentModified)}, 1, this)'></button>
-            <button class="fa fa-thumbs-down" onclick='sendFeedback("entry_id", ${JSON.stringify(messageContentModified)}, -1, this)'></button>
+            <button class="fa fa-thumbs-up" onclick='sendFeedback('${entry_id}', ${JSON.stringify(messageContentModified)}, 1, this)'></button>
+            <button class="fa fa-thumbs-down" onclick='sendFeedback('${entry_id}', ${JSON.stringify(messageContentModified)}, -1, this)'></button>
           </span>
         </p>`;
       } else {
