@@ -243,7 +243,7 @@ def timestamp_to_local_time(timestamp):
 
 
 @app.route('/about')
-def about_is():
+def about():
     return render_template('about.html')
 
 @app.route('/chat-feedback', methods=['POST'])
