@@ -137,6 +137,9 @@ def past_entries(entry_id):
     entry = orm.get_entry(entry_id)
     return render_template('journal-entry.html', entry=entry)
 
+@ app.route("/privacy")
+def privacy():
+    return render_template('privacy.html')
 
 @app.route('/logo')
 def get_log0():

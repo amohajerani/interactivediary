@@ -215,9 +215,16 @@ button:hover {
   body {
     background-color: #f4f4f4;
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
-
+  main {
+    flex: 1;
+  }
 
   .container {
     max-width: 1200px; /* Set the maximum width for the content */
@@ -391,4 +398,16 @@ button:hover {
 
 .highlighted {
   color: #3a373725;
+}
+
+footer {
+  background-color: #e0e0e0;
+  padding: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+footer a {
+  margin-left: 10px;
+  color: black;
 }

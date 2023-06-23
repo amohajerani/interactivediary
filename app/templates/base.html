@@ -49,9 +49,6 @@
             <a class="nav-link" id="feedback" href="/feedback">Feedback</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="about" href="/about">About us</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" id="how-it-works" href="/how-it-works">How it works</a>
           </li>
           {% else %}
@@ -62,16 +59,22 @@
             <a class="nav-link" id="feedback" href="/feedback">Feedback</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="about" href="/about">About us</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" id="how-it-works" href="/how-it-works">How it works</a>
           </li>
           {% endif %}
         </ul>
       </div>
     </nav>
+    <main>
     <div class="container">{% block content %} {% endblock %}</div>
+  </main>
+    <footer>
+      <p>
+        <a href="privacy.html">Privacy</a> |
+        <a href="about.html">About</a>
+      </p>
+    </footer>
+  </body>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
