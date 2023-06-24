@@ -1,5 +1,6 @@
 
 from pymongo.mongo_client import MongoClient
+from pymongo import DESCENDING
 from dotenv import find_dotenv, load_dotenv
 from os import environ as env
 import datetime
@@ -151,3 +152,16 @@ def insert_feedback(feedback):
 def insert_chat_feedback(obj):
     obj.update({'last_update': int(time.time())})
     ChatFeedbacks.insert_one(obj)
+
+def get_public_entries():
+    entries = Entries.find({'private':False}).sort([('last_updated', DESCENDING)]).limit(100)
+    public_entries=[]
+    for entry in entries:
+        if len(entry['chat'])<3:
+            continue
+        excerpt = entry['chat'][2]
+        excerpt = excerpt[:150]
+        excerpt=excerpt+' ...'
+        public_entries.append({'excerpt':excerpt, 'title':entry['title'], 'last_updated':entry['last_updated']})
+
+    return public_entries
