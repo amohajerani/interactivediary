@@ -51,12 +51,18 @@ def require_auth(func):
 def home():
     if not session.get('user', None):
         return render_template('landing.html')
+    public_entries = orm.get_public_entries()
+    return render_template('/home', public_entries)
+
+@app.route("/personal")
+@require_auth
+def personal():
     user_id = session['user']['user_id']
     in_progress_entries , completed_entries = orm.get_entries(
         user_id=user_id)
     wordcloud = orm.get_wordcloud_file(user_id)
-    return render_template('home.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
-
+    return render_template('personal.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
+  
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
@@ -73,9 +79,14 @@ def callback():
 
 
 @app.route('/terms')
-@require_auth
 def terms():
     return render_template('terms.html')
+
+@app.route('/public-entries/<entry_id>')
+@require_auth
+def terms(entry_id):
+    entry=orm.get_entry(entry_id, public=True)
+    return render_template('public-entry.html', entry)
 
 
 @app.route("/login")
@@ -132,9 +143,14 @@ def get_response():
 
 
 @ app.route("/past_entries/<entry_id>")
-#@ require_auth
+@ require_auth
 def past_entries(entry_id):
     entry = orm.get_entry(entry_id)
+    if 'private' not in entry:
+        entry['private']=True
+    if entry['private'] and entry['user_id']!= session['user']['user_id']:
+        return render_template('/')
+    
     return render_template('journal-entry.html', entry=entry)
 
 @ app.route("/privacy")
@@ -214,15 +230,20 @@ def change_to_in_progress():
 @ app.route("/tmp")
 #@ require_auth
 def tmp():
-    entry_id ='647275dc06343ac6a5645f1b'
     user_id = '645db31405e1973b595c0422'
-    if entry_id=='new':
-        user_id = session['user']['user_id']
-        entry_id = orm.create_entry(user_id)
-    entry = orm.get_entry(entry_id)
-    return render_template('tmp.html', entry=entry)
+    in_progress_entries , completed_entries = orm.get_entries(
+        user_id=user_id)
+    wordcloud = orm.get_wordcloud_file(user_id)
+    return render_template('home.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
 
 
+@ app.route("/update-privacy", methods=['POST'])
+#@ require_auth
+def update_privacy():
+    entry_id = request.json['entry_id']
+    private = request.json['private']
+    orm.update_entry(entry_id, {'private':private})
+    return 'success'
 
 @app.route('/feedback', methods=['GET','POST'])
 def submit_feedback():

@@ -27,3 +27,37 @@
     });
   }
 }
+
+function togglePrivacy(element, entryId, isPrivate) {
+  const text = element.innerText.trim();
+  const updatedText = text === 'Private' ? 'Public' : 'Private';
+  element.innerText = updatedText;
+  const data = {
+    entry_id: entryId,
+    private: updatedText === 'Private'
+  };
+
+    // Send a POST request to the server-side endpoint for updating the privacy
+    fetch('/update-privacy', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      // Handle the response as needed
+      if (response.ok) {
+        console.log('Privacy updated successfully');
+      } else {
+        console.error('Failed to update privacy');
+      }
+    })
+    .catch(error => {
+      console.error('An error occurred while updating privacy', error);
+    });
+
+  // Optional: You can also add visual cues or styles to indicate the privacy status change.
+  element.classList.toggle('private');
+  element.classList.toggle('public');
+}

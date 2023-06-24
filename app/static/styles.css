@@ -14,17 +14,19 @@
   table {
     border-collapse: collapse;
     width: 100%;
+    table-layout: fixed;
   }
-  td, th {
+  
+  td {
     padding: 8px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: none;
   }
-  th {
-    background-color: #f2f2f2;
-  }
+  
   td {
     margin: 5px;
+    border-top: 1px solid #ddd; /* Add top border for separation */
+
   }
   .chatbox {
   border: 1px solid black;
@@ -252,12 +254,23 @@ button:hover {
   justify-content: space-between; /* Adjust the spacing between buttons */
 }
 
-/* new */
+.entry-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .content {
+  display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
+  width: 100%; /* Set the width to 100% */
+  max-width: 800px; /* Adjust the max-width to your desired value */
+  margin-left: auto; /* Center the div horizontally */
+  margin-right: auto; /* Center the div horizontally */
 }
+
 
 .entries {
   display: flex;
@@ -267,14 +280,13 @@ button:hover {
 }
 
 
+
 .in-progress-entries h4,
 .completed-entries h4 {
   margin-bottom: 10px;
 }
 
-
 .delete-icon {
-  margin-left: 10px;
   color: red;
   cursor: pointer;
 }
@@ -364,6 +376,7 @@ button:hover {
   margin-bottom: 30px;
   box-shadow: 1px -1px 5px #555;
   border-top: 1px solid #946947;
+  width: 100%;
 }
 
 .completed-entry:after {
@@ -410,4 +423,22 @@ footer {
 footer a {
   margin-left: 10px;
   color: black;
+}
+
+.entry-title {
+  flex: 1;
+}
+
+.entry-date {
+  margin-left: 10px;
+}
+
+.private, 
+.public {    color:#007bff;
+  cursor: pointer;
+}
+
+.delete-icon {
+  color: red;
+  cursor: pointer;
 }

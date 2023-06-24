@@ -435,3 +435,4 @@ def close_entry(entry_id):
         entry_id, 'done'))
     thread_analyze.start()
     return
+

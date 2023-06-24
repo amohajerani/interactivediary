@@ -55,7 +55,7 @@ def create_entry(user_id):
     # assign a default title
     default_title = 'Entry'
     entry_id = Entries.insert_one(
-        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time()), 'title':default_title, 'chats':initial_chats})
+        {'user_id': user_id, 'completed': False, 'title': '', 'last_update': int(time.time()), 'title':default_title, 'chats':initial_chats, 'private':True})
     return str(entry_id.inserted_id)
 
 
@@ -88,9 +88,14 @@ def add_chat_to_entry(entry_id, role, content):
     '$set':{'last_update': int(time.time())}}
     Entries.update_one({'_id': ObjectId(entry_id)}, update_data)
 
-def get_entry(entry_id:str):
+def get_entry(entry_id:str, public=False):
+    '''
+    if public is True, it does not return the user_id to protect the user
+    '''
     entry = Entries.find_one({'_id':ObjectId(entry_id)})
     entry['_id']=str(entry['_id'])
+    if public:
+        del entry['user_id']
     return entry
 
 def delete_entry(entry_id):
