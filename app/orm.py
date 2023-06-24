@@ -157,9 +157,9 @@ def get_public_entries():
     entries = Entries.find({'private':False}).sort([('last_updated', DESCENDING)]).limit(100)
     public_entries=[]
     for entry in entries:
-        if len(entry['chat'])<3:
+        if len(entry['chats'])<3:
             continue
-        excerpt = entry['chat'][2]
+        excerpt = entry['chats'][2]
         excerpt = excerpt[:150]
         excerpt=excerpt+' ...'
         public_entries.append({'excerpt':excerpt, 'title':entry['title'], 'last_updated':entry['last_updated']})
