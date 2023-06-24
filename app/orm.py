@@ -159,9 +159,9 @@ def get_public_entries():
     for entry in entries:
         if len(entry['chats'])<3:
             continue
-        excerpt = entry['chats'][2]
+        excerpt = entry['chats'][2]['content']
         excerpt = excerpt[:150]
         excerpt=excerpt+' ...'
-        public_entries.append({'excerpt':excerpt, 'title':entry['title'], 'last_updated':entry['last_updated']})
+        public_entries.append({'excerpt':excerpt, 'title':entry['title'], 'last_update':entry['last_update']})
 
     return public_entries
