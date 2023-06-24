@@ -52,7 +52,7 @@ def home():
     if not session.get('user', None):
         return render_template('landing.html')
     public_entries = orm.get_public_entries()
-    return render_template('/home', public_entries)
+    return render_template('/home', public_entries=public_entries)
 
 @app.route("/personal")
 @require_auth
