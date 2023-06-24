@@ -51,8 +51,13 @@ def require_auth(func):
 def home():
     if not session.get('user', None):
         return render_template('landing.html')
-    public_entries = orm.get_public_entries()
-    return render_template('home.html', public_entries=public_entries)
+    #public_entries = orm.get_public_entries()
+    #return render_template('home.html', public_entries=public_entries)
+    user_id = session['user']['user_id']
+    in_progress_entries , completed_entries = orm.get_entries(
+        user_id=user_id)
+    wordcloud = orm.get_wordcloud_file(user_id)
+    return render_template('personal.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
 
 @app.route("/personal")
 @require_auth
