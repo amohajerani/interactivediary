@@ -82,10 +82,10 @@ def callback():
 def terms():
     return render_template('terms.html')
 
-@app.route('/public-entries/<entry_id>')
+@app.route('/public-entry/<entry_id>')
 @require_auth
-def terms(entry_id):
-    entry=orm.get_entry(entry_id, public=True)
+def get_public_entry(entry_id):
+    entry=data.get_public_entry(entry_id)
     return render_template('public-entry.html', entry)
 
 

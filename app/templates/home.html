@@ -9,7 +9,7 @@
     <ul>
       {% for entry in public_entries %}
       <li>
-        <span style="float: left;"><a href="/public-entries/{{entry['_id']}}">{{entry['title']}} </a> <em > {{entry['last_update']|timestamp_to_local_time }}</span></span>
+        <span style="float: left;"><a href="/public-entry/{{entry['_id']}}">{{entry['title']}} </a> <em > {{entry['last_update']|timestamp_to_local_time }}</span></span>
         <p>{{entry['excerpt']}}</p>
       </li>
       {% endfor %}

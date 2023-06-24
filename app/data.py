@@ -436,3 +436,15 @@ def close_entry(entry_id):
     thread_analyze.start()
     return
 
+def get_public_entry(entry_id):
+    entry = orm.get_entry(entry_id, public=True)
+    if len(entry['chat'])<3:
+        excerpt = ''
+    else:
+        excerpt = entry['chat'][2]
+
+    excerpt = excerpt[:150]
+    excerpt=excerpt+' ...'
+    entry['excerpt']=excerpt
+    return entry
+
