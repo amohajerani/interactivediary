@@ -19,7 +19,7 @@ if ENV_FILE:
     load_dotenv(ENV_FILE)
 
 app = data.init_app()
-
+admin_user_id = '6464e7ac009a56e46cc4ca4c'
 oauth = OAuth(app)
 oauth.register(
     "auth0",
@@ -51,22 +51,17 @@ def require_auth(func):
 def home():
     if not session.get('user', None):
         return render_template('landing.html')
-    #public_entries = orm.get_public_entries()
-    #return render_template('home.html', public_entries=public_entries)
     user_id = session['user']['user_id']
     in_progress_entries , completed_entries = orm.get_entries(
         user_id=user_id)
     wordcloud = orm.get_wordcloud_file(user_id)
     return render_template('personal.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
 
-@app.route("/personal")
+@app.route("/shared")
 @require_auth
-def personal():
-    user_id = session['user']['user_id']
-    in_progress_entries , completed_entries = orm.get_entries(
-        user_id=user_id)
-    wordcloud = orm.get_wordcloud_file(user_id)
-    return render_template('personal.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
+def public_entries():
+    public_entries = orm.get_public_entries()
+    return render_template('public-entries.html', public_entries=public_entries)
   
 
 @app.route("/callback", methods=["GET", "POST"])
@@ -91,7 +86,7 @@ def terms():
 @require_auth
 def get_public_entry(entry_id):
     entry=data.get_public_entry(entry_id)
-    return render_template('public-entry.html', entry)
+    return render_template('public-entry.html', entry=entry)
 
 
 @app.route("/login")
@@ -153,10 +148,22 @@ def past_entries(entry_id):
     entry = orm.get_entry(entry_id)
     if 'private' not in entry:
         entry['private']=True
-    if entry['private'] and entry['user_id']!= session['user']['user_id']:
-        return render_template('/')
-    
+    if entry['private'] and entry['user_id']!= session['user']['user_id'] and admin_user_id!=session['user']['user_id']:
+        return render_template('/')   
     return render_template('journal-entry.html', entry=entry)
+
+@ app.route("/admin/<entry_id>")
+@ require_auth
+def admin(entry_id=None):
+    # make available only for the admin
+    if session['user']['user_id']!=admin_user_id:
+        return redirect("/")
+    if not entry_id:
+        entries = orm.get_public_entries(admin=True)
+        return render_template('public-entries.html', public_entries=entries)
+    # if entry_id was provided
+    return redirect("/past_entries/<entry_id>")
+
 
 @ app.route("/privacy")
 def privacy():
@@ -211,6 +218,7 @@ def email_content():
 
 
 @app.route('/entry-title', methods=['POST'])
+@ require_auth
 def update_entry_title():
     entry_title = request.json['title']
     entry_id = request.json['entry_id']
@@ -219,6 +227,7 @@ def update_entry_title():
 
 
 @app.route('/delete-entry/<entry_id>', methods=['DELETE'])
+@ require_auth
 def delte_entry(entry_id):
     orm.delete_entry(entry_id)
     return {'success':True}
@@ -227,6 +236,7 @@ def delte_entry(entry_id):
 
 
 @app.route('/change-to-in-progress', methods=['POST'])
+@ require_auth
 def change_to_in_progress():
     entry_id = request.json['entry_id']
     orm.update_entry(entry_id, {'completed':False})
@@ -243,7 +253,7 @@ def tmp():
 
 
 @ app.route("/update-privacy", methods=['POST'])
-#@ require_auth
+@ require_auth
 def update_privacy():
     entry_id = request.json['entry_id']
     private = request.json['private']

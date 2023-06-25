@@ -442,3 +442,8 @@ footer a {
   color: red;
   cursor: pointer;
 }
+
+.timestamp {
+  color:gray;
+  margin-left: 10px;
+}

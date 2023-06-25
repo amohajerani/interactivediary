@@ -126,6 +126,7 @@ function doneFunc(entry_id) {
   fetch("/entry-done/" + entry_id)
     .then(function(response) {
       if (response.ok) {
+        quietMode = true;
         sendMessage(entry_id);
         window.location.href = '/';
       } else {
