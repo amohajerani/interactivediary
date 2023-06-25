@@ -417,7 +417,7 @@ footer {
   background-color: #e0e0e0;
   padding: 20px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 footer a {
