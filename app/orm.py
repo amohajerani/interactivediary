@@ -170,8 +170,6 @@ def get_public_entries():
 
 def get_admin_entries():
     entries = Entries.find({}).sort('last_updated', -1)
-    for entry in entries:
-        print(entry['last_update'])
     all_entries=[]
     for entry in entries:
         if len(entry['chats'])<3:
