@@ -95,7 +95,7 @@ def add_comment():
     text = request.form['comment_text']
     user_id = session['user']['user_id']
     orm.insert_comment(entry_id, text, user_id)
-    return redirect('/public-entry/'+entry_id)
+    return {'success':True}
 
 @app.route("/login")
 def login():

@@ -19,7 +19,7 @@
     </div>
 <div>
     <div>
-    <form action="/add_comment" method="post">
+    <form id="commentForm" action="/add_comment" method="post">
         <input type="hidden" name="entry_id" value="{{ entry._id }}">
         <textarea id="message" name="comment_text" placeholder="Add a comment"></textarea>
         <button type="submit">Submit</button>
@@ -30,7 +30,9 @@
     <div>
     <p>{{ comment.text }}</p>
     </div>
-    <hr class="faint-line"
+    <hr class="faint-line">
     {% endfor %}
-    
+</div>
+    <script src="{{ url_for('static', filename='public_entry.js') }}"></script>
+ 
 {% endblock %}
