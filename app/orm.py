@@ -153,12 +153,9 @@ def insert_chat_feedback(obj):
     obj.update({'last_update': int(time.time())})
     ChatFeedbacks.insert_one(obj)
 
-def get_public_entries(admin=False):
-    if admin:
-        filter={}
-    else:
-        filter={'private':False}
-    entries = Entries.find(filter).sort([('last_updated', DESCENDING)]).limit(100)
+def get_public_entries():
+    filter={'private':False}
+    entries = Entries.find(filter).sort('last_updated',-1).limit(1000)
     public_entries=[]
     for entry in entries:
         if len(entry['chats'])<3:
@@ -170,3 +167,20 @@ def get_public_entries(admin=False):
     public_entries = sorted(public_entries, key=lambda x: x["last_update"], reverse=True)
 
     return public_entries
+
+def get_admin_entries():
+    entries = Entries.find({}).sort('last_updated', -1)
+    for entry in entries:
+        print(entry['last_update'])
+    all_entries=[]
+    for entry in entries:
+        if len(entry['chats'])<3:
+            continue
+        excerpt = entry['chats'][2]['content']
+        excerpt = excerpt[:150]
+        print(excerpt)
+        excerpt=excerpt+' ...'
+        all_entries.append({'excerpt':excerpt, 'title':entry['title'], 'last_update':entry['last_update'], '_id':str(entry['_id'])})
+    all_entries = sorted(all_entries, key=lambda x: x["last_update"], reverse=True)
+
+    return all_entries
