@@ -86,8 +86,20 @@ def terms():
 @require_auth
 def get_public_entry(entry_id):
     entry=data.get_public_entry(entry_id)
-    return render_template('public-entry.html', entry=entry)
+    comments = [{
+            '_id': 1,
+            'text': """Wow, this article totally blew my mind! I never thought I'd stumble upon such an insightful and thought-provoking piece on the internet. The author's writing style is captivating, keeping me hooked from the very first sentence until the end. The way they presented their arguments and supported them with evidence was truly impressive.""",
+            'likes': 0
+        }]
+    return render_template('public-entry.html', entry=entry, comments=comments)
 
+@app.route('/add_comment', methods=['POST'])
+def add_comment():
+    entry_id = request.form['entry_id']
+    text = request.form['comment_text']
+    user_id = session['user']['user_id']
+    orm.insert_comment({'_id':entry_id, 'text':text, 'user_id':user_id})
+    return 'success'
 
 @app.route("/login")
 def login():
