@@ -60,7 +60,7 @@ def home():
 @app.route("/shared")
 @require_auth
 def public_entries():
-    public_entries = orm.get_public_entries()
+    entries = orm.get_public_entries()
     return render_template('public-entries.html', entries=entries)
   
 
@@ -86,11 +86,7 @@ def terms():
 @require_auth
 def get_public_entry(entry_id):
     entry=data.get_public_entry(entry_id)
-    comments = [{
-            '_id': 1,
-            'text': """Wow, this article totally blew my mind! I never thought I'd stumble upon such an insightful and thought-provoking piece on the internet. The author's writing style is captivating, keeping me hooked from the very first sentence until the end. The way they presented their arguments and supported them with evidence was truly impressive.""",
-            'likes': 0
-        }]
+    comments = orm.get_comments(entry_id)
     return render_template('public-entry.html', entry=entry, comments=comments)
 
 @app.route('/add_comment', methods=['POST'])

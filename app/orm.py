@@ -186,3 +186,9 @@ def get_admin_entries():
 
 def insert_comment(_id,text, user_id):
     Comments.insert_one({'_id':ObjectId(_id), 'text':text, 'last_update':int(time.time()), 'user_id':user_id})
+
+def get_comments(_id):
+    # entry_id is the same as comments id
+    comments = list(Comments.find({'_id':ObjectId(_id)}))
+    ordered_comments = comments[::-1]
+    return ordered_comments
