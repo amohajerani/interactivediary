@@ -61,7 +61,7 @@ def home():
 @require_auth
 def public_entries():
     public_entries = orm.get_public_entries()
-    return render_template('public-entries.html', public_entries=public_entries)
+    return render_template('public-entries.html', entries=entries)
   
 
 @app.route("/callback", methods=["GET", "POST"])
