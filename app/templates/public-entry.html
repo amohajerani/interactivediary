@@ -26,13 +26,14 @@
     </form>
     </div>
     <h3>Comments:</h3>
-    {% for comment in comments %}
-    <div>
-    <p>{{ comment.text }}</p>
+    <div id="commentsContainer">
+      {% for comment in comments %}
+        <div>
+          <p>{{ comment.text }}</p>
+        </div>
+        <hr class="faint-line">
+      {% endfor %}
     </div>
-    <hr class="faint-line">
-    {% endfor %}
-</div>
     <script src="{{ url_for('static', filename='public_entry.js') }}"></script>
  
 {% endblock %}
