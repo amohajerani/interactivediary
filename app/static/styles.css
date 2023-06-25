@@ -447,3 +447,10 @@ footer a {
   color:gray;
   margin-left: 10px;
 }
+
+.faint-line {
+  border: none;
+  height: 1px;
+  background-color: #ccc; /* Adjust the color to your preference */
+  opacity: 0.5; /* Adjust the opacity to control the faintness */
+}
