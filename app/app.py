@@ -94,7 +94,7 @@ def add_comment():
     entry_id = request.form['entry_id']
     text = request.form['comment_text']
     user_id = session['user']['user_id']
-    orm.insert_comment({'_id':entry_id, 'text':text, 'user_id':user_id})
+    orm.insert_comment(entry_id, text, user_id)
     return 'success'
 
 @app.route("/login")
