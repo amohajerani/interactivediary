@@ -154,7 +154,7 @@ def past_entries(entry_id):
 
 @ app.route("/admin/<entry_id>")
 @ require_auth
-def admin(entry_id=None):
+def admin(entry_id):
     # make available only for the admin
     if session['user']['user_id']!=admin_user_id:
         return redirect("/")
