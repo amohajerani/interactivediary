@@ -167,5 +167,6 @@ def get_public_entries(admin=False):
         excerpt = excerpt[:150]
         excerpt=excerpt+' ...'
         public_entries.append({'excerpt':excerpt, 'title':entry['title'], 'last_update':entry['last_update'], '_id':str(entry['_id'])})
+    public_entries = sorted(public_entries, key=lambda x: x["last_update"], reverse=True)
 
     return public_entries
