@@ -158,11 +158,11 @@ def admin(entry_id):
     # make available only for the admin
     if session['user']['user_id']!=admin_user_id:
         return redirect("/")
-    if not entry_id:
+    if  entry_id=='all':
         entries = orm.get_public_entries(admin=True)
         return render_template('public-entries.html', public_entries=entries)
     # if entry_id was provided
-    return redirect("/past_entries/<entry_id>")
+    return redirect("/past_entries/"+entry_id)
 
 
 @ app.route("/privacy")
