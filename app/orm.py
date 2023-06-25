@@ -195,4 +195,6 @@ def get_comments(_id):
     # entry_id is the same as comments id
     comments = list(Comments.find({'_id':ObjectId(_id)}))
     ordered_comments = comments[::-1]
+    for comment in ordered_comments:
+        comment['_id']=str(comment['_id'])
     return ordered_comments
