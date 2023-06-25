@@ -185,7 +185,11 @@ def get_admin_entries():
     return all_entries
 
 def insert_comment(entry_id,text, user_id):
-    Comments.insert_one({'_id':ObjectId(entry_id), 'text':text, 'last_update':int(time.time()), 'user_id':user_id})
+    existing_document = Comments.find_one({"_id": ObjectId(entry_id)})
+    if existing_document:
+        Comments.update_one({'_id':ObjectId(entry_id)},{"$push": {"comments": {'text':text, 'last_update':int(time.time()), 'user_id':user_id}}})
+    else:
+        Comments.insert_one({'_id':ObjectId(entry_id), 'comments':[{'text':text, 'last_update':int(time.time()), 'user_id':user_id}]})
 
 def get_comments(_id):
     # entry_id is the same as comments id
