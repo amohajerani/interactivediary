@@ -19,7 +19,7 @@
   
           // Clear the existing comments
           commentsContainer.innerHTML = "";
-  
+        console.log(data)
           // Render the updated comments
           data.forEach(function(comment) {
             var commentDiv = document.createElement("div");

@@ -193,8 +193,6 @@ def insert_comment(entry_id,text, user_id):
 
 def get_comments(_id):
     # entry_id is the same as comments id
-    comments = list(Comments.find({'_id':ObjectId(_id)}))
-    ordered_comments = comments[::-1]
-    for comment in ordered_comments:
-        comment['_id']=str(comment['_id'])
+    comments = Comments.find_one({'_id':ObjectId(_id)})
+    ordered_comments = comments['comments'][::-1]
     return ordered_comments

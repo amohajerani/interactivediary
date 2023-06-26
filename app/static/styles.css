@@ -454,3 +454,15 @@ footer a {
   background-color: #ccc; /* Adjust the color to your preference */
   opacity: 0.5; /* Adjust the opacity to control the faintness */
 }
+
+.clear {
+  clear: both;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}

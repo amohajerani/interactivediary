@@ -83,7 +83,7 @@ def terms():
     return render_template('terms.html')
 
 @app.route('/public-entry/<entry_id>')
-@require_auth
+#@require_auth
 def get_public_entry(entry_id):
     entry=data.get_public_entry(entry_id)
     comments = orm.get_comments(entry_id)
