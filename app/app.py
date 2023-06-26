@@ -168,7 +168,7 @@ def admin(entry_id):
         return redirect("/")
     if  entry_id=='all':
         entries = orm.get_admin_entries()
-        return render_template('public-entries.html', entries=entries)
+        return render_template('admin-entries.html', entries=entries)
     # if entry_id was provided
     return redirect("/past_entries/"+entry_id)
 
