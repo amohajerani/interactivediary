@@ -1,5 +1,5 @@
-   // JavaScript code to handle form submission and update comments dynamically
-
+   // JavaScript code to handle form submission and update comments and add likes dynamically
+   document.addEventListener("DOMContentLoaded", function() {
     // Listen for form submission
     document.getElementById("commentForm").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent the default form submission
@@ -37,3 +37,14 @@
           console.error("Error:", error);
         });
       });
+
+      // Handle liking a comment
+      var likeButtons = document.getElementsByClassName("like-button");
+      Array.from(likeButtons).forEach(function(button) {
+        button.addEventListener("click", function() {
+          var commentId = this.getAttribute("data-comment-id");
+          // Send a request to the server to indicate a like for the comment with the specified commentId
+          // Update the like count or UI accordingly
+        });
+    });
+});

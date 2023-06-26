@@ -26,12 +26,12 @@
     </form>
     </div>
     <div class="clear"></div>
-
     <div id="commentsContainer">
       {% for comment in comments %}
         <div>
           <p>{{ comment.text }}</p>
           <p class="timestamp" data-timestamp="{{ comment.last_update }}">{{ entry.last_update }}</p>
+          <button class="like-button fa fa-thumbs-up" data-comment-id="{{ comment.id }}"></button>
         </div>
         <hr class="faint-line">
       {% endfor %}
