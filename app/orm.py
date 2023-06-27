@@ -184,15 +184,38 @@ def get_admin_entries():
 
     return all_entries
 
-def insert_comment(entry_id,text, user_id):
-    existing_document = Comments.find_one({"_id": ObjectId(entry_id)})
-    if existing_document:
-        Comments.update_one({'_id':ObjectId(entry_id)},{"$push": {"comments": {'text':text, 'last_update':int(time.time()), 'user_id':user_id}}})
+def like_comment(comment_id, user_id):
+    
+    comment = Comments.find_one({'_id': ObjectId(comment_id)})
+    # if user has already liked a comment, this will unlike it
+    liked_users = comment['liked_users']
+    if user_id in liked_users:
+        liked_users.remove(user_id)
+        likes_cnt = comment['likes']-1
     else:
-        Comments.insert_one({'_id':ObjectId(entry_id), 'comments':[{'text':text, 'last_update':int(time.time()), 'user_id':user_id}]})
+        liked_users.append(user_id)
+        likes_cnt = comment['likes']+1
 
-def get_comments(_id):
-    # entry_id is the same as comments id
-    comments = Comments.find_one({'_id':ObjectId(_id)})
-    ordered_comments = comments['comments'][::-1]
-    return ordered_comments
+    Comments.update_one(
+        {'_id': ObjectId(comment_id)},
+        {'$set': {'likes': likes_cnt, 'liked_users':liked_users}}
+        )
+    return comment['entry_id']
+
+def insert_comment(entry_id, user_id, content):
+    comment = {
+        'entry_id': entry_id,
+        'user_id': user_id,
+        'content': content,
+        'last_update': int(time.time()),
+        'likes': 0,
+        'liked_users':[]
+    }
+    Comments.insert_one(comment)
+    return
+    
+
+def get_comments(entry_id):
+    comments = list(Comments.find({'entry_id': entry_id}, {'user_id':0}))
+    comments = sorted(comments, key=lambda x: x["last_update"], reverse=True)
+    return comments

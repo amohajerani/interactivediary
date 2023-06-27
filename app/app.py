@@ -58,7 +58,7 @@ def home():
     return render_template('personal.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
 
 @app.route("/shared")
-@require_auth
+#@require_auth
 def public_entries():
     entries = orm.get_public_entries()
     return render_template('public-entries.html', entries=entries)
@@ -66,7 +66,7 @@ def public_entries():
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
-    token = oauth.auth0.authorize_access_token()
+    token = oauth.auth0.user_idize_access_token()
     session["user"] = token
     session['user']['user_id'], terms_conditions = data.get_user_id(
         session['user']['userinfo']['email'])
@@ -82,20 +82,8 @@ def callback():
 def terms():
     return render_template('terms.html')
 
-@app.route('/public-entry/<entry_id>')
-#@require_auth
-def get_public_entry(entry_id):
-    entry=data.get_public_entry(entry_id)
-    comments = orm.get_comments(entry_id)
-    return render_template('public-entry.html', entry=entry, comments=comments)
 
-@app.route('/add_comment', methods=['POST'])
-def add_comment():
-    entry_id = request.form['entry_id']
-    text = request.form['comment_text']
-    user_id = session['user']['user_id']
-    orm.insert_comment(entry_id, text, user_id)
-    return orm.get_comments(entry_id)
+
 
 @app.route("/login")
 def login():
@@ -298,6 +286,32 @@ def chat_feedback():
     feedback = request.json['feedback']
     orm.insert_chat_feedback({'entry_id': entry_id, 'content':content, 'feedback':feedback })
     return {'success':True}
+
+
+@app.route('/like_comment/<comment_id>')
+def like_comment(comment_id):
+    user_id = '123'
+    entry_id = orm.like_comment(comment_id, user_id)
+    return redirect(f'/public-entry/{entry_id}')
+
+@app.route('/add_comment', methods=['POST'])
+def add_comment():
+    entry_id = request.form['entry_id']
+    user_id = '123'
+    content = request.form['content']
+    orm.insert_comment(entry_id, user_id, content)
+    
+    return redirect(f'/public-entry/{entry_id}')
+
+@app.route('/public-entry/<entry_id>')
+#@require_auth
+def get_public_entry(entry_id):
+    entry=data.get_public_entry(entry_id)
+    comments = orm.get_comments(entry_id)
+    return render_template('public-entry.html', entry=entry, comments=comments)
+
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 8000), debug=True)

@@ -466,3 +466,8 @@ footer a {
   right: 0;
   z-index: 9999;
 }
+
+.fa-thumbs-up:hover {
+  color: #ff0000; /* Change the color to the desired visual cue */
+  cursor: pointer;
+}
