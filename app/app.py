@@ -66,7 +66,7 @@ def public_entries():
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
-    token = oauth.auth0.user_idize_access_token()
+    token = oauth.auth0.authorize_access_token()
     session["user"] = token
     session['user']['user_id'], terms_conditions = data.get_user_id(
         session['user']['userinfo']['email'])
