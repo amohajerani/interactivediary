@@ -361,7 +361,7 @@ def send_email(entry, email):
     aws_client = boto3.client('ses', region_name=AWS_REGION)
 
     BODY_TEXT = ''
-    for chat in entry['chats']:
+    for chat in entry['chats'][2:]:
         BODY_TEXT = BODY_TEXT + \
             f"\n{chat.get('role','')}: {chat.get('content','')}"
 

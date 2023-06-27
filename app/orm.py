@@ -179,7 +179,7 @@ def get_admin_entries():
         excerpt = excerpt[:150]
         print(excerpt)
         excerpt=excerpt+' ...'
-        all_entries.append({'excerpt':excerpt, 'title':entry['title'], 'last_update':entry['last_update'], '_id':str(entry['_id'])})
+        all_entries.append({'excerpt':excerpt, 'title':entry['title'], 'last_update':entry['last_update'],'user_id':entry['user_id'] , '_id':str(entry['_id'])})
     all_entries = sorted(all_entries, key=lambda x: x["last_update"], reverse=True)
 
     return all_entries
