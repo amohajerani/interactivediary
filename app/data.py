@@ -373,7 +373,7 @@ def send_email(entry, email):
         BODY_HTML += '<h4>Insights</h4>\n'
         BODY_HTML += '<p><em>{}</em></p>\n'.format(entry['insights'])
         BODY_HTML += '<h4>Entry</h4>\n'
-    for chat in entry['chats']:
+    for chat in entry['chats'][2:]:
         role = chat.get('role', '')
         content = chat.get('content', '')
 
