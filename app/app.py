@@ -61,8 +61,7 @@ def home():
 #@require_auth
 def public_entries():
     entries = orm.get_public_entries()
-    return 'We are working on this. Hang tight'
-    #return render_template('public-entries.html', entries=entries)
+    return render_template('public-entries.html', entries=entries)
   
 
 @app.route("/callback", methods=["GET", "POST"])
