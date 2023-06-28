@@ -67,7 +67,7 @@ def get_entries(user_id):
     '''
     # from newest to oldest
     entries = Entries.find(
-        {'user_id': user_id}, {'title': 1, 'completed': 1, 'last_update': 1}).sort(
+        {'user_id': user_id}, {'title': 1, 'completed': 1, 'last_update': 1, 'private':1}).sort(
             'last_update', pymongo.DESCENDING)
     in_progress_entries = []
     completed_entries = []

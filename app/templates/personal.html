@@ -31,7 +31,8 @@
           <td><a href="/past_entries/{{entry['_id']}}">{{entry['title']}}</a></td>
           <td><em>{{entry['last_update']|timestamp_to_local_time }}</em></td>
           <td>
-            <i class="private" onclick="togglePrivacy(this, '{{ entry._id }}', {{ entry['private'] }})">
+            <i class="private" onclick="togglePrivacy(this, '{{ entry._id }}')">
+              {{entry['private']}}
               {% if not entry['private'] %}Private{% else %}Public{% endif %}
             </i>
           </td>
