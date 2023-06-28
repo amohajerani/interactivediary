@@ -74,6 +74,8 @@ def get_entries(user_id):
     for entry in entries:
         entry['_id'] = str(entry['_id'])
         if entry.get('completed'):
+            if 'private' not in entry:
+                entry['private']=1
             completed_entries.append(entry)
         else:
             in_progress_entries.append(entry) 
@@ -177,7 +179,6 @@ def get_admin_entries():
             continue
         excerpt = entry['chats'][2]['content']
         excerpt = excerpt[:150]
-        print(excerpt)
         excerpt=excerpt+' ...'
         all_entries.append({'excerpt':excerpt, 'title':entry['title'], 'last_update':entry['last_update'],'user_id':entry['user_id'] , '_id':str(entry['_id'])})
     all_entries = sorted(all_entries, key=lambda x: x["last_update"], reverse=True)
