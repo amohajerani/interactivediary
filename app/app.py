@@ -174,6 +174,9 @@ def get_log0():
 def get_static_file(filename):
     return send_file('./static/images/'+filename, mimetype='image/png')
 
+@app.route('/assets/<folder>/<filename>')
+def get_assets(folder,filename):
+    return send_file('./assets/'+folder+'/'+filename)
 
 @app.route('/analyze/<analysis_type>/<entry_id>')
 @require_auth
@@ -237,6 +240,11 @@ def change_to_in_progress():
     entry_id = request.json['entry_id']
     orm.update_entry(entry_id, {'completed':False})
     return {'success':True}
+
+@app.route('/landing')
+def landing():
+    return render_template('freed.html')
+
 
 @ app.route("/tmp")
 #@ require_auth
