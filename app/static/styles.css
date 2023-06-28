@@ -471,3 +471,22 @@ footer a {
   color: #ff0000; /* Change the color to the desired visual cue */
   cursor: pointer;
 }
+
+.div-block {
+  height: auto;
+  background-color: blue;
+  background-position: 0 0;
+  background-size: cover;
+  padding-top: 60px;
+  padding-bottom: 90px;
+}
+
+.heading-benefits {
+  color: #fff;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 20px;
+  padding-bottom: 40px;
+  font-weight: 400;
+}

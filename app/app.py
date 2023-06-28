@@ -242,11 +242,8 @@ def change_to_in_progress():
 @ app.route("/tmp")
 #@ require_auth
 def tmp():
-    user_id = '645db31405e1973b595c0422'
-    in_progress_entries , completed_entries = orm.get_entries(
-        user_id=user_id)
-    wordcloud = orm.get_wordcloud_file(user_id)
-    return render_template('personal.html', in_progress_entries=in_progress_entries, completed_entries=completed_entries, wordcloud=wordcloud)
+
+    return render_template('landing2.html')
 
 
 @ app.route("/update-privacy", methods=['POST'])
