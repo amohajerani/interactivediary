@@ -170,9 +170,9 @@ def get_log0():
     return send_file('./static/gagalilogo.jpg', mimetype='image/jpg')
 
 
-@app.route('/static/images/<filename>')
-def get_static_file(filename):
-    return send_file('./static/images/'+filename, mimetype='image/png')
+@app.route('/static/<folder>/<filename>')
+def get_static_file(folder, filename):
+    return send_file('./static/'+folder+'/'+filename)
 
 @app.route('/assets/<folder>/<filename>')
 def get_assets(folder,filename):
@@ -249,6 +249,11 @@ def landing():
 @ app.route("/tmp")
 #@ require_auth
 def tmp():
+    return render_template('tmp.html')
+
+@ app.route("/tmp1")
+#@ require_auth
+def tmp1():
     user_id = '6464e7ac009a56e46cc4ca4c'
     in_progress_entries , completed_entries = orm.get_entries(
         user_id=user_id)
